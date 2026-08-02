@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit"
+  short_description: "Plan and create clean atomic Git commits"
+  default_prompt: "Use $commit to plan and commit the outstanding changes."
