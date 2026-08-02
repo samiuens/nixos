@@ -5,6 +5,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,28 +61,85 @@
         pkgs = import nixpkgs {
           inherit system;
         };
+
+        checkedSource = nixpkgs.lib.cleanSourceWith {
+          src = ./.;
+          filter = path: type: type == "directory" || baseNameOf path != "hardware-configuration.nix";
+        };
+
+        hardwareConfigurationRegex = "(^|/)hardware-configuration\\.nix$";
+
+        checkNixSyntax = pkgs.writeShellScript "check-nix-syntax" ''
+          set -eu
+
+          export NIX_STATE_DIR="''${TMPDIR:-/tmp}/nix-syntax-state-$$"
+          mkdir -p "$NIX_STATE_DIR"
+
+          for file in "$@"; do
+            ${pkgs.nix}/bin/nix-instantiate --eval-store dummy:// --parse "$file" >/dev/null
+          done
+        '';
+
+        preCommitCheck = inputs.git-hooks.lib.${system}.run {
+          src = checkedSource;
+          hooks = {
+            nixfmt = {
+              enable = true;
+              excludes = [ hardwareConfigurationRegex ];
+            };
+
+            nix-syntax = {
+              enable = true;
+              name = "Nix syntax";
+              entry = "${checkNixSyntax}";
+              files = "\\.nix$";
+              excludes = [ hardwareConfigurationRegex ];
+              require_serial = true;
+            };
+          };
+        };
       in
       {
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [
-            deadnix
-            nil
-            nixd
-            nixfmt
-            statix
-          ];
+          inherit (preCommitCheck) shellHook;
+
+          packages =
+            preCommitCheck.enabledPackages
+            ++ (with pkgs; [
+              deadnix
+              nil
+              nixd
+              nixfmt
+              statix
+            ]);
         };
 
         formatter = pkgs.nixfmt;
 
         checks = {
+          pre-commit = preCommitCheck;
+
           format =
             pkgs.runCommand "nix-format-check"
               {
                 nativeBuildInputs = [ pkgs.nixfmt ];
               }
               ''
-                ${pkgs.lib.getExe pkgs.nixfmt} --check ${./.}
+                ${pkgs.lib.getExe pkgs.nixfmt} --check ${checkedSource}
+                touch $out
+              '';
+
+          syntax =
+            pkgs.runCommand "nix-syntax-check"
+              {
+                nativeBuildInputs = [ pkgs.nix ];
+              }
+              ''
+                export NIX_STATE_DIR="$TMPDIR/nix-state"
+                mkdir -p "$NIX_STATE_DIR"
+
+                find ${checkedSource} -type f -name '*.nix' \
+                  -exec nix-instantiate --eval-store dummy:// --parse {} + >/dev/null
                 touch $out
               '';
 
@@ -87,7 +149,7 @@
                 nativeBuildInputs = [ pkgs.statix ];
               }
               ''
-                ${pkgs.lib.getExe pkgs.statix} check ${./.}
+                ${pkgs.lib.getExe pkgs.statix} check ${checkedSource}
                 touch $out
               '';
 
@@ -97,7 +159,7 @@
                 nativeBuildInputs = [ pkgs.deadnix ];
               }
               ''
-                ${pkgs.lib.getExe pkgs.deadnix} --fail ${./.}
+                ${pkgs.lib.getExe pkgs.deadnix} --fail ${checkedSource}
                 touch $out
               '';
         }
