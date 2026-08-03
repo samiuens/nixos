@@ -101,6 +101,10 @@ in
       };
 
       editor = section {
+        vscodium = program "VSCodium" {
+          profiles = attrsOption "VSCodium profiles.";
+        };
+
         vscode = program "Visual Studio Code" {
           profiles = attrsOption "Visual Studio Code profiles.";
         };

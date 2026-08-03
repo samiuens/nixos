@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  inputs,
   ...
 }:
 
@@ -54,6 +55,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    nixpkgs.overlays = [ inputs.nix4vscode.overlays.default ];
+
     nix = {
       settings = {
         experimental-features = [
