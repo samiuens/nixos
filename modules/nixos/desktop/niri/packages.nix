@@ -18,14 +18,18 @@ in
       name = lib.mkOption {
         type = lib.types.str;
         default = "Adwaita";
-        description = "Cursor theme name used by Niri.";
+        description = "Cursor theme name used by Niri and Noctalia Greeter.";
       };
 
       size = lib.mkOption {
         type = lib.types.ints.positive;
         default = 24;
-        description = "Cursor size used by Niri.";
+        description = "Cursor size used by Niri and Noctalia Greeter.";
       };
+    };
+
+    noctaliaGreeter.enable = lib.mkEnableOption "Noctalia Greeter" // {
+      default = true;
     };
   };
 
@@ -36,6 +40,20 @@ in
       noctalia = {
         enable = true;
         recommendedServices.enable = true;
+      };
+
+      noctalia-greeter = lib.mkIf cfg.noctaliaGreeter.enable {
+        enable = true;
+
+        settings = {
+          session.default = "niri";
+
+          cursor = {
+            theme = cfg.cursor.name;
+            size = cfg.cursor.size;
+            path = "${cfg.cursor.package}/share/icons";
+          };
+        };
       };
     };
 
@@ -54,5 +72,10 @@ in
         pkgs.xwayland-satellite
       ];
     };
+
+    # Noctalia Greeter runs through greetd. Keep the GNOME session installed,
+    # but do not start GDM when the greeter is enabled.
+    services.displayManager.gdm.enable = lib.mkIf cfg.noctaliaGreeter.enable (lib.mkForce false);
+
   };
 }
