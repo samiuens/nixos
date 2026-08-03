@@ -28,6 +28,7 @@ in
       development = {
         codex.enable = true;
         direnv.enable = true;
+        gh.enable = true;
 
         git = {
           enable = true;

@@ -61,6 +61,8 @@ in
           "nix-direnv" = program "nix-direnv integration" { };
         };
 
+        gh = program "GitHub CLI" { };
+
         git = program "Git" {
           userName = mkOption {
             type = types.nullOr types.str;
