@@ -1,6 +1,6 @@
 # Brainstorm
 
-- [ ] Add pre-commit hooks
+- [x] Add pre-commit hooks
 - [x] Add `commit` AI skill
 - [x] Implement snapper with btrfs
   - [x] Add `btrfs-assistant` as program
