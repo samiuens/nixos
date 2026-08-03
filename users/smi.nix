@@ -12,6 +12,7 @@ in
 
     desktop = {
       gnome.enable = true;
+      niri.enable = true;
     };
 
     programs = {

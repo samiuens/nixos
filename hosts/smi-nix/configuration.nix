@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   ...
 }:
 
@@ -35,6 +36,17 @@
 
     desktop = {
       gnome.enable = true;
+
+      niri = {
+        enable = true;
+
+        cursor = {
+          package = pkgs.bibata-cursors;
+          name = "Bibata-Modern-Classic";
+          size = 20;
+        };
+      };
+
       shared.fonts.enable = true;
     };
 
