@@ -25,6 +25,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix4vscode = {
       url = "github:nix-community/nix4vscode";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -50,6 +55,7 @@
         inputs.disko.nixosModules.disko
         inputs.home-manager.nixosModules.home-manager
         inputs.nix-index-database.nixosModules.default
+        inputs.noctalia-greeter.nixosModules.default
       ];
 
       nixosConfigurations = smiLib.mkNixosConfigurations {
