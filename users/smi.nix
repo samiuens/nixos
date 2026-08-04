@@ -159,17 +159,6 @@ in
             add_newline = false;
             format = "$username$hostname$directory$git_branch$git_status$character";
             right_format = "$cmd_duration$nix_shell$nodejs$python$rust$golang$zig";
-            palette = "minimal";
-
-            palettes.minimal = {
-              blue = "#7aa2f7";
-              green = "#9ece6a";
-              muted = "#777777";
-              purple = "#bb9af7";
-              red = "#f7768e";
-              yellow = "#e0af68";
-            };
-
             username = {
               format = "[$user]($style)@";
               style_root = "bold red";
