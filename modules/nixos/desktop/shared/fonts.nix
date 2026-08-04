@@ -15,6 +15,7 @@ in
     packages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = [
+        pkgs.adwaita-fonts
         pkgs.jetbrains-mono
         pkgs.nerd-fonts.jetbrains-mono
       ];
@@ -27,6 +28,7 @@ in
       inherit (cfg) packages;
 
       fontconfig.defaultFonts = {
+        sansSerif = [ "Adwaita Sans" ];
         monospace = [
           "JetBrains Mono"
           "JetBrainsMono Nerd Font"

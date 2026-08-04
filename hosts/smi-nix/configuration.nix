@@ -42,6 +42,7 @@
       };
 
       shared = {
+        appearance.enable = true;
         applications.enable = true;
         cursor = {
           enable = true;
