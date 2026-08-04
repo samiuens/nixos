@@ -7,6 +7,7 @@
 let
   cfg = config.smi.desktop.niri;
   cursor = config.smi.desktop.shared.cursor;
+  keyboard = config.smi.environment.keyboard;
 in
 {
   options.smi.desktop.niri.noctaliaGreeter.enable = lib.mkEnableOption "Noctalia Greeter" // {
@@ -24,6 +25,10 @@ in
           theme = cursor.name;
           size = cursor.size;
           path = "${cursor.package}/share/icons";
+        };
+
+        keyboard = {
+          inherit (keyboard) layout variant;
         };
       };
     };
