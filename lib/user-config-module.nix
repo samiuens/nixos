@@ -32,7 +32,15 @@ in
   options = {
     desktop = section {
       gnome = program "GNOME desktop preferences" { };
-      niri = program "Niri desktop preferences" { };
+      niri = program "Niri desktop preferences" {
+        noctalia = section {
+          plugins = mkOption {
+            type = types.listOf types.str;
+            default = [ ];
+            description = "Noctalia plugin identifiers enabled for this user.";
+          };
+        };
+      };
     };
 
     programs = section {

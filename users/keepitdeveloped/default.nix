@@ -8,6 +8,7 @@
 
     desktop.niri = {
       enable = true;
+      noctalia.plugins = [ "alexander/screen-toolkit" ];
     };
   };
 }

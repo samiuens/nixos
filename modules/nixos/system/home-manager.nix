@@ -64,7 +64,10 @@ in
 
     home-manager = {
       inherit (cfg) useGlobalPkgs useUserPackages backupFileExtension;
-      extraSpecialArgs = { inherit inputs; };
+      extraSpecialArgs = {
+        inherit inputs;
+        niriDisplayManager = config.smi.desktop.niri.displayManager;
+      };
       sharedModules = [
         inputs.nix-flatpak.homeManagerModules.nix-flatpak
         inputs.zen-browser.homeModules.twilight

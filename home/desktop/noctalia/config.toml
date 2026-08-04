@@ -1,0 +1,139 @@
+[backdrop]
+enabled = true
+
+[bar.default]
+center = [ "media" ]
+concave_edge_corners = false
+end = [ "tray", "widget", "control-center", "session", "clock" ]
+margin_edge = 8
+margin_ends = 16
+position = "bottom"
+start = [ "workspaces" ]
+thickness = 45
+
+[brightness]
+enable_ddcutil = true
+
+[control_center]
+hidden_tabs = [ "calendar" ]
+
+    [[control_center.shortcuts]]
+    type = "wifi"
+
+    [[control_center.shortcuts]]
+    type = "bluetooth"
+
+    [[control_center.shortcuts]]
+    type = "caffeine"
+
+    [[control_center.shortcuts]]
+    type = "nightlight"
+
+    [[control_center.shortcuts]]
+    type = "power_profile"
+
+    [[control_center.shortcuts]]
+    type = "wallpaper"
+
+[desktop_widgets]
+enabled = false
+
+[dock]
+active_monitor_only = true
+auto_hide = true
+concave_edge_corners = false
+enabled = true
+icon_size = 36
+magnification = false
+margin_edge = 16
+position = "left"
+reserve_space = false
+show_dots = true
+
+[location]
+auto_locate = true
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@DP-3" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-3"]
+    box_height = 229.0
+    box_width = 810.0
+    cx = 1920.0
+    cy = 881.5
+    output = "DP-3"
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-3".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_weather = true
+
+[shell]
+font_family = "Adwaita Sans"
+polkit_agent = true
+screen_time_enabled = true
+
+    [shell.greeter_sync]
+    auto_sync = true
+
+    [shell.launcher]
+    app_grid = true
+    categories = false
+
+    [shell.panel]
+    clipboard_position = "auto"
+    open_near_click_control_center = true
+    open_near_click_session = true
+    open_near_click_wallpaper = true
+    transparency_mode = "glass"
+
+    [shell.screenshot]
+    show_cursor = true
+
+    [shell.session]
+    grid_columns = 5
+
+[theme]
+builtin = "Tokyo-Night"
+community_palette = "Ayu Red"
+mode = "dark"
+source = "wallpaper"
+wallpaper_scheme = "m3-tonal-spot"
+
+[widget.active_window]
+title_scroll = "on_hover"
+
+[widget.clock]
+format = "{:%H:%M} {:%a, %d. %B}"
+
+[widget.control-center]
+glyph = "adjustments-horizontal"
+
+[widget.media]
+hide_when_no_media = true
+
+[widget.tray]
+drawer = true
+drawer_item_size = 18.0
+
+[widget.widget]
+type = "alexander/screen-toolkit:widget"

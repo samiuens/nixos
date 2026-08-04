@@ -37,6 +37,7 @@
     desktop = {
       niri = {
         enable = true;
+        displayManager = "gdm";
         screenToolkit.enable = true;
       };
 
