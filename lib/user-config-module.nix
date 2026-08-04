@@ -61,6 +61,8 @@ in
       };
 
       development = section {
+        claude-code = program "Claude Code" { };
+
         codex = program "Codex" { };
 
         direnv = program "direnv" {
