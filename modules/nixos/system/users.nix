@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 
@@ -64,6 +65,35 @@ let
       inherit (user) permissionLevel extraGroups;
     };
   };
+
+  userFaces = lib.filterAttrs (_: builtins.pathExists) (
+    lib.mapAttrs (name: _: ../../../users + "/${name}/_face.png") cfg.users
+  );
+
+  registerUserFace =
+    name: face:
+    let
+      escapedName = lib.escapeShellArg name;
+      escapedFace = lib.escapeShellArg (toString face);
+    in
+    ''
+      user_uid="$(${lib.getExe' pkgs.coreutils "id"} -u -- ${escapedName})"
+
+      case "$user_uid" in
+        ""|*[!0-9]*)
+          echo "Unable to resolve a numeric UID for ${name}" >&2
+          exit 1
+          ;;
+      esac
+
+      ${lib.getExe' pkgs.systemd "busctl"} call \
+        org.freedesktop.Accounts \
+        "/org/freedesktop/Accounts/User$user_uid" \
+        org.freedesktop.Accounts.User \
+        SetIconFile \
+        s \
+        ${escapedFace}
+    '';
 in
 {
   imports = smiLib.importModulesRecursive ../../../users;
@@ -87,5 +117,22 @@ in
   config = lib.mkIf cfg.enable {
     users.mutableUsers = cfg.mutableUsers;
     users.users = lib.mapAttrs mkNixosUser cfg.users;
+
+    systemd.services.accounts-daemon-user-icons =
+      lib.mkIf (config.services.accounts-daemon.enable && userFaces != { })
+        {
+          description = "Register declarative user icons with AccountsService";
+          after = [ "accounts-daemon.service" ];
+          before = [ "display-manager.service" ];
+          requires = [ "accounts-daemon.service" ];
+          wantedBy = [ "display-manager.service" ];
+
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+          };
+
+          script = lib.concatStringsSep "\n" (lib.mapAttrsToList registerUserFace userFaces);
+        };
   };
 }
