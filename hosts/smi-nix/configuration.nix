@@ -42,6 +42,7 @@
       };
 
       shared = {
+        applications.enable = true;
         cursor = {
           enable = true;
           package = pkgs.bibata-cursors;
