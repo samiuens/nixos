@@ -10,6 +10,9 @@ let
 in
 {
   config = lib.mkIf (cfg.enable or false) {
-    home.packages = [ pkgs.bitwarden-desktop ];
+    home.packages = [
+      pkgs.bitwarden-desktop
+      pkgs.bitwarden-cli
+    ];
   };
 }
