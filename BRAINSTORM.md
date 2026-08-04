@@ -14,3 +14,12 @@
 - [ ] Add trackpad support
 - [ ] Add yubikey support
 - [x] Configure xdg user directories
+- [ ] Add option for toggling users on host
+- [ ] Add snapper snapshots to limine bootloader
+- [ ] Add max generation count to limine bootloader
+- [ ] Verify docker & podman dependencies
+- [ ] Find solution for signing https certificates for local development
+- [ ] Add bun & pnpm package manager
+- [ ] Add alias for github & gitlab ssh
+- [ ] Add automatic git clone of skills repo for codex & claude code
+- [ ] Remove ghostty close warning
