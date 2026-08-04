@@ -8,7 +8,7 @@
 
 let
   cfg = userConfig.desktop.niri or { };
-  cursor = osConfig.smi.desktop.niri.cursor;
+  cursor = osConfig.smi.desktop.shared.cursor;
 in
 {
   options.smi.desktop.niri.extraConfig = lib.mkOption {
