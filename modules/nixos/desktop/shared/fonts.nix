@@ -18,6 +18,8 @@ in
         pkgs.adwaita-fonts
         pkgs.jetbrains-mono
         pkgs.nerd-fonts.jetbrains-mono
+        pkgs.inter
+        pkgs.montserrat
       ];
       description = "Font packages installed system-wide.";
     };
