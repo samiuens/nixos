@@ -37,6 +37,7 @@
     desktop = {
       niri = {
         enable = true;
+        screenToolkit.enable = true;
       };
 
       shared = {
