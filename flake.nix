@@ -74,6 +74,7 @@
       let
         pkgs = import nixpkgs {
           inherit system;
+          config.allowUnfreePredicate = pkg: nixpkgs.lib.getName pkg == "claude-code-bin";
         };
 
         checkedSource = nixpkgs.lib.cleanSourceWith {
@@ -129,6 +130,10 @@
         };
 
         formatter = pkgs.nixfmt;
+
+        packages = {
+          claude-code-bin = pkgs.callPackage ./packages/claude-code-bin.nix { };
+        };
 
         checks = {
           pre-commit = preCommitCheck;
