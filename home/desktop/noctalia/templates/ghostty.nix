@@ -21,11 +21,13 @@ in
     smi.desktop.noctalia.builtinTemplateIds = [ "ghostty" ];
     programs.ghostty.settings.theme = "noctalia";
 
-    home.activation.seedNoctaliaGhosttyTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      theme_file="${config.xdg.configHome}/ghostty/themes/noctalia"
-      if [[ ! -e "$theme_file" ]]; then
-        run install -Dm644 ${fallback} "$theme_file"
-      fi
-    '';
+    home.activation.seedNoctaliaGhosttyTheme =
+      lib.hm.dag.entryBetween [ "onFilesChange" ] [ "writeBoundary" ]
+        ''
+          theme_file="${config.xdg.configHome}/ghostty/themes/noctalia"
+          if [[ ! -e "$theme_file" ]]; then
+            run install -Dm644 ${fallback} "$theme_file"
+          fi
+        '';
   };
 }
