@@ -134,6 +134,7 @@
         packages = {
           claude-code-bin = pkgs.callPackage ./packages/claude-code-bin.nix { };
           codex-bin = pkgs.callPackage ./packages/codex-bin.nix { };
+          graphify = pkgs.callPackage ./packages/graphify/default.nix { };
         };
 
         checks = {

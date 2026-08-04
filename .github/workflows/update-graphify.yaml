@@ -1,0 +1,81 @@
+name: update graphify
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 5 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-agent-binaries
+  cancel-in-progress: false
+
+jobs:
+  update-graphify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Update Graphify
+        id: update
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          package_file="packages/graphify/default.nix"
+          current_version="$(sed -n 's/^  version = "\([^"]*\)";$/\1/p' "$package_file")"
+          latest_tag="$(gh api repos/Graphify-Labs/graphify/releases/latest --jq '.tag_name')"
+          latest_version="${latest_tag#v}"
+
+          if [[ "$latest_tag" != v* || ! "$latest_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid Graphify release tag: $latest_tag" >&2
+            exit 1
+          fi
+
+          if [[ "$latest_version" == "$current_version" ]]; then
+            echo "Graphify is already up to date at $current_version"
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          archive_url="https://github.com/Graphify-Labs/graphify/archive/refs/tags/v$latest_version.tar.gz"
+          hash="$(nix store prefetch-file --json "$archive_url" | jq --raw-output '.hash')"
+
+          sed -i \
+            -e "s|^  version = \".*\";|  version = \"$latest_version\";|" \
+            -e "s|^    hash = \".*\";|    hash = \"$hash\";|" \
+            "$package_file"
+
+          echo "version=$latest_version" >> "$GITHUB_OUTPUT"
+          echo "updated=true" >> "$GITHUB_OUTPUT"
+
+      - name: Build Graphify
+        if: steps.update.outputs.updated == 'true'
+        run: nix build .#graphify
+
+      - name: Validate flake
+        if: steps.update.outputs.updated == 'true'
+        run: nix flake check --no-build
+
+      - name: Commit updated Graphify
+        if: steps.update.outputs.updated == 'true'
+        env:
+          VERSION: ${{ steps.update.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- packages/graphify/default.nix
+          git commit -m "⬆️ chore(graphify): update to $VERSION"
+          git push origin HEAD:main
