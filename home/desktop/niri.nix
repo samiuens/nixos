@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   osConfig,
   userConfig,
@@ -10,6 +11,12 @@ let
   cursor = osConfig.smi.desktop.niri.cursor;
 in
 {
+  options.smi.desktop.niri.extraConfig = lib.mkOption {
+    type = lib.types.lines;
+    default = "";
+    description = "Additional Niri configuration contributed by desktop integrations.";
+  };
+
   config = lib.mkIf (cfg.enable or false) {
     home.pointerCursor = {
       enable = true;
@@ -18,8 +25,15 @@ in
       x11.enable = true;
     };
 
-    gtk.enable = true;
+    xdg.configFile."niri/config.kdl".text = ''
+      ${builtins.readFile ./niri/config.kdl}
 
-    xdg.configFile."niri/config.kdl".source = ./niri/config.kdl;
+      cursor {
+          xcursor-theme "${cursor.name}"
+          xcursor-size ${toString cursor.size}
+      }
+
+      ${config.smi.desktop.niri.extraConfig}
+    '';
   };
 }
