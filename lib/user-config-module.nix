@@ -43,6 +43,7 @@ in
       };
 
       browser = section {
+        chrome = program "Chrome" { };
         firefox = program "Firefox" { };
 
         zen = program "Zen Browser" {
