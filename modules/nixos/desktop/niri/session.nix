@@ -12,5 +12,6 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.niri.enable = true;
+    services.udisks2.enable = true;
   };
 }

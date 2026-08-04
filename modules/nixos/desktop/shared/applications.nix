@@ -32,5 +32,6 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = cfg.packages;
     programs.gnome-disks.enable = true;
+    services.gvfs.enable = true;
   };
 }

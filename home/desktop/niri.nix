@@ -25,6 +25,8 @@ in
       x11.enable = true;
     };
 
+    services.udiskie.enable = true;
+
     xdg.configFile."niri/config.kdl".text = ''
       ${builtins.readFile ./niri/config.kdl}
 
