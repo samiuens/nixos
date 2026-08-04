@@ -23,7 +23,7 @@ in
 
         cursor = {
           theme = cursor.name;
-          size = cursor.size;
+          inherit (cursor) size;
           path = "${cursor.package}/share/icons";
         };
 
