@@ -1,0 +1,20 @@
+{
+  smi.system.users.users.keepitdeveloped.programs.development = {
+    claude-code.enable = true;
+    direnv.enable = true;
+    gh.enable = true;
+
+    git = {
+      enable = true;
+      userName = "Sami Arda Ünsay";
+      userEmail = "sami.uensay@keepitdeveloped.com";
+
+      providers.gitlab = {
+        host = "gitlab.com";
+        userName = "samiuensay.kid";
+      };
+
+      signing.enable = true;
+    };
+  };
+}
