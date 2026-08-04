@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -13,5 +14,12 @@ in
       enable = true;
       recommendedServices.enable = true;
     };
+
+    environment.systemPackages = [
+      pkgs.ddcutil
+      pkgs.playerctl
+    ];
+
+    hardware.i2c.enable = true;
   };
 }
