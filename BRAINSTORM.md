@@ -12,3 +12,5 @@
 - [ ] Add custom emoji font (Apple Color Emoji)
 - [ ] Add device class option (toggling options like power daemon, ...)
 - [ ] Add trackpad support
+- [ ] Add yubikey support
+- [ ] Configure xdg user directories
