@@ -13,4 +13,4 @@
 - [ ] Add device class option (toggling options like power daemon, ...)
 - [ ] Add trackpad support
 - [ ] Add yubikey support
-- [ ] Configure xdg user directories
+- [x] Configure xdg user directories
