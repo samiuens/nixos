@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
@@ -22,11 +21,5 @@ in
         games.enable = false;
       };
     };
-
-    documentation.nixos.enable = false;
-
-    environment.gnome.excludePackages = [ pkgs.gnome-tour ];
-
-    services.xserver.excludePackages = [ pkgs.xterm ];
   };
 }

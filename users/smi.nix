@@ -11,7 +11,6 @@ in
     packages = with pkgs; [ ];
 
     desktop = {
-      gnome.enable = true;
       niri.enable = true;
     };
 
