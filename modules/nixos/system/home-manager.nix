@@ -65,7 +65,11 @@ in
     home-manager = {
       inherit (cfg) useGlobalPkgs useUserPackages backupFileExtension;
       extraSpecialArgs = { inherit inputs; };
-      sharedModules = [ inputs.zen-browser.homeModules.twilight ];
+      sharedModules = [
+        inputs.nix-flatpak.homeManagerModules.nix-flatpak
+        inputs.zen-browser.homeModules.twilight
+        { services.flatpak.enable = lib.mkDefault false; }
+      ];
       users = lib.mapAttrs mkHomeManagerUser usersCfg.users;
     };
   };

@@ -25,6 +25,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-flatpak.url = "github:gmodena/nix-flatpak/v0.7.0";
+
     noctalia-greeter = {
       url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -55,6 +57,7 @@
         inputs.disko.nixosModules.disko
         inputs.home-manager.nixosModules.home-manager
         inputs.nix-index-database.nixosModules.default
+        inputs.nix-flatpak.nixosModules.nix-flatpak
         inputs.noctalia-greeter.nixosModules.default
       ];
 

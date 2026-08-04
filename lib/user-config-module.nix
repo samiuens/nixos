@@ -2,6 +2,7 @@
 
 let
   inherit (lib) mkEnableOption mkOption types;
+  flatpakPackageType = with types; either str attrs;
 
   attrsOption =
     description:
@@ -209,6 +210,26 @@ in
 
     services = section {
       raw = attrsOption "Home Manager service options passed through without translation.";
+
+      flatpak = program "user-scoped declarative Flatpak management" {
+        packages = mkOption {
+          type = types.listOf flatpakPackageType;
+          default = [ ];
+          description = "Flatpak applications to install for this user.";
+        };
+
+        autoUpdate = section {
+          enable = mkEnableOption "automatic Flatpak updates" // {
+            default = true;
+          };
+
+          onCalendar = mkOption {
+            type = types.str;
+            default = "weekly";
+            description = "Systemd calendar expression for Flatpak updates.";
+          };
+        };
+      };
 
       security = section {
         gpg-agent = program "GPG agent" {
