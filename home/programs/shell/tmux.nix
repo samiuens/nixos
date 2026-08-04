@@ -9,29 +9,6 @@ let
   cfg = userConfig.programs.shell.tmux or { };
   enabled = name: cfg.plugins.${name}.enable or false;
 
-  tmuxGitStatus = pkgs.writeShellApplication {
-    name = "tmux-git-status";
-    runtimeInputs = [ pkgs.git ];
-    text = ''
-      directory="''${1:-}"
-
-      if ! git -C "$directory" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-        exit 0
-      fi
-
-      branch=$(
-        git -C "$directory" symbolic-ref --quiet --short HEAD 2>/dev/null \
-          || git -C "$directory" rev-parse --short HEAD 2>/dev/null
-      ) || exit 0
-
-      if test -n "$(git -C "$directory" status --porcelain=v1 2>/dev/null)"; then
-        printf ' %s *' "$branch"
-      else
-        printf ' %s' "$branch"
-      fi
-    '';
-  };
-
   statusConfig =
     if (cfg.statusPosition or "bottom") == "hidden" then
       "set -g status off"
@@ -40,6 +17,7 @@ let
         set -g status on
         set -g status-position ${cfg.statusPosition or "bottom"}
       '';
+
 in
 {
   config = lib.mkIf (cfg.enable or false) (
@@ -118,19 +96,10 @@ in
 
             ${statusConfig}
             set -g status-interval 5
-            set -g status-style 'bg=#111111,fg=#777777'
             set -g status-left-length 40
-            set -g status-left '#[fg=#7aa2f7,bold] #S #[fg=#777777,bg=#111111,nobold]'
             set -g window-status-separator ' '
-            set -g window-status-format '#[fg=#777777]○ #W'
-            set -g window-status-current-format '#[fg=#7aa2f7,bold]● #W'
             set -g status-right-length 80
-            set -g status-right '#{?client_prefix,#[fg=#e0af68]prefix ,}#[fg=#bb9af7]#(${lib.getExe tmuxGitStatus} #{q:pane_current_path}) #[fg=#777777]%H:%M '
 
-            set -g pane-border-style 'fg=#333333'
-            set -g pane-active-border-style 'fg=#7aa2f7'
-            set -g message-style 'bg=#111111,fg=#d8d8d8'
-            set -g mode-style 'bg=#7aa2f7,fg=#111111'
           '';
         };
       }
