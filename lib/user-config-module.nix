@@ -55,6 +55,10 @@ in
         };
       };
 
+      communication = section {
+        vesktop = program "Vesktop Discord client" { };
+      };
+
       development = section {
         codex = program "Codex" { };
 

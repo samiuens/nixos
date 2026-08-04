@@ -25,6 +25,8 @@ in
         };
       };
 
+      communication.vesktop.enable = true;
+
       development = {
         codex.enable = true;
         direnv.enable = true;
