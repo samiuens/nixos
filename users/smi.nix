@@ -11,7 +11,7 @@ in
     packages = with pkgs; [ ];
 
     desktop = {
-      gnome.enable = true;
+      niri.enable = true;
     };
 
     programs = {
@@ -158,17 +158,6 @@ in
             add_newline = false;
             format = "$username$hostname$directory$git_branch$git_status$character";
             right_format = "$cmd_duration$nix_shell$nodejs$python$rust$golang$zig";
-            palette = "minimal";
-
-            palettes.minimal = {
-              blue = "#7aa2f7";
-              green = "#9ece6a";
-              muted = "#777777";
-              purple = "#bb9af7";
-              red = "#f7768e";
-              yellow = "#e0af68";
-            };
-
             username = {
               format = "[$user]($style)@";
               style_root = "bold red";
@@ -278,11 +267,6 @@ in
         settings = {
           font-family = "JetBrainsMono Nerd Font";
           font-size = 12;
-
-          background = "111111";
-          foreground = "d8d8d8";
-          selection-background = "333333";
-          selection-foreground = "ffffff";
 
           window-padding-x = 10;
           window-padding-y = 10;

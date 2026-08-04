@@ -31,6 +31,7 @@ in
   options = {
     desktop = section {
       gnome = program "GNOME desktop preferences" { };
+      niri = program "Niri desktop preferences" { };
     };
 
     programs = section {

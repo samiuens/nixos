@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
@@ -22,26 +21,5 @@ in
         games.enable = false;
       };
     };
-
-    documentation.nixos.enable = false;
-
-    environment = {
-      systemPackages = [
-        pkgs.gnome-calculator
-        pkgs.gnome-console
-        pkgs.gnome-control-center
-        pkgs.gnome-disk-utility
-        pkgs.gnome-system-monitor
-        pkgs.gnome-text-editor
-        pkgs.loupe
-        pkgs.nautilus
-        pkgs.papers
-      ];
-      gnome.excludePackages = [ pkgs.gnome-tour ];
-    };
-
-    programs.gnome-disks.enable = true;
-
-    services.xserver.excludePackages = [ pkgs.xterm ];
   };
 }
