@@ -280,11 +280,6 @@ in
           font-family = "JetBrainsMono Nerd Font";
           font-size = 12;
 
-          background = "111111";
-          foreground = "d8d8d8";
-          selection-background = "333333";
-          selection-foreground = "ffffff";
-
           window-padding-x = 10;
           window-padding-y = 10;
           window-padding-balance = true;
