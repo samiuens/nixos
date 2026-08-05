@@ -120,6 +120,8 @@ in
           signing = program "SSH commit and tag signing" { };
         };
 
+        nodejs = program "Node.js and npm" { };
+
         pnpm = program "pnpm" { };
       };
 

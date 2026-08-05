@@ -4,6 +4,7 @@
     codex.enable = true;
     direnv.enable = true;
     gh.enable = true;
+    nodejs.enable = true;
     pnpm.enable = true;
 
     git = {
