@@ -23,6 +23,7 @@
 
       limine = {
         enable = true;
+        maxGenerations = 10;
 
         windows = {
           enable = true;
