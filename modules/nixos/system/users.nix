@@ -7,6 +7,7 @@
 
 let
   cfg = config.smi.system.users;
+  enabledUsers = lib.filterAttrs (name: _: builtins.elem name cfg.enabledUsers) cfg.users;
   smiLib = import ../../../lib { inherit lib; };
 
   userModule =
@@ -67,7 +68,7 @@ let
   };
 
   userFaces = lib.filterAttrs (_: builtins.pathExists) (
-    lib.mapAttrs (name: _: ../../../users + "/${name}/_face.png") cfg.users
+    lib.mapAttrs (name: _: ../../../users + "/${name}/_face.png") enabledUsers
   );
 
   registerUserFace =
@@ -112,11 +113,28 @@ in
       default = { };
       description = "Declarative users keyed by login name.";
     };
+
+    enabledUsers = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = builtins.attrNames cfg.users;
+      description = "Declarative users enabled on this host, identified by login name.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = lib.all (name: builtins.hasAttr name cfg.users) cfg.enabledUsers;
+        message = "smi.system.users.enabledUsers may only contain users declared in smi.system.users.users.";
+      }
+      {
+        assertion = lib.length cfg.enabledUsers == lib.length (lib.unique cfg.enabledUsers);
+        message = "smi.system.users.enabledUsers must not contain duplicate usernames.";
+      }
+    ];
+
     users.mutableUsers = cfg.mutableUsers;
-    users.users = lib.mapAttrs mkNixosUser cfg.users;
+    users.users = lib.mapAttrs mkNixosUser enabledUsers;
 
     systemd.services.accounts-daemon-user-icons =
       lib.mkIf (config.services.accounts-daemon.enable && userFaces != { })

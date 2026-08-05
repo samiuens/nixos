@@ -8,6 +8,7 @@
 let
   cfg = config.smi.system.home-manager;
   usersCfg = config.smi.system.users;
+  enabledUsers = lib.filterAttrs (name: _: builtins.elem name usersCfg.enabledUsers) usersCfg.users;
 
   mkHomeManagerUser = _: user: {
     imports = [
@@ -73,7 +74,7 @@ in
         inputs.zen-browser.homeModules.twilight
         { services.flatpak.enable = lib.mkDefault false; }
       ];
-      users = lib.mapAttrs mkHomeManagerUser usersCfg.users;
+      users = lib.mapAttrs mkHomeManagerUser enabledUsers;
     };
   };
 }

@@ -19,7 +19,9 @@ in
 
     allowedUsers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = smiLib.getAdminUsers config.smi.system.users.users;
+      default = lib.filter (name: builtins.elem name config.smi.system.users.enabledUsers) (
+        smiLib.getAdminUsers config.smi.system.users.users
+      );
       description = "Users allowed to manage the configured Snapper snapshots.";
     };
 

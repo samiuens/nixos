@@ -14,7 +14,7 @@
 - [ ] Add trackpad support
 - [ ] Add yubikey support
 - [x] Configure xdg user directories
-- [ ] Add option for toggling users on host
+- [x] Add option for toggling users on host
 - [ ] Add snapper snapshots to limine bootloader
 - [ ] Add max generation count to limine bootloader
 - [ ] Verify docker & podman dependencies
