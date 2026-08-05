@@ -4,6 +4,7 @@
     claude-code.enable = true;
     direnv.enable = true;
     gh.enable = true;
+    pnpm.enable = true;
 
     git = {
       enable = true;

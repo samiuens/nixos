@@ -119,6 +119,8 @@ in
 
           signing = program "SSH commit and tag signing" { };
         };
+
+        pnpm = program "pnpm" { };
       };
 
       editor = section {
