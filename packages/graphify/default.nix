@@ -1,11 +1,23 @@
 {
   lib,
-  python313,
   python313Packages,
   fetchurl,
 }:
 
 let
+  pythonPackages = python313Packages.overrideScope (
+    _final: prev: {
+      datamodel-code-generator = prev.datamodel-code-generator.overridePythonAttrs (old: {
+        disabledTests = (old.disabledTests or [ ]) ++ [
+          # Ruff 0.14.14 separates future and third-party imports. These tests
+          # still expect the formatting produced by earlier Ruff versions.
+          "ruff"
+          "test_no_use_type_checking_imports"
+        ];
+      });
+    }
+  );
+
   grammarNames = [
     "tree-sitter-bash"
     "tree-sitter-c"
@@ -36,12 +48,12 @@ let
 
   treeSitterGrammars = map (
     name:
-    python313.pkgs.tree-sitter-grammars.${name}.overridePythonAttrs {
+    pythonPackages.tree-sitter-grammars.${name}.overridePythonAttrs {
       dontCheckPythonMetadata = true;
     }
   ) grammarNames;
 in
-python313Packages.buildPythonApplication rec {
+pythonPackages.buildPythonApplication rec {
   __structuredAttrs = true;
   pname = "graphify";
   version = "0.9.31";
@@ -54,7 +66,7 @@ python313Packages.buildPythonApplication rec {
 
   patches = [ ./writable-skill-references.patch ];
 
-  build-system = [ python313.pkgs.setuptools ];
+  build-system = [ pythonPackages.setuptools ];
 
   pythonRelaxDeps = [
     "tree-sitter-fortran"
@@ -64,7 +76,7 @@ python313Packages.buildPythonApplication rec {
   ];
 
   dependencies =
-    with python313.pkgs;
+    with pythonPackages;
     [
       networkx
       numpy
