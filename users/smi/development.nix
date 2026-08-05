@@ -6,6 +6,8 @@
     gh.enable = true;
     nodejs.enable = true;
     pnpm.enable = true;
+    python.enable = true;
+    uv.enable = true;
 
     git = {
       enable = true;

@@ -123,6 +123,10 @@ in
         nodejs = program "Node.js and npm" { };
 
         pnpm = program "pnpm" { };
+
+        python = program "Python" { };
+
+        uv = program "uv" { };
       };
 
       editor = section {
