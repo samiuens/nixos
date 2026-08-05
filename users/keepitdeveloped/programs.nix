@@ -1,5 +1,6 @@
 {
   smi.system.users.users.keepitdeveloped.programs = {
+    communication.signal-desktop.enable = true;
     security.bitwarden.enable = true;
 
     terminal.ghostty = {

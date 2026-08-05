@@ -66,6 +66,8 @@ in
       };
 
       communication = section {
+        signal-desktop = program "Signal Desktop" { };
+
         vesktop = program "Vesktop Discord client" { };
       };
 

@@ -1,5 +1,6 @@
 {
   smi.system.users.users.fittedgroup.programs = {
+    communication.signal-desktop.enable = true;
     security.bitwarden.enable = true;
 
     terminal.ghostty = {
