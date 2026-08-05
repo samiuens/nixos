@@ -15,11 +15,14 @@
 - [ ] Add yubikey support
 - [x] Configure xdg user directories
 - [x] Add option for toggling users on host
-- [ ] Add snapper snapshots to limine bootloader
-- [ ] Add max generation count to limine bootloader
+- [-] Add snapper snapshots to limine bootloader
+- [x] Add max generation count to limine bootloader
 - [ ] Verify docker & podman dependencies
 - [ ] Find solution for signing https certificates for local development
-- [ ] Add bun & pnpm package manager
+- [x] Add bun & pnpm package manager
 - [x] Add alias for github & gitlab ssh
 - [ ] Add automatic git clone of skills repo for codex & claude code
 - [ ] Remove ghostty close warning
+- [ ] Adjust tmux status bar information (right side)
+- [ ] Add cloudflare one client
+- [ ] Add systemd user job for stopping/starting vpn (Workaround for system daemon)
