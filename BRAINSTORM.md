@@ -20,6 +20,6 @@
 - [ ] Verify docker & podman dependencies
 - [ ] Find solution for signing https certificates for local development
 - [ ] Add bun & pnpm package manager
-- [ ] Add alias for github & gitlab ssh
+- [x] Add alias for github & gitlab ssh
 - [ ] Add automatic git clone of skills repo for codex & claude code
 - [ ] Remove ghostty close warning

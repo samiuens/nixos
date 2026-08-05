@@ -18,12 +18,18 @@ let
   sshDirectory = "${config.home.homeDirectory}/.ssh";
   sshKeysDirectory = "${sshDirectory}/keys";
 
+  providerAliases = {
+    github = "gh";
+    gitlab = "gl";
+  };
+
   providerKeyPath =
     providerName: provider:
     "${sshKeysDirectory}/${providerName}/id_ed25519_${providerName}_${normalizeUserName provider.userName}";
 
   providerEntries = lib.mapAttrsToList (providerName: provider: {
     inherit provider providerName;
+    alias = providerAliases.${providerName} or providerName;
     keyPath = providerKeyPath providerName provider;
   }) providers;
 
@@ -32,11 +38,20 @@ let
   providerSshSettings = lib.listToAttrs (
     map (
       entry:
-      lib.nameValuePair entry.provider.host {
+      lib.nameValuePair entry.alias {
         HostName = entry.provider.host;
         User = "git";
         IdentityFile = entry.keyPath;
         IdentitiesOnly = true;
+      }
+    ) providerEntries
+  );
+
+  providerGitUrlSettings = lib.listToAttrs (
+    map (
+      entry:
+      lib.nameValuePair "${entry.alias}:" {
+        insteadOf = "git@${entry.provider.host}:";
       }
     ) providerEntries
   );
@@ -47,6 +62,7 @@ let
     user.useConfigOnly = true;
 
     alias.unstage = "reset HEAD --";
+    url = providerGitUrlSettings;
     init.defaultBranch = "main";
     color.ui = true;
 
