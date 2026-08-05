@@ -1,5 +1,6 @@
 {
   smi.system.users.users.visuax.programs.development = {
+    bun.enable = true;
     claude-code.enable = true;
     direnv.enable = true;
     gh.enable = true;

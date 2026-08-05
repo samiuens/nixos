@@ -1,5 +1,6 @@
 {
   smi.system.users.users.smi.programs.development = {
+    bun.enable = true;
     codex.enable = true;
     direnv.enable = true;
     gh.enable = true;

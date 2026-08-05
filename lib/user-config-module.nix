@@ -70,6 +70,8 @@ in
       };
 
       development = section {
+        bun = program "Bun" { };
+
         claude-code = program "Claude Code" { };
 
         codex = program "Codex" { };
