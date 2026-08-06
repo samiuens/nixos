@@ -153,6 +153,7 @@ in
 
       security = section {
         bitwarden = program "Bitwarden desktop client" { };
+        yubico-authenticator = program "Yubico Authenticator" { };
       };
 
       shell = section {

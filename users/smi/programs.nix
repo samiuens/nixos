@@ -1,7 +1,10 @@
 {
   smi.system.users.users.smi.programs = {
     communication.vesktop.enable = true;
-    security.bitwarden.enable = true;
+    security = {
+      bitwarden.enable = true;
+      yubico-authenticator.enable = true;
+    };
 
     terminal.ghostty = {
       enable = true;
