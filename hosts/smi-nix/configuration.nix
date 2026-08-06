@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   ...
 }:
@@ -16,9 +15,6 @@
       kernel = {
         enable = true;
         package = "default";
-        modules = [ "r8168" ];
-        blacklistedModules = [ "r8169" ];
-        extraModulePackages = [ config.boot.kernelPackages.r8168 ];
       };
 
       limine = {
