@@ -71,6 +71,7 @@ in
       };
       sharedModules = [
         inputs.nix-flatpak.homeManagerModules.nix-flatpak
+        inputs.sops-nix.homeManagerModules.sops
         inputs.zen-browser.homeModules.twilight
         { services.flatpak.enable = lib.mkDefault false; }
       ];

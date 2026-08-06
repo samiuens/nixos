@@ -27,6 +27,11 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak/v0.7.0";
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     noctalia-greeter = {
       url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -59,6 +64,7 @@
         inputs.nix-index-database.nixosModules.default
         inputs.nix-flatpak.nixosModules.nix-flatpak
         inputs.noctalia-greeter.nixosModules.default
+        inputs.sops-nix.nixosModules.sops
       ];
 
       nixosConfigurations = smiLib.mkNixosConfigurations {
