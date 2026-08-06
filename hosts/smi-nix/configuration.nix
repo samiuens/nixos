@@ -113,7 +113,10 @@
       };
     };
 
-    security.enable = true;
+    security = {
+      enable = true;
+      yubikey.enable = true;
+    };
 
     services = {
       localsend.enable = true;
