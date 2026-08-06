@@ -3,6 +3,7 @@
     communication.vesktop.enable = true;
     security = {
       bitwarden.enable = true;
+      keepassxc.enable = true;
       gnupg.enable = true;
       sops.enable = true;
       yubico-authenticator.enable = true;

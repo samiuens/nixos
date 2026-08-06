@@ -154,6 +154,7 @@ in
       security = section {
         bitwarden = program "Bitwarden desktop client" { };
         gnupg = program "hardened GnuPG with YubiKey smart-card support" { };
+        keepassxc = program "KeePassXC desktop client" { };
         sops = program "SOPS secrets editor" { };
         yubico-authenticator = program "Yubico Authenticator" { };
         yubikey-manager = program "YubiKey Manager and the ykman CLI" { };
