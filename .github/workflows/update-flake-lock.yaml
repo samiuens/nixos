@@ -3,10 +3,11 @@ name: update flake lock
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 4 * * *"
+    - cron: "0 4 */3 * *"
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: update-flake-lock
@@ -15,7 +16,7 @@ concurrency:
 jobs:
   update-flake-lock:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       - name: Check out repository
@@ -32,15 +33,22 @@ jobs:
       - name: Validate flake
         run: nix flake check --no-build
 
-      - name: Commit updated flake lock
-        run: |
-          if git diff --quiet -- flake.lock; then
-            echo "flake.lock is already up to date"
-            exit 0
-          fi
+      - name: Build NixOS configuration
+        run: nix build .#checks.x86_64-linux.nixos-smi-nix --no-link
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add flake.lock
-          git commit -m "⬆️ chore(deps): update flake inputs"
-          git push origin HEAD:main
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: automation/update-flake-lock
+          delete-branch: true
+          add-paths: flake.lock
+          commit-message: "⬆️ chore(deps): update flake inputs"
+          title: "⬆️ chore(deps): update flake inputs"
+          body: |
+            Automated flake input update.
+
+            Validation performed before opening or updating this pull request:
+            - `nix flake check --no-build`
+            - `nix build .#checks.x86_64-linux.nixos-smi-nix --no-link`
