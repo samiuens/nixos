@@ -16,7 +16,9 @@ in
       type = lib.types.listOf lib.types.package;
       default = [
         pkgs.gnome-calculator
-        pkgs.gnome-console
+      ]
+      ++ lib.optional (!config.smi.desktop.alternativeTerminalEnabled) pkgs.gnome-console
+      ++ [
         pkgs.gnome-control-center
         pkgs.gnome-disk-utility
         pkgs.gnome-system-monitor
