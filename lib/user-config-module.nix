@@ -61,6 +61,14 @@ in
             description = "Whether to use Zen Browser as the default browser.";
           };
 
+          doh = program "DNS over HTTPS for Zen Browser" {
+            uri = mkOption {
+              type = types.str;
+              default = "https://dns.quad9.net/dns-query";
+              description = "DNS over HTTPS resolver URI used by Zen Browser.";
+            };
+          };
+
           betterfox = program "Betterfox preferences for Zen Browser" { };
         };
       };
