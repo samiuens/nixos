@@ -2,6 +2,7 @@
 
 let
   openVsx = pkgs.nix4vscode.forOpenVsx;
+  Vscode = pkgs.nix4vscode.forVscode;
   commonVscodiumExtensions = openVsx [
     "antfu.theme-vitesse"
     "miguelsolorio.symbols"
@@ -13,44 +14,39 @@ let
     "mkhl.direnv"
   ];
   commonVscodiumSettings = {
-    "editor.fontFamily" = "JetBrains Mono";
-    "editor.fontSize" = 16;
-    "editor.lineHeight" = 1.8;
-    "editor.fontLigatures" = true;
-
-    "editor.formatOnSave" = true;
-    "editor.smoothScrolling" = true;
-    "editor.cursorSmoothCaretAnimation" = "on";
+    "breadcrumbs.enabled" = false;
     "editor.cursorBlinking" = "smooth";
-
-    "workbench.colorTheme" = "Vitesse Dark";
-    "workbench.iconTheme" = "symbols";
-    "workbench.sideBar.location" = "left";
-    "workbench.activityBar.location" = "default";
-    "workbench.list.smoothScrolling" = true;
-
-    "terminal.integrated.fontFamily" = "JetBrainsMono Nerd Font";
-    "terminal.integrated.fontSize" = 14;
-    "terminal.integrated.smoothScrolling" = true;
-    "terminal.integrated.fontLigatures.enabled" = true;
-
+    "editor.cursorSmoothCaretAnimation" = "on";
+    "editor.fontFamily" = "JetBrains Mono";
+    "editor.fontLigatures" = true;
+    "editor.fontSize" = 16;
+    "editor.formatOnSave" = true;
+    "editor.guides.indentation" = false;
+    "editor.hideCursorInOverviewRuler" = true;
+    "editor.lineHeight" = 1.8;
+    "editor.minimap.enabled" = false;
+    "editor.overviewRulerBorder" = false;
+    "editor.renderWhitespace" = "none";
+    "editor.smoothScrolling" = true;
+    "editor.stickyScroll.enabled" = false;
+    "extensions.autoCheckUpdates" = false;
+    "extensions.autoUpdate" = "off";
     "files.autoSave" = "onFocusChange";
-
     "git.autofetch" = true;
     "git.confirmSync" = false;
     "telemetry.telemetryLevel" = "off";
+    "terminal.integrated.fontFamily" = "JetBrainsMono Nerd Font";
+    "terminal.integrated.fontLigatures.enabled" = true;
+    "terminal.integrated.fontSize" = 14;
+    "terminal.integrated.smoothScrolling" = true;
     "update.mode" = "none";
-    "extensions.autoUpdate" = false;
-
-    "editor.minimap.enabled" = false;
-    "breadcrumbs.enabled" = false;
-    "editor.stickyScroll.enabled" = false;
-    "editor.guides.indentation" = false;
-    "editor.renderWhitespace" = "none";
-    "editor.overviewRulerBorder" = false;
-    "editor.hideCursorInOverviewRuler" = true;
     "window.commandCenter" = false;
+    "workbench.activityBar.location" = "default";
+    "workbench.colorTheme" = "Vitesse Dark";
+    "workbench.iconTheme" = "symbols";
     "workbench.layoutControl.enabled" = false;
+    "workbench.list.smoothScrolling" = true;
+    "workbench.sideBar.location" = "left";
     "workbench.startupEditor" = "none";
     "workbench.tips.enabled" = false;
   };
@@ -66,6 +62,23 @@ in
           userSettings = commonVscodiumSettings;
           enableExtensionUpdateCheck = false;
           enableUpdateCheck = false;
+        };
+
+        infrastructure = {
+          extensions =
+            commonVscodiumExtensions
+            ++ (openVsx [
+              "redhat.vscode-yaml"
+              "redhat.ansible"
+              "nefrob.vscode-just-syntax"
+            ])
+            ++ (Vscode [
+              "pulumi.pulumi-vscode-tools"
+              "ms-python.python"
+            ]);
+          userSettings = commonVscodiumSettings // {
+            "redhat.telemetry.enabled" = false;
+          };
         };
 
         typst = {
