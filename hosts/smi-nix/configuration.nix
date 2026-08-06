@@ -103,9 +103,7 @@
       btrfs-assistant.enable = true;
       comma.enable = true;
       coolercontrol.enable = true;
-      flatpak = {
-        enable = true;
-      };
+      flatpak.enable = true;
       graphify.enable = true;
       manager.enable = true;
       nix-ld.enable = true;
