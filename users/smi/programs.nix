@@ -4,6 +4,7 @@
     security = {
       bitwarden.enable = true;
       yubico-authenticator.enable = true;
+      yubikey-manager.enable = true;
     };
 
     terminal.ghostty = {

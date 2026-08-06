@@ -154,6 +154,7 @@ in
       security = section {
         bitwarden = program "Bitwarden desktop client" { };
         yubico-authenticator = program "Yubico Authenticator" { };
+        yubikey-manager = program "YubiKey Manager and the ykman CLI" { };
       };
 
       shell = section {

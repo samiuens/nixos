@@ -12,7 +12,7 @@
 - [ ] Add custom emoji font (Apple Color Emoji)
 - [ ] Add device class option (toggling options like power daemon, ...)
 - [ ] Add trackpad support
-- [ ] Add yubikey support
+- [x] Add yubikey support
 - [x] Configure xdg user directories
 - [x] Add option for toggling users on host
 - [-] Add snapper snapshots to limine bootloader
