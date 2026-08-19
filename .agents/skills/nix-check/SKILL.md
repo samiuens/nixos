@@ -1,6 +1,6 @@
 ---
 name: nix-check
-description: Use after editing any .nix file in this repo and before proposing a commit — runs the same four checks CI runs (nixfmt, nix-instantiate syntax, statix, deadnix), explains how to fix each failure, and covers which checks are cheap versus expensive.
+description: Use after editing any .nix file in this repo and before proposing a commit — runs the same checks CI runs (nixfmt, nix-instantiate syntax, statix, deadnix, plus evaluation of the aarch64-darwin host), explains how to fix each failure, and covers which checks are cheap versus expensive.
 ---
 
 # nix-check
@@ -50,6 +50,33 @@ never `hardware-configuration.nix` (filtered out in `flake.nix`).
 **Do not reach for `nix flake check` as the default.** It also builds the
 `nixos-smi-nix` check — the full system toplevel — which is a complete system build, not a
 lint. Run it only when you actually want to verify the system evaluates and builds.
+`nix flake check --no-build --all-systems` is the cheap variant: it evaluates everything
+for both `x86_64-linux` and `aarch64-darwin` without building, and is what the
+`update flake lock` workflow runs.
+
+## The darwin configuration
+
+`hosts/smi-mac` is an `aarch64-darwin` nix-darwin host. It cannot be *built* on a Linux
+machine, but it does evaluate on one, and that evaluation is what CI checks
+(`.github/workflows/darwin.yaml`):
+
+```bash
+nix eval .#checks.aarch64-darwin.darwin-smi-mac.drvPath
+```
+
+**Run it after touching anything under `home/`, `lib/`, `users/`, or `modules/darwin/`.**
+The first three are shared between both hosts, so it is easy to break the Mac from a file
+that looks Linux-only — and none of the four lint checks above will notice.
+
+The usual failure is a package with no `aarch64-darwin` support. The fix is not to drop the
+package: add it to `lib/app-catalogue.nix` with its Homebrew cask, and gate its home module
+on `smiLib.nixUsable pkgs <package>`. `modules/darwin/system/homebrew.nix` reads the same
+catalogue, so the cask appears automatically — and disappears again once nixpkgs gains
+support. Verify with:
+
+```bash
+nix eval .#darwinConfigurations.smi-mac.config.homebrew.casks --apply 'cs: map (c: c.name) cs' --json
+```
 
 ## Fixing each failure
 
