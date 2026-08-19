@@ -88,6 +88,9 @@ in
             ++ (openVsx [
               "myriad-dreamin.tinymist"
               "tomoki1207.pdf"
+            ])
+            ++ (Vscode [
+              "hediet.vscode-drawio"
             ]);
           userSettings = commonVscodiumSettings // {
             "[typst]"."editor.defaultFormatter" = "myriad-dreamin.tinymist";
