@@ -1,79 +1,112 @@
 ---
 name: commit
-description: Plan and create clean, atomic Git commits from outstanding working-tree changes. Use when the user asks to inspect, organize, stage, or commit uncommitted changes and wants an approval-gated commit plan, English lowercase Conventional Commit subjects, gitmojis, no commit body or co-author trailers, and one logical change per repository area in each commit.
+description: Use when creating git commits in this repo — defines the required message format (Conventional Commits + gitmoji), granularity, and the plan-then-confirm gate before any commit is made.
 ---
 
-# Commit
+# commit
 
-Create a reviewable commit plan, wait for explicit approval, and then make only the approved commits.
+House rules for git commits in this repo. **These are hard requirements, not suggestions.**
 
-## Workflow
+## The gate (never skip)
 
-1. Use a low-cost model when model selection is available and the repository's complexity or risk does not require a stronger model.
-2. Inspect repository instructions and read-only Git state, including status, staged changes, unstaged changes, untracked files, and recent commit conventions. Do not modify the index or working tree during planning.
-3. Identify logical changes and affected areas. Keep each proposed commit limited to one coherent change in one area. Include directly related tests, documentation, fixtures, generated files, or lockfile updates with that change when separating them would make the commit incomplete.
-4. Split unrelated changes in the same file by staging individual hunks later. Do not rewrite the user's working-tree content merely to manufacture commit boundaries.
-5. Read [references/gitmojis.md](references/gitmojis.md) and select the most specific gitmoji for each change.
-6. Present the complete plan before staging or committing. For every proposed commit, show the exact subject, its purpose, and the files or hunks it will contain. Call out ambiguous boundaries, already-staged content, and changes that should remain uncommitted.
-7. Ask for explicit user confirmation. Do not stage or commit before confirmation. Treat requested edits as a new plan and ask for confirmation again. If the working tree or index changes after approval, stop and present an updated plan.
-8. After approval, stage only the approved paths or hunks. Preserve unrelated changes and pre-existing staged intent. Use patch staging when a file belongs to multiple commits.
-9. Review the staged diff for scope, accidental secrets, generated noise, and message accuracy before every commit. Run focused checks when they are practical or requested; report skipped or failing checks without hiding them.
-10. Commit with exactly one subject-line message. After every commit, verify the resulting commit and remaining status, then continue with the next approved commit. Do not push unless the user separately requests it.
+1. **Only commit when explicitly asked.** Never auto-commit.
+2. **Plan first, then show the user.** Before running any `git commit`, write out the
+   full commit plan — the grouping of changes and the exact message for each commit —
+   and present it to the user.
+3. **Wait for confirmation.** Only after the user confirms may you run the `git add` /
+   `git commit` commands. If they ask for changes, revise the plan and show it again.
 
-## Commit Subjects
+**Violating the letter of these rules is violating the spirit.** "It's obviously fine" /
+"they clearly want it committed" / "just this once" are not confirmations. No confirmation → no commit.
 
-Use this exact structure:
+## Message format
 
-```text
+```
 <emoji> <type>(<scope>): <subject>
 ```
 
-Omit `(scope)` when it does not improve clarity. Add `!` immediately before `:` for a breaking change:
-
-```text
-💥 feat(api)!: remove legacy authentication
-```
-
-Apply all of these rules:
-
-- Use a literal gitmoji from the bundled catalog, not its `:code:` form.
-- Use a valid Conventional Commit type such as `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, or `revert`.
-- Write the entire subject in English and lowercase, including the type, optional scope, and summary.
-- Use an imperative, concise summary with no trailing period.
-- Supply exactly one message argument to create a subject-only commit.
-- Add no body, description, footer, attribution, or `Co-authored-by` trailer.
-- Do not amend, squash, rebase, or otherwise rewrite existing commits unless the user explicitly requests it.
+- `<scope>` is optional; use it when it adds clarity (`hero`, `nav`, `i18n`).
+- **Subject:** lowercase, English, imperative mood, no trailing period.
+- **No body.** Subject line only — pass exactly one message argument to `git commit`.
+- **No co-author trailer.** No `Co-Authored-By`, no "Generated with" line.
+- Add `!` immediately before `:` for a breaking change (`💥 feat(api)!: drop legacy auth`).
 
 Examples:
 
-```text
-✨ feat(shell): add fish abbreviations
-🐛 fix(networking): enable resolved fallback dns
-📝 docs: document host bootstrap steps
-♻️ refactor(lib): simplify module discovery
-🔧 chore(nix): update formatter settings
+```
+✨ feat(hero): add video playback rate control
+🐛 fix(nav): correct logo scaling on mobile
+💄 style(services): refine bullet spacing
+📝 docs: document i18n page-adding workflow
 ```
 
-## Approval Plan
+## Granularity
 
-Use a compact plan such as:
+**Very granular — one logical change per commit.** If a diff mixes two concerns, split
+it into two commits (stage with pathspecs or hunks). Prefer more, smaller commits over
+fewer large ones. A commit's subject should describe one thing without needing "and".
 
-```text
-1. ✨ feat(shell): add fish abbreviations
-   area: home/shell
-   includes: home/shell/fish.nix and the related assertion hunk in tests
+Include directly related tests, docs, fixtures, generated files, or lockfile updates with
+the change when separating them would leave the commit incomplete.
 
-2. 📝 docs: document shell aliases
-   area: documentation
-   includes: docs/shell.md
-```
+## Type → gitmoji
 
-End the plan with a direct confirmation request. Approval applies only to the displayed messages and scopes.
+Common defaults for this repo. **The full, verified gitmoji list is in
+[references/gitmojis.md](references/gitmojis.md)** — consult it when none of these fit.
 
-## Safety Boundaries
+| type       | emoji | when                                   |
+|------------|-------|----------------------------------------|
+| `feat`     | ✨    | new feature / capability               |
+| `fix`      | 🐛    | bug fix                                |
+| `docs`     | 📝    | documentation only                     |
+| `style`    | 🎨    | code formatting / structure, no logic  |
+| `style`    | 💄    | UI / visual design / styling           |
+| `refactor` | ♻️    | restructure without behavior change    |
+| `perf`     | ⚡️   | performance                            |
+| `test`     | ✅    | tests                                  |
+| `build`    | 👷    | build system / tooling / deps config   |
+| `ci`       | 💚    | CI config / pipelines                  |
+| `chore`    | 🔧    | config, housekeeping                   |
+| `chore`    | 🔥    | remove code or files                   |
+| `chore`    | 🚚    | move / rename files                    |
+| `chore`    | ⬆️    | upgrade dependencies                   |
+| `revert`   | ⏪️   | revert a previous commit               |
 
-- Never use broad staging such as `git add .`, `git add -A`, or `git commit -a` when unrelated changes exist.
+Pick the emoji that best fits the *intent* of the change; the table gives the default
+per type plus common situational choices. Commit the literal emoji character, never the
+`:shortcode:` form.
+
+## Workflow
+
+1. **Plan.** Inspect read-only git state — `git status`, staged diff, unstaged diff,
+   untracked files, and `git log --oneline` for local convention. Do not touch the index
+   or working tree while planning. Produce a very granular plan: for each commit, the
+   `git add` pathspec(s) or hunks and the exact subject line. Call out ambiguous
+   boundaries, already-staged content, and anything that should stay uncommitted.
+2. **Show & confirm.** Present the plan as a numbered list and stop. Nothing is staged or
+   committed yet. If the user wants changes, revise and show it again. If the working tree
+   or index changes after approval, stop and re-present.
+3. **Execute.** Only after confirmation: stage the approved paths or hunks (patch staging
+   when a file spans multiple commits), review the staged diff for scope, secrets, and
+   generated noise, then commit — one commit per approved group. Report the resulting
+   `git log --oneline`. Do not push unless separately asked.
+
+If the runtime supports model selection, run the plan and execute steps on a low-cost
+model (subagent) — this workflow is mechanical and does not need a stronger one.
+
+## Safety boundaries
+
+- Never use broad staging (`git add .`, `git add -A`, `git commit -a`) when unrelated
+  changes exist.
 - Never discard, overwrite, or clean outstanding changes.
-- Never move already-staged changes out of the index without explicit permission.
-- Never bypass hooks unless the user explicitly requests it and understands the consequence.
-- Stop if a hook changes files or a commit contains content outside the approved scope; show the resulting state and ask how to proceed.
+- Never unstage already-staged work without explicit permission.
+- Never amend, squash, rebase, or otherwise rewrite existing commits unless asked.
+- Never bypass hooks unless the user asks and understands the consequence. If a hook
+  rewrites files, stop, show the resulting state, and ask how to proceed.
+
+## Red flags — stop
+
+- About to `git commit` without having shown a plan → stop, show the plan first.
+- Bundling unrelated changes into one commit → split them.
+- Reaching for a body, a scope you're unsure of, or a co-author line → drop it.
+- Capitalized or non-English subject → rewrite lowercase English imperative.
