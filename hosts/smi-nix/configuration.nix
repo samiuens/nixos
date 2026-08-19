@@ -125,6 +125,10 @@
       snapper.enable = true;
     };
 
+    virtualization = {
+      docker.enable = true;
+    };
+
     system = {
       users.enable = true;
       home-manager.enable = true;
