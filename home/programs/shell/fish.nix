@@ -14,6 +14,8 @@ let
   };
 
   enabled = name: cfg.plugins.${name}.enable or false;
+
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
 in
 {
   config = lib.mkIf (cfg.enable or false) {
@@ -36,6 +38,7 @@ in
         pkgs.fd
         pkgs.fzf
       ]
-      ++ lib.optional (enabled "done") pkgs.libnotify;
+      # The done plugin notifies through libnotify on Linux and osascript on darwin.
+      ++ lib.optional (enabled "done" && isLinux) pkgs.libnotify;
   };
 }
