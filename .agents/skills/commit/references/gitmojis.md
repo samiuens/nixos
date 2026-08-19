@@ -1,9 +1,16 @@
-# Gitmoji Catalog
+# gitmoji reference
 
-Use this catalog to choose the most specific emoji for a commit subject. The table is generated from the upstream [`gitmojis.json`](https://raw.githubusercontent.com/carloscuesta/gitmoji/refs/heads/master/packages/gitmojis/src/gitmojis.json), fetched on 2026-08-02. Use the emoji column in commit messages; keep the code column for lookup.
+Full gitmoji list, verified against <https://gitmoji.dev/>. Use the `Emoji` character in the
+commit subject; the `Code` is the `:shortcode:` form. Pick the one whose meaning best fits the
+change's intent.
 
-| emoji | code | description / meaning |
-| --- | --- | --- |
+**Commit the emoji character itself, never the `:shortcode:`.** Git stores the message
+literally and does no shortcode substitution — `:sparkles:` stays as literal text in
+`git log`, the terminal, and most tooling. Only some web UIs (GitHub, GitLab) render
+shortcodes as emoji, so treat the `Code` column purely as a lookup key.
+
+| Emoji | Code | Meaning |
+|-------|------|---------|
 | 🎨 | `:art:` | Improve structure / format of the code. |
 | ⚡️ | `:zap:` | Improve performance. |
 | 🔥 | `:fire:` | Remove code or files. |
