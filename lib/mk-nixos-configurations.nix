@@ -3,26 +3,21 @@
 {
   nixpkgs,
   hostsDir,
-  system ? "x86_64-linux",
   inputModules ? [ ],
   specialArgs ? { },
 }:
 
 let
-  entries = builtins.readDir hostsDir;
+  discoverHosts = import ./discover-hosts.nix { inherit lib; };
 
-  hostNames = lib.filter (
-    name:
-    entries.${name} == "directory" && builtins.pathExists (hostsDir + "/${name}/configuration.nix")
-  ) (builtins.attrNames entries);
+  hosts = lib.filterAttrs (_: host: host.platform == "nixos") (discoverHosts hostsDir);
 
   mkHost =
-    name:
-    lib.nameValuePair name (
-      nixpkgs.lib.nixosSystem {
-        inherit system specialArgs;
-        modules = inputModules ++ [ (hostsDir + "/${name}/configuration.nix") ];
-      }
-    );
+    _: host:
+    nixpkgs.lib.nixosSystem {
+      inherit specialArgs;
+      inherit (host) system;
+      modules = inputModules ++ [ host.configuration ];
+    };
 in
-builtins.listToAttrs (map mkHost hostNames)
+lib.mapAttrs mkHost hosts
