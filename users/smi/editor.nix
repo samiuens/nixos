@@ -75,6 +75,7 @@ in
             ++ (Vscode [
               "pulumi.pulumi-vscode-tools"
               "ms-python.python"
+              "ms-python.vscode-python-envs"
             ]);
           userSettings = commonVscodiumSettings // {
             "redhat.telemetry.enabled" = false;
