@@ -15,6 +15,8 @@
     system = {
       home-manager.enable = true;
 
+      homebrew.enable = true;
+
       nix.enable = true;
 
       users = {
