@@ -20,6 +20,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -69,6 +76,21 @@
 
       nixosConfigurations = smiLib.mkNixosConfigurations {
         inherit inputModules nixpkgs;
+        hostsDir = ./hosts;
+        specialArgs = {
+          inherit inputs;
+        };
+      };
+
+      darwinInputModules = [
+        inputs.home-manager.darwinModules.home-manager
+        inputs.nix-homebrew.darwinModules.nix-homebrew
+        inputs.sops-nix.darwinModules.sops
+      ];
+
+      darwinConfigurations = smiLib.mkDarwinConfigurations {
+        inherit (inputs) nix-darwin;
+        inputModules = darwinInputModules;
         hostsDir = ./hosts;
         specialArgs = {
           inherit inputs;
@@ -192,11 +214,14 @@
         }
         // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
           nixos-smi-nix = nixosConfigurations.smi-nix.config.system.build.toplevel;
+        }
+        // nixpkgs.lib.optionalAttrs (system == "aarch64-darwin") {
+          darwin-smi-mac = darwinConfigurations.smi-mac.system;
         };
       }
     )
     // {
       lib = smiLib;
-      inherit nixosConfigurations;
+      inherit darwinConfigurations nixosConfigurations;
     };
 }
