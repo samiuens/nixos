@@ -9,6 +9,8 @@
 let
   cfg = userConfig.programs.browser.zen or { };
 
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+
   mkExtensionSettings = builtins.mapAttrs (
     _extensionId: amoSlug: {
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/${amoSlug}/latest.xpi";
@@ -28,7 +30,10 @@ let
   };
 in
 {
-  config = lib.mkIf (cfg.enable or false) {
+  # Zen ships as a signed application bundle on darwin, where the flake refuses to
+  # apply policies because doing so would mutate that bundle. Extensions are
+  # installed by hand there; every other Zen setting still applies.
+  config = lib.mkIf ((cfg.enable or false) && !isDarwin) {
     programs.zen-browser = {
       inherit policies;
 
