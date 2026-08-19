@@ -31,10 +31,13 @@ jobs:
         run: nix flake update
 
       - name: Validate flake
-        run: nix flake check --no-build
+        run: nix flake check --no-build --all-systems
 
       - name: Build NixOS configuration
         run: nix build .#checks.x86_64-linux.nixos-smi-nix --no-link
+
+      - name: Evaluate darwin configuration
+        run: nix eval .#checks.aarch64-darwin.darwin-smi-mac.drvPath
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v8
@@ -50,5 +53,6 @@ jobs:
             Automated flake input update.
 
             Validation performed before opening or updating this pull request:
-            - `nix flake check --no-build`
+            - `nix flake check --no-build --all-systems`
             - `nix build .#checks.x86_64-linux.nixos-smi-nix --no-link`
+            - `nix eval .#checks.aarch64-darwin.darwin-smi-mac.drvPath`
