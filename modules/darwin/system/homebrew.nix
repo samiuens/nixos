@@ -87,9 +87,16 @@ in
     };
 
     extraTaps = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
+      type = lib.types.listOf (lib.types.either lib.types.str lib.types.attrs);
       default = [ ];
-      description = "Additional taps required by extraCasks or extraBrews.";
+      description = ''
+        Additional taps required by extraCasks or extraBrews.
+
+        A plain name is marked trusted, because declaring a tap here is the
+        decision to trust it: Homebrew 6 refuses to load formulae and casks from
+        untrusted third-party taps and aborts activation. Pass nix-darwin's tap
+        attribute set instead to say otherwise.
+      '';
     };
   };
 
@@ -110,7 +117,16 @@ in
       enable = true;
       brews = cfg.extraBrews;
       casks = lib.unique (lib.naturalSort (fallbackCasks ++ cfg.extraCasks));
-      taps = cfg.extraTaps;
+      taps = map (
+        tap:
+        if lib.isString tap then
+          {
+            name = tap;
+            trusted = true;
+          }
+        else
+          tap
+      ) cfg.extraTaps;
 
       onActivation = {
         inherit (cfg) autoUpdate cleanup upgrade;
