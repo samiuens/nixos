@@ -159,7 +159,10 @@
 
       users = {
         enable = true;
-        enabledUsers = [ "smi" ];
+        enabledUsers = [
+          "smi"
+          "visuax"
+        ];
         homeStateVersion = "26.11";
       };
     };
