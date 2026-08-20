@@ -15,6 +15,8 @@
     system = {
       dock.enable = true;
 
+      firewall.enable = true;
+
       home-manager.enable = true;
 
       homebrew = {
