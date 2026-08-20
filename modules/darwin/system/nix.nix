@@ -14,6 +14,14 @@ in
 
     manageNixDaemon = lib.mkEnableOption "nix-darwin management of the Nix installation" // {
       default = true;
+      description = ''
+        Whether nix-darwin manages the Nix installation: the daemon, the
+        installed Nix version and /etc/nix/nix.conf. Turn this off for a
+        Determinate Nix installation, which runs its own daemon and aborts
+        nix-darwin activation while this is on. The `settings` options below
+        stop applying once it is off, because nix-darwin no longer writes
+        nix.conf.
+      '';
     };
 
     trustedUsers = lib.mkOption {
@@ -78,8 +86,11 @@ in
         trusted-public-keys = cfg.trustedPublicKeys;
       };
 
+      # nix-darwin asserts `nix.gc.automatic -> nix.enable`, and a Determinate
+      # installation collects garbage itself, so this follows whoever manages
+      # the daemon rather than being separately configurable.
       gc = {
-        automatic = cfg.gc.enable;
+        automatic = cfg.gc.enable && cfg.manageNixDaemon;
         inherit (cfg.gc) interval options;
       };
     };
