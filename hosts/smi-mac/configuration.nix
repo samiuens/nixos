@@ -131,6 +131,8 @@
       };
     };
 
+    security.sudo.enable = true;
+
     services = {
       localsend.enable = true;
       netbird.enable = true;
