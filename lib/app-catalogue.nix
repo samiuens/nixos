@@ -90,6 +90,16 @@ pkgs:
     cask = "monitorcontrol";
   };
 
+  "programs.utility.raycast" = {
+    package = pkgs.raycast;
+    cask = "raycast";
+
+    # nixpkgs does build this on darwin, but Raycast ships its own updater and
+    # expects to keep itself current; from the store it would sit frozen between
+    # flake updates.
+    preferCask = true;
+  };
+
   "programs.utility.shottr" = {
     package = pkgs.shottr;
     cask = "shottr";
