@@ -13,6 +13,8 @@
     packages.manager.enable = true;
 
     system = {
+      dock.enable = true;
+
       home-manager.enable = true;
 
       homebrew = {
