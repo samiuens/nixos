@@ -7,6 +7,9 @@
 # `preferCask` for the ones where it does build but the cask is wanted anyway;
 # the flag is ignored on Linux, where nixpkgs is the only source.
 #
+# A cask that does not live in homebrew-cask names its tap as `tap`, which is
+# added for as long as the entry needs the cask.
+#
 # Keys are option paths inside a user's `programs`/`services` tree in users/.
 pkgs:
 

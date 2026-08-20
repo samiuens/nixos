@@ -21,8 +21,17 @@ let
   # and the catalogue says nixpkgs is not the source here -- either because the
   # package has no darwin build, or because the entry sets `preferCask`. Entries
   # of the first kind return to nixpkgs automatically once support lands upstream.
-  fallbackCasks = lib.mapAttrsToList (_: entry: entry.cask) (
-    lib.filterAttrs (path: _: anyUserWants path && !(smiLib.preferNixPackage pkgs path)) catalogue
+  fallbackEntries = lib.filterAttrs (
+    path: _: anyUserWants path && !(smiLib.preferNixPackage pkgs path)
+  ) catalogue;
+
+  fallbackCasks = lib.mapAttrsToList (_: entry: entry.cask) fallbackEntries;
+
+  # Casks outside homebrew-cask name the tap they come from, so a tap is added
+  # for exactly as long as a cask still needs it and disappears with the entry
+  # that pulled it in.
+  fallbackTaps = lib.filter (tap: tap != null) (
+    lib.mapAttrsToList (_: entry: entry.tap or null) fallbackEntries
   );
 in
 {
@@ -92,7 +101,10 @@ in
     extraTaps = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      description = "Additional taps required by extraCasks or extraBrews.";
+      description = ''
+        Additional taps required by extraCasks or extraBrews. Taps belonging to a
+        catalogue entry are added automatically and do not belong here.
+      '';
     };
   };
 
@@ -113,7 +125,7 @@ in
       enable = true;
       brews = cfg.extraBrews;
       casks = lib.unique (lib.naturalSort (fallbackCasks ++ cfg.extraCasks));
-      taps = cfg.extraTaps;
+      taps = lib.unique (lib.naturalSort (fallbackTaps ++ cfg.extraTaps));
 
       onActivation = {
         inherit (cfg) autoUpdate cleanup upgrade;
