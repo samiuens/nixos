@@ -51,6 +51,12 @@ pkgs:
     cask = "ghostty";
   };
 
+  "programs.utility.cork" = {
+    # Cask-only: Cork is a Homebrew front end and nixpkgs has no package for it.
+    package = null;
+    cask = "cork";
+  };
+
   "programs.utility.linearmouse" = {
     # Cask-only: LinearMouse ships as a signed application and nixpkgs has no
     # package for it at all, so there is nothing to fall back to off darwin.

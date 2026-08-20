@@ -34,9 +34,11 @@ in
 
     sync.nextcloud-client.enable = true;
 
-    # Only wanted on the mac so far. Both come from a Homebrew cask there, and
-    # LinearMouse has no nixpkgs package to fall back to anywhere else.
+    # Only wanted on the mac so far, and all three come from a Homebrew cask
+    # there. Cork and LinearMouse have no nixpkgs package to fall back to
+    # anywhere else.
     utility = lib.mkIf isDarwin {
+      cork.enable = true;
       linearmouse.enable = true;
       thaw.enable = true;
     };

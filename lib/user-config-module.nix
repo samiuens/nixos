@@ -246,6 +246,7 @@ in
       };
 
       utility = section {
+        cork = program "Cork, a Homebrew front end" { };
         linearmouse = program "LinearMouse" { };
         thaw = program "Thaw menu bar manager" { };
       };
