@@ -131,6 +131,11 @@
       };
     };
 
+    services = {
+      localsend.enable = true;
+      netbird.enable = true;
+    };
+
     system = {
       dock.enable = true;
 

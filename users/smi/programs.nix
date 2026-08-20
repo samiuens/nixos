@@ -7,8 +7,6 @@ in
   smi.system.users.users.smi.programs = {
     communication.vesktop.enable = true;
 
-    network.netbird.enable = lib.mkIf isDarwin true;
-
     security = {
       bitwarden.enable = true;
       keepassxc.enable = true;
@@ -34,10 +32,7 @@ in
       darwinSettings.font-size = 15;
     };
 
-    sync = {
-      localsend.enable = lib.mkIf isDarwin true;
-      nextcloud-client.enable = true;
-    };
+    sync.nextcloud-client.enable = true;
 
     # Only wanted on the mac so far. Both come from a Homebrew cask there, and
     # LinearMouse has no nixpkgs package to fall back to anywhere else.
