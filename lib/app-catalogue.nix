@@ -18,6 +18,11 @@ pkgs:
     cask = "claude-code";
   };
 
+  "programs.editor.drawio" = {
+    package = pkgs.drawio;
+    cask = "drawio";
+  };
+
   "programs.editor.zed" = {
     package = pkgs.zed-editor;
     cask = "zed";

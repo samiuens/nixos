@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   openVsx = pkgs.nix4vscode.forOpenVsx;
@@ -53,6 +53,9 @@ let
 in
 {
   smi.system.users.users.smi.programs.editor = {
+    # Only wanted on the mac so far.
+    drawio.enable = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin true;
+
     vscodium = {
       enable = true;
 

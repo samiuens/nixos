@@ -140,6 +140,8 @@ in
       };
 
       editor = section {
+        drawio = program "draw.io desktop" { };
+
         vscodium = program "VSCodium" {
           profiles = attrsOption "VSCodium profiles.";
         };
