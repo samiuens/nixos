@@ -15,7 +15,16 @@
     system = {
       home-manager.enable = true;
 
-      homebrew.enable = true;
+      homebrew = {
+        enable = true;
+        extraCasks = [
+          "linearmouse"
+          "nikitabobko/tap/aerospace"
+          "thaw"
+        ];
+
+        extraTaps = [ "nikitabobko/tap" ];
+      };
 
       nix.enable = true;
 
