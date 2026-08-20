@@ -68,15 +68,74 @@ nix eval .#checks.aarch64-darwin.darwin-smi-mac.drvPath
 The first three are shared between both hosts, so it is easy to break the Mac from a file
 that looks Linux-only — and none of the four lint checks above will notice.
 
-The usual failure is a package with no `aarch64-darwin` support. The fix is not to drop the
-package: add it to `lib/app-catalogue.nix` with its Homebrew cask, and gate its home module
-on `smiLib.nixUsable pkgs <package>`. `modules/darwin/system/homebrew.nix` reads the same
-catalogue, so the cask appears automatically — and disappears again once nixpkgs gains
-support. Verify with:
+A new module that is still untracked is invisible to the flake, so the check happily passes
+over a file it never read. If a change appears to have no effect, `git add -N` it before
+concluding anything.
+
+## Getting an application from Homebrew
+
+The usual darwin failure is a package with no `aarch64-darwin` support. The fix is not to
+drop the package — route it through `lib/app-catalogue.nix`, which pairs each nixpkgs
+package with a Homebrew cask. `modules/darwin/system/homebrew.nix` and the home modules
+both read that one catalogue, so the two never drift.
+
+```nix
+# lib/app-catalogue.nix — keyed by the option path in users/
+"programs.sync.nextcloud-client" = {
+  package = pkgs.nextcloud-client;
+  cask = "nextcloud";
+};
+```
+
+Then gate the home module on the catalogue rather than on the package — see
+`home/programs/security/bitwarden.nix` or `home/programs/editor/zed.nix`:
+
+```nix
+useNixPackage = smiLib.preferNixPackage pkgs "programs.security.bitwarden";
+```
+
+`preferNixPackage` takes the **option path, not the package**, and throws on a path the
+catalogue does not define, so a typo fails the darwin check instead of silently installing
+nothing.
+
+Entries added this way need no further change: the cask appears on darwin, and disappears
+again once nixpkgs gains support upstream.
+
+`smiLib.nixUsable` is the underlying predicate. Call it directly only for a package with no
+catalogue entry, as `home/programs/development/claude-code.nix` does — it cannot see
+`preferCask`. The three older catalogue entries (`yubico-authenticator`, `nextcloud-client`,
+`ghostty`) still call it and name their package twice; move them to `preferNixPackage` when
+you next touch them.
+
+### When nixpkgs *does* build it
+
+Set `preferCask` to take the cask anyway — for a signed `/Applications` bundle, or because
+nixpkgs trails the cask by several releases. It is ignored on Linux, where nixpkgs is the
+only source:
+
+```nix
+"programs.editor.zed" = {
+  package = pkgs.zed-editor;
+  cask = "zed";
+  preferCask = true;
+};
+```
+
+Without a `preferCask` entry the fallback will not fire, because `nixUsable` reports the
+package as perfectly usable on darwin.
+
+### When there is no nixpkgs package at all
+
+Skip the catalogue — there is nothing to pair. Use `smi.system.homebrew.extraCasks` in
+`hosts/smi-mac/configuration.nix`, plus `extraTaps` when the cask is not in `homebrew/cask`.
+
+Verify any of the above with:
 
 ```bash
 nix eval .#darwinConfigurations.smi-mac.config.homebrew.casks --apply 'cs: map (c: c.name) cs' --json
 ```
+
+Casks are not pinned by `flake.lock`, so this tells you *which* casks, never which versions.
 
 ## Fixing each failure
 
