@@ -18,10 +18,11 @@ let
   anyUserWants = path: lib.any (userWants path) (lib.attrValues enabledUsers);
 
   # An application falls back to Homebrew only when an enabled user asks for it
-  # and its nixpkgs package cannot be used on this platform. Entries return to
-  # nixpkgs automatically once support lands upstream.
+  # and the catalogue says nixpkgs is not the source here -- either because the
+  # package has no darwin build, or because the entry sets `preferCask`. Entries
+  # of the first kind return to nixpkgs automatically once support lands upstream.
   fallbackCasks = lib.mapAttrsToList (_: entry: entry.cask) (
-    lib.filterAttrs (path: entry: anyUserWants path && !(smiLib.nixUsable pkgs entry.package)) catalogue
+    lib.filterAttrs (path: _: anyUserWants path && !(smiLib.preferNixPackage pkgs path)) catalogue
   );
 in
 {

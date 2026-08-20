@@ -1,7 +1,11 @@
-# Applications whose nixpkgs derivation is not available on every platform this
-# repository targets. Each entry pairs the nixpkgs package with the Homebrew cask
-# used as a fallback; `nixUsable` decides which one applies on a given platform,
-# so an entry needs no change when nixpkgs gains support for a new system.
+# Applications that come from Homebrew rather than nixpkgs on darwin. Each entry
+# pairs the nixpkgs package with the Homebrew cask; `preferNixPackage` decides
+# which one applies on a given platform, so an entry needs no change when nixpkgs
+# gains support for a new system.
+#
+# Most entries are here because nixpkgs has no darwin build at all. Set
+# `preferCask` for the ones where it does build but the cask is wanted anyway;
+# the flag is ignored on Linux, where nixpkgs is the only source.
 #
 # Keys are option paths inside a user's `programs`/`services` tree in users/.
 pkgs:
