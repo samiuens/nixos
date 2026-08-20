@@ -18,6 +18,11 @@ in
         AppleReduceDesktopTinting = true;
 
         AppleKeyboardUIMode = 3;
+
+        # Menu bar stays hidden until the pointer reaches the top of the
+        # screen. Takes effect after the next login.
+        _HIHideMenuBar = true;
+
         KeyRepeat = 2;
         InitialKeyRepeat = 15;
         NSNavPanelExpandedStateForSaveMode = true;
