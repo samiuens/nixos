@@ -13,9 +13,11 @@ let
   hosts = lib.filterAttrs (_: host: host.platform == "nixos") (discoverHosts hostsDir);
 
   mkHost =
-    _: host:
+    name: host:
     nixpkgs.lib.nixosSystem {
-      inherit specialArgs;
+      specialArgs = specialArgs // {
+        hostName = name;
+      };
       inherit (host) system;
       modules = inputModules ++ [ host.configuration ];
     };

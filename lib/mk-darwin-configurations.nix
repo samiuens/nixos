@@ -13,9 +13,11 @@ let
   hosts = lib.filterAttrs (_: host: host.platform == "darwin") (discoverHosts hostsDir);
 
   mkHost =
-    _: host:
+    name: host:
     nix-darwin.lib.darwinSystem {
-      inherit specialArgs;
+      specialArgs = specialArgs // {
+        hostName = name;
+      };
       modules = inputModules ++ [
         { nixpkgs.hostPlatform = lib.mkDefault host.system; }
         host.configuration
