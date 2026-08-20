@@ -55,6 +55,9 @@ in
         FXDefaultSearchScope = "SCcf";
         FXPreferredViewStyle = "clmv";
 
+        # Open folders in windows rather than adding a tab to the current one.
+        FinderSpawnTab = false;
+
         # Home Manager's typed option is misspelled `ShowPathBar`; this is the
         # key macOS actually reads, and freeform passes it through untouched.
         ShowPathbar = true;
