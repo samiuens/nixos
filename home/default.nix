@@ -9,12 +9,10 @@ let
   smiLib = import ../lib { inherit lib; };
   face = ../users + "/${userConfig.name}/_face.png";
 
-  # Modules that cannot be imported at all on darwin: home/desktop reads NixOS-only
-  # osConfig options and the niriDisplayManager special arg, and services/flatpak.nix
-  # defines options that only exist once the Linux-only nix-flatpak module is loaded.
   linuxOnlyModules = [
     ./desktop
-    ./services/flatpak.nix
+    ./services
+    ./xdg.nix
   ];
 
   isLinuxOnly =
@@ -34,7 +32,7 @@ in
   config = {
     smi.user = userConfig;
 
-    home.file = lib.optionalAttrs (builtins.pathExists face) {
+    home.file = lib.optionalAttrs (!isDarwin && builtins.pathExists face) {
       ".face".source = face;
     };
 
