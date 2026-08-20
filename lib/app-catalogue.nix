@@ -57,6 +57,12 @@ pkgs:
     cask = "cork";
   };
 
+  "programs.utility.dockdoor" = {
+    # Cask-only: DockDoor is a signed application and nixpkgs has no package.
+    package = null;
+    cask = "dockdoor";
+  };
+
   "programs.utility.linearmouse" = {
     # Cask-only: LinearMouse ships as a signed application and nixpkgs has no
     # package for it at all, so there is nothing to fall back to off darwin.

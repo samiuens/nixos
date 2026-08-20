@@ -247,6 +247,7 @@ in
 
       utility = section {
         cork = program "Cork, a Homebrew front end" { };
+        dockdoor = program "DockDoor window peeking" { };
         linearmouse = program "LinearMouse" { };
         thaw = program "Thaw menu bar manager" { };
       };

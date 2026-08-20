@@ -39,6 +39,7 @@ in
     # anywhere else.
     utility = lib.mkIf isDarwin {
       cork.enable = true;
+      dockdoor.enable = true;
       linearmouse.enable = true;
       thaw.enable = true;
     };
