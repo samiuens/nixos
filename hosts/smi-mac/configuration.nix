@@ -138,15 +138,7 @@
 
       home-manager.enable = true;
 
-      homebrew = {
-        enable = true;
-        extraCasks = [
-          "linearmouse"
-          "thaw"
-          "netbirdio/tap/netbird-ui"
-          "localsend"
-        ];
-      };
+      homebrew.enable = true;
 
       keyboard.enable = true;
 

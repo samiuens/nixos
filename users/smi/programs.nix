@@ -1,6 +1,14 @@
+{ lib, pkgs, ... }:
+
+let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+in
 {
   smi.system.users.users.smi.programs = {
     communication.vesktop.enable = true;
+
+    network.netbird.enable = lib.mkIf isDarwin true;
+
     security = {
       bitwarden.enable = true;
       keepassxc.enable = true;
@@ -26,6 +34,16 @@
       darwinSettings.font-size = 15;
     };
 
-    sync.nextcloud-client.enable = true;
+    sync = {
+      localsend.enable = lib.mkIf isDarwin true;
+      nextcloud-client.enable = true;
+    };
+
+    # Only wanted on the mac so far. Both come from a Homebrew cask there, and
+    # LinearMouse has no nixpkgs package to fall back to anywhere else.
+    utility = lib.mkIf isDarwin {
+      linearmouse.enable = true;
+      thaw.enable = true;
+    };
   };
 }
