@@ -12,6 +12,11 @@ in
     targets.darwin.defaults = {
       NSGlobalDomain = {
         AppleInterfaceStyle = "Dark";
+
+        # macOS stores the inverse: this keeps window backgrounds off the
+        # wallpaper's colour.
+        AppleReduceDesktopTinting = true;
+
         AppleKeyboardUIMode = 3;
         KeyRepeat = 2;
         InitialKeyRepeat = 15;
