@@ -153,7 +153,17 @@
         cleanup = "uninstall";
       };
 
-      keyboard.enable = true;
+      keyboard = {
+        enable = true;
+
+        # Spotlight's slot is dropped from the kept list so the sweep switches
+        # it off rather than restoring it at every login, which leaves cmd-space
+        # free for Raycast.
+        keep = [
+          32 # Mission Control, named “All windows” in the table
+          65 # Show Finder search window
+        ];
+      };
 
       nix = {
         enable = true;
