@@ -5,7 +5,10 @@ let
 in
 {
   smi.system.users.users.smi.programs = {
-    communication.vesktop.enable = true;
+    communication.vesktop = {
+      enable = true;
+      hosts = [ "smi-nix" ];
+    };
 
     security = {
       bitwarden.enable = true;
