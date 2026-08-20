@@ -67,6 +67,13 @@ let
     };
   };
 
+  # Catalogue entries whose nixpkgs package cannot be built here. On darwin these
+  # fall back to a Homebrew cask; Linux has no such fallback, so enabling one
+  # would leave the application quietly missing rather than failing the build.
+  unavailable = lib.filterAttrs (_: entry: !(smiLib.nixUsable pkgs entry.package)) (
+    smiLib.enabledCatalogueEntries pkgs enabledUsers
+  );
+
   userFaces = lib.filterAttrs (_: builtins.pathExists) (
     lib.mapAttrs (name: _: ../../../users + "/${name}/_face.png") enabledUsers
   );
@@ -131,7 +138,15 @@ in
         assertion = lib.length cfg.enabledUsers == lib.length (lib.unique cfg.enabledUsers);
         message = "smi.system.users.enabledUsers must not contain duplicate usernames.";
       }
-    ];
+    ]
+    ++ lib.mapAttrsToList (path: entry: {
+      assertion = false;
+      message = ''
+        ${path} has no nixpkgs package available on ${pkgs.stdenv.hostPlatform.system}. It is
+        provided by the Homebrew cask "${entry.cask}", which only exists on darwin, so enable
+        it there rather than for every host this user is on.
+      '';
+    }) unavailable;
 
     users.mutableUsers = cfg.mutableUsers;
     users.users = lib.mapAttrs mkNixosUser enabledUsers;
