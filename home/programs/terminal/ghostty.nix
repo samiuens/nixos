@@ -17,7 +17,7 @@ let
 
   # gtk-* are Linux-only ghostty options.
   settings = lib.filterAttrs (name: _: !(isDarwin && lib.hasPrefix "gtk-" name)) (
-    cfg.settings or { }
+    (cfg.settings or { }) // lib.optionalAttrs isDarwin (cfg.darwinSettings or { })
   );
 in
 {

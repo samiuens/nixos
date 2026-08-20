@@ -240,6 +240,8 @@ in
 
         ghostty = program "Ghostty" {
           settings = attrsOption "Ghostty configuration.";
+
+          darwinSettings = attrsOption "Ghostty configuration applied on darwin only, layered over settings.";
         };
       };
     };
