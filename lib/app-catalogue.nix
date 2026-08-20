@@ -63,11 +63,26 @@ pkgs:
     cask = "dockdoor";
   };
 
+  "programs.utility.keka" = {
+    package = pkgs.keka;
+    cask = "keka";
+  };
+
   "programs.utility.linearmouse" = {
     # Cask-only: LinearMouse ships as a signed application and nixpkgs has no
     # package for it at all, so there is nothing to fall back to off darwin.
     package = null;
     cask = "linearmouse";
+  };
+
+  "programs.utility.monitorcontrol" = {
+    package = pkgs.monitorcontrol;
+    cask = "monitorcontrol";
+  };
+
+  "programs.utility.shottr" = {
+    package = pkgs.shottr;
+    cask = "shottr";
   };
 
   "programs.utility.thaw" = {

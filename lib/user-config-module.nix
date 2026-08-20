@@ -248,7 +248,10 @@ in
       utility = section {
         cork = program "Cork, a Homebrew front end" { };
         dockdoor = program "DockDoor window peeking" { };
+        keka = program "Keka file archiver" { };
         linearmouse = program "LinearMouse" { };
+        monitorcontrol = program "MonitorControl" { };
+        shottr = program "Shottr screenshot tool" { };
         thaw = program "Thaw menu bar manager" { };
       };
     };
