@@ -11,6 +11,15 @@
 pkgs:
 
 {
+  "programs.editor.zed" = {
+    package = pkgs.zed-editor;
+    cask = "zed";
+
+    # nixpkgs does build this on darwin, but only as a source build that trails
+    # the cask by several releases.
+    preferCask = true;
+  };
+
   "programs.security.bitwarden" = {
     package = pkgs.bitwarden-desktop;
     cask = "bitwarden";
