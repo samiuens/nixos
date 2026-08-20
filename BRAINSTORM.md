@@ -26,3 +26,20 @@
 - [ ] Adjust tmux status bar information (right side)
 - [ ] Add cloudflare one client
 - [ ] Add systemd user job for stopping/starting vpn (Workaround for system daemon)
+- [ ] Add justfile for frequently-used commands
+
+## macOS Implementation
+- [ ] tmux Theme for MacOS
+- [ ] Ghostty Font Size
+- [x] Auto-clear dock on user init
+- [x] Add aerospace
+- [ ] Add raycast or alternative
+- [ ] Add alt-tab
+- [ ] Add docker & podman
+- [ ] Add linearmouse
+- [ ] IDE setup
+- [ ] Install cider
+- [x] Find options for defaults:
+  - [x] Auto-hide menu bar
+  - [x] Activate firewall
+  - [x] Disable wallpaper tinting
