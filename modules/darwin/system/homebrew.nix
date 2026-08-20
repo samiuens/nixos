@@ -11,19 +11,14 @@ let
   enabledUsers = lib.filterAttrs (name: _: builtins.elem name usersCfg.enabledUsers) usersCfg.users;
 
   smiLib = import ../../../lib { inherit lib; };
-  catalogue = smiLib.appCatalogue pkgs;
 
-  userWants = path: user: lib.attrByPath (lib.splitString "." path ++ [ "enable" ]) false user;
-
-  anyUserWants = path: lib.any (userWants path) (lib.attrValues enabledUsers);
+  wanted = smiLib.enabledCatalogueEntries pkgs enabledUsers;
 
   # An application falls back to Homebrew only when an enabled user asks for it
   # and the catalogue says nixpkgs is not the source here -- either because the
   # package has no darwin build, or because the entry sets `preferCask`. Entries
   # of the first kind return to nixpkgs automatically once support lands upstream.
-  fallbackEntries = lib.filterAttrs (
-    path: _: anyUserWants path && !(smiLib.preferNixPackage pkgs path)
-  ) catalogue;
+  fallbackEntries = lib.filterAttrs (path: _: !(smiLib.preferNixPackage pkgs path)) wanted;
 
   fallbackCasks = lib.mapAttrsToList (_: entry: entry.cask) fallbackEntries;
 
