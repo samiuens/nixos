@@ -30,6 +30,8 @@
         extraTaps = [ "nikitabobko/tap" ];
       };
 
+      keyboard.enable = true;
+
       nix = {
         enable = true;
 
