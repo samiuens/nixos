@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  hostName,
   pkgs,
   ...
 }:
@@ -13,7 +14,7 @@ let
   userModule =
     { name, ... }:
     {
-      imports = [ smiLib.userConfigModule ];
+      imports = [ (smiLib.userConfigModule { inherit hostName; }) ];
 
       options = {
         name = lib.mkOption {

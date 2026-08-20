@@ -1,4 +1,10 @@
+# `hostName` names the host being built, after its directory in `hosts/`. It is
+# what `programs.<...>.hosts` is matched against, and is required rather than
+# defaulted so a missing argument fails loudly instead of quietly scoping every
+# program to nothing.
 { lib }:
+
+{ hostName }:
 
 let
   inherit (lib) mkEnableOption mkOption types;
@@ -21,12 +27,56 @@ let
 
   program =
     description: options:
-    section (
-      {
-        enable = mkEnableOption description;
-      }
-      // options
-    );
+    mkOption {
+      type = types.submodule (
+        { config, ... }:
+        {
+          options = {
+            enable = mkEnableOption description;
+
+            hosts = mkOption {
+              type = types.nullOr (types.listOf types.str);
+              default = null;
+              example = [ "smi-nix" ];
+              description = ''
+                Hosts this program is enabled on, named after their directory in
+                `hosts/`. The default of `null` means every host; naming hosts
+                turns the program off on all the others, whatever `enable` says
+                there.
+
+                This is for a program wanted on some machines but not others.
+                A program that only exists on one platform belongs behind a
+                `pkgs.stdenv.hostPlatform` check instead, so adding a second
+                machine of that kind does not mean editing every list.
+              '';
+            };
+
+            excludeHosts = mkOption {
+              type = types.listOf types.str;
+              default = [ ];
+              example = [ "smi-mac" ];
+              description = ''
+                Hosts this program is turned off on, for when naming the hosts
+                that keep it would be the longer list. A host named here loses
+                the program even if `hosts` also names it.
+              '';
+            };
+          }
+          // options;
+
+          config =
+            lib.mkIf
+              (
+                (config.hosts != null && !(builtins.elem hostName config.hosts))
+                || builtins.elem hostName config.excludeHosts
+              )
+              {
+                enable = lib.mkForce false;
+              };
+        }
+      );
+      default = { };
+    };
 in
 {
   options = {
