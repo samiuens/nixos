@@ -21,6 +21,9 @@
         window-padding-balance = true;
         gtk-titlebar = false;
       };
+
+      # Retina panels render the same point size noticeably smaller.
+      darwinSettings.font-size = 15;
     };
 
     sync.nextcloud-client.enable = true;
