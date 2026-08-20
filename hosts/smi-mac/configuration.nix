@@ -143,7 +143,13 @@
 
       home-manager.enable = true;
 
-      homebrew.enable = true;
+      homebrew = {
+        enable = true;
+
+        # The declared set is authoritative: anything installed by hand is
+        # uninstalled on the next activation.
+        cleanup = "uninstall";
+      };
 
       keyboard.enable = true;
 
