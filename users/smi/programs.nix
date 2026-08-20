@@ -10,6 +10,9 @@ in
       hosts = [ "smi-nix" ];
     };
 
+    # Only wanted on the mac so far; IINA is a macOS-only application.
+    media.iina.enable = lib.mkIf isDarwin true;
+
     security = {
       bitwarden.enable = true;
       keepassxc.enable = true;

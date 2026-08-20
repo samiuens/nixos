@@ -32,6 +32,11 @@ pkgs:
     preferCask = true;
   };
 
+  "programs.media.iina" = {
+    package = pkgs.iina;
+    cask = "iina";
+  };
+
   "programs.security.bitwarden" = {
     package = pkgs.bitwarden-desktop;
     cask = "bitwarden";

@@ -203,6 +203,10 @@ in
         zed = program "Zed" { };
       };
 
+      media = section {
+        iina = program "IINA media player" { };
+      };
+
       security = section {
         bitwarden = program "Bitwarden desktop client" { };
         gnupg = program "hardened GnuPG with YubiKey smart-card support" { };
