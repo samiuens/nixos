@@ -21,13 +21,6 @@ let
   fallbackEntries = lib.filterAttrs (path: _: !(smiLib.preferNixPackage pkgs path)) wanted;
 
   fallbackCasks = lib.mapAttrsToList (_: entry: entry.cask) fallbackEntries;
-
-  # Casks outside homebrew-cask name the tap they come from, so a tap is added
-  # for exactly as long as a cask still needs it and disappears with the entry
-  # that pulled it in.
-  fallbackTaps = lib.filter (tap: tap != null) (
-    lib.mapAttrsToList (_: entry: entry.tap or null) fallbackEntries
-  );
 in
 {
   options.smi.system.homebrew = {
@@ -96,10 +89,7 @@ in
     extraTaps = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      description = ''
-        Additional taps required by extraCasks or extraBrews. Taps belonging to a
-        catalogue entry are added automatically and do not belong here.
-      '';
+      description = "Additional taps required by extraCasks or extraBrews.";
     };
   };
 
@@ -120,7 +110,7 @@ in
       enable = true;
       brews = cfg.extraBrews;
       casks = lib.unique (lib.naturalSort (fallbackCasks ++ cfg.extraCasks));
-      taps = lib.unique (lib.naturalSort (fallbackTaps ++ cfg.extraTaps));
+      taps = cfg.extraTaps;
 
       onActivation = {
         inherit (cfg) autoUpdate cleanup upgrade;
