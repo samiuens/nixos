@@ -11,6 +11,13 @@
 pkgs:
 
 {
+  "programs.development.claude-code" = {
+    # Repo-local rather than nixpkgs: upstream ships a prebuilt linux-x64 binary,
+    # so the package is marked x86_64-linux only and darwin takes the cask.
+    package = pkgs.callPackage ../packages/claude-code-bin.nix { };
+    cask = "claude-code";
+  };
+
   "programs.editor.zed" = {
     package = pkgs.zed-editor;
     cask = "zed";

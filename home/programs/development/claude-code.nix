@@ -9,12 +9,16 @@ let
   smiLib = import ../../../lib { inherit lib; };
   cfg = userConfig.programs.development.claude-code or { };
 
-  # Prebuilt Linux-only binary; on darwin the tool is installed through Homebrew.
-  claude-code = pkgs.callPackage ../../../packages/claude-code-bin.nix { };
-  useNixPackage = smiLib.nixUsable pkgs claude-code;
+  catalogueKey = "programs.development.claude-code";
+
+  # Taken from the catalogue rather than named again here, so the package and its
+  # Homebrew cask cannot drift apart.
+  entry = (smiLib.appCatalogue pkgs).${catalogueKey};
+
+  useNixPackage = smiLib.preferNixPackage pkgs catalogueKey;
 in
 {
   config = lib.mkIf (cfg.enable or false) {
-    home.packages = lib.optional useNixPackage claude-code;
+    home.packages = lib.optional useNixPackage entry.package;
   };
 }
