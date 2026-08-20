@@ -26,7 +26,12 @@
         extraTaps = [ "nikitabobko/tap" ];
       };
 
-      nix.enable = true;
+      nix = {
+        enable = true;
+
+        # This host runs a Determinate Nix installation.
+        manageNixDaemon = false;
+      };
 
       users = {
         enable = true;
