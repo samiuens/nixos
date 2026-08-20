@@ -11,6 +11,15 @@
 pkgs:
 
 {
+  "programs.security.bitwarden" = {
+    package = pkgs.bitwarden-desktop;
+    cask = "bitwarden";
+
+    # nixpkgs does build this on darwin; the cask is preferred anyway so the app
+    # is the signed build Bitwarden ships, installed into /Applications.
+    preferCask = true;
+  };
+
   "programs.security.yubico-authenticator" = {
     package = pkgs.yubioath-flutter;
     cask = "yubico-authenticator";
