@@ -151,6 +151,10 @@ in
         zed = program "Zed" { };
       };
 
+      network = section {
+        netbird = program "NetBird mesh VPN client" { };
+      };
+
       security = section {
         bitwarden = program "Bitwarden desktop client" { };
         gnupg = program "hardened GnuPG with YubiKey smart-card support" { };
@@ -230,6 +234,7 @@ in
       };
 
       sync = section {
+        localsend = program "LocalSend" { };
         nextcloud-client = program "Nextcloud desktop client" { };
       };
 
@@ -243,6 +248,11 @@ in
 
           darwinSettings = attrsOption "Ghostty configuration applied on darwin only, layered over settings.";
         };
+      };
+
+      utility = section {
+        linearmouse = program "LinearMouse" { };
+        thaw = program "Thaw menu bar manager" { };
       };
     };
 

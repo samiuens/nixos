@@ -30,6 +30,16 @@ pkgs:
     preferCask = true;
   };
 
+  "programs.network.netbird" = {
+    package = pkgs.netbird-ui;
+    cask = "netbirdio/tap/netbird-ui";
+    tap = "netbirdio/tap";
+
+    # nixpkgs does build this on darwin, but the client drives a privileged
+    # daemon and a network extension that the cask installs alongside it.
+    preferCask = true;
+  };
+
   "programs.security.bitwarden" = {
     package = pkgs.bitwarden-desktop;
     cask = "bitwarden";
@@ -49,8 +59,33 @@ pkgs:
     cask = "nextcloud";
   };
 
+  "programs.sync.localsend" = {
+    package = pkgs.localsend;
+    cask = "localsend";
+
+    # nixpkgs does build this on darwin; the cask keeps the app at a stable
+    # path, so the local network permission survives an update.
+    preferCask = true;
+  };
+
   "programs.terminal.ghostty" = {
     package = pkgs.ghostty;
     cask = "ghostty";
+  };
+
+  "programs.utility.linearmouse" = {
+    # Cask-only: LinearMouse ships as a signed application and nixpkgs has no
+    # package for it at all, so there is nothing to fall back to off darwin.
+    package = null;
+    cask = "linearmouse";
+  };
+
+  "programs.utility.thaw" = {
+    package = pkgs.thaw;
+    cask = "thaw";
+
+    # nixpkgs does build this on darwin; the cask keeps the app at a stable
+    # path, so the accessibility permission survives an update.
+    preferCask = true;
   };
 }
