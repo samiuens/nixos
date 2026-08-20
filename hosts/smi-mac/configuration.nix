@@ -143,6 +143,8 @@
         extraCasks = [
           "linearmouse"
           "thaw"
+          "netbirdio/tap/netbird-ui"
+          "localsend"
         ];
       };
 
