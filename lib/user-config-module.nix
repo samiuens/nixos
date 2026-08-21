@@ -96,6 +96,10 @@ in
     programs = section {
       raw = attrsOption "Home Manager program options passed through without translation.";
 
+      ai = section {
+        claude = program "Claude desktop app" { };
+      };
+
       audio = section {
         pulsemeeter = program "Pulsemeeter" { };
       };

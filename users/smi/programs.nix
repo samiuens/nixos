@@ -5,6 +5,12 @@ let
 in
 {
   smi.system.users.users.smi.programs = {
+    # Only wanted on the mac; the Claude desktop app has no nixpkgs package to
+    # fall back to anywhere else, so it comes from a Homebrew cask.
+    ai = lib.mkIf isDarwin {
+      claude.enable = true;
+    };
+
     communication.vesktop = {
       enable = true;
       hosts = [ "smi-nix" ];

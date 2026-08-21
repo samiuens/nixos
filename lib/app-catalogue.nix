@@ -11,6 +11,14 @@
 pkgs:
 
 {
+  "programs.ai.claude" = {
+    # Cask-only: the Claude desktop app is proprietary and ships for macOS
+    # only, so nixpkgs has no package and there is nothing to fall back to off
+    # darwin.
+    package = null;
+    cask = "claude";
+  };
+
   "programs.development.claude-code" = {
     # Repo-local rather than nixpkgs: upstream ships a prebuilt linux-x64 binary,
     # so the package is marked x86_64-linux only and darwin takes the cask.
