@@ -10,7 +10,10 @@
 
     environment.shell.enable = true;
 
-    packages.manager.enable = true;
+    packages = {
+      comma.enable = true;
+      manager.enable = true;
+    };
 
     programs.aerospace = {
       enable = true;

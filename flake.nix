@@ -85,6 +85,7 @@
       darwinInputModules = [
         inputs.home-manager.darwinModules.home-manager
         inputs.nix-homebrew.darwinModules.nix-homebrew
+        inputs.nix-index-database.darwinModules.default
         inputs.sops-nix.darwinModules.sops
       ];
 
