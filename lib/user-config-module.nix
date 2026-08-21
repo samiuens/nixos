@@ -182,6 +182,8 @@ in
 
         nodejs = program "Node.js and npm" { };
 
+        orbstack = program "OrbStack container runtime" { };
+
         pnpm = program "pnpm" { };
 
         python = program "Python" { };

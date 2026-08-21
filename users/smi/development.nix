@@ -1,3 +1,8 @@
+{ lib, pkgs, ... }:
+
+let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+in
 {
   smi.system.users.users.smi.programs.development = {
     bun.enable = true;
@@ -6,6 +11,10 @@
     direnv.enable = true;
     gh.enable = true;
     nodejs.enable = true;
+
+    # Only wanted on the mac; OrbStack is a macOS-only application.
+    orbstack.enable = lib.mkIf isDarwin true;
+
     pnpm.enable = true;
     python.enable = true;
     uv.enable = true;

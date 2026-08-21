@@ -18,6 +18,13 @@ pkgs:
     cask = "claude-code";
   };
 
+  "programs.development.orbstack" = {
+    # Cask-only: OrbStack is proprietary and macOS-only, so nixpkgs has no
+    # package and there is nothing to fall back to off darwin.
+    package = null;
+    cask = "orbstack";
+  };
+
   "programs.editor.drawio" = {
     package = pkgs.drawio;
     cask = "drawio";
