@@ -97,6 +97,8 @@ in
       raw = attrsOption "Home Manager program options passed through without translation.";
 
       ai = section {
+        chatgpt = program "ChatGPT desktop app" { };
+
         claude = program "Claude desktop app" { };
       };
 

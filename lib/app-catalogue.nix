@@ -11,6 +11,14 @@
 pkgs:
 
 {
+  "programs.ai.chatgpt" = {
+    # Cask-only: the ChatGPT desktop app is proprietary and ships for macOS
+    # only, so nixpkgs has no package and there is nothing to fall back to off
+    # darwin.
+    package = null;
+    cask = "chatgpt";
+  };
+
   "programs.ai.claude" = {
     # Cask-only: the Claude desktop app is proprietary and ships for macOS
     # only, so nixpkgs has no package and there is nothing to fall back to off

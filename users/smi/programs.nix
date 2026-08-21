@@ -5,9 +5,11 @@ let
 in
 {
   smi.system.users.users.smi.programs = {
-    # Only wanted on the mac; the Claude desktop app has no nixpkgs package to
-    # fall back to anywhere else, so it comes from a Homebrew cask.
+    # Only wanted on the mac; the Claude and ChatGPT desktop apps have no
+    # nixpkgs package to fall back to anywhere else, so they come from a
+    # Homebrew cask.
     ai = lib.mkIf isDarwin {
+      chatgpt.enable = true;
       claude.enable = true;
     };
 
