@@ -9,12 +9,16 @@ let
   smiLib = import ../../../lib { inherit lib; };
   cfg = userConfig.programs.development.codex or { };
 
-  # Prebuilt Linux-only binary; on darwin the tool is installed through Homebrew.
-  codex = pkgs.callPackage ../../../packages/codex-bin.nix { };
-  useNixPackage = smiLib.nixUsable pkgs codex;
+  catalogueKey = "programs.development.codex";
+
+  # Taken from the catalogue rather than named again here, so the package and its
+  # Homebrew cask cannot drift apart.
+  entry = (smiLib.appCatalogue pkgs).${catalogueKey};
+
+  useNixPackage = smiLib.preferNixPackage pkgs catalogueKey;
 in
 {
   config = lib.mkIf (cfg.enable or false) {
-    home.packages = lib.optional useNixPackage codex;
+    home.packages = lib.optional useNixPackage entry.package;
   };
 }

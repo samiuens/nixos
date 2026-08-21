@@ -18,6 +18,14 @@ pkgs:
     cask = "claude-code";
   };
 
+  "programs.development.codex" = {
+    # Repo-local rather than nixpkgs: upstream ships a prebuilt linux-x64
+    # binary, so the package is marked x86_64-linux only and darwin takes the
+    # cask.
+    package = pkgs.callPackage ../packages/codex-bin.nix { };
+    cask = "codex";
+  };
+
   "programs.development.orbstack" = {
     # Cask-only: OrbStack is proprietary and macOS-only, so nixpkgs has no
     # package and there is nothing to fall back to off darwin.
