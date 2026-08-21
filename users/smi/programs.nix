@@ -34,8 +34,16 @@ in
         gtk-titlebar = false;
       };
 
-      # Retina panels render the same point size noticeably smaller.
-      darwinSettings.font-size = 15;
+      darwinSettings = {
+        # Retina panels render the same point size noticeably smaller.
+        font-size = 15;
+
+        # macOS 26 hands Ghostty the native glass material. It only has
+        # something to blur when the background is not fully opaque, so the
+        # opacity below is what makes the effect visible at all.
+        background-opacity = 0.9;
+        background-blur = "macos-glass-regular";
+      };
     };
 
     sync.nextcloud-client.enable = true;
