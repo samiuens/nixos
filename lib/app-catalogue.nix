@@ -90,6 +90,12 @@ pkgs:
     cask = "monitorcontrol";
   };
 
+  "programs.utility.radix" = {
+    # Cask-only: Radix is a signed application and nixpkgs has no package.
+    package = null;
+    cask = "radix";
+  };
+
   "programs.utility.raycast" = {
     package = pkgs.raycast;
     cask = "raycast";

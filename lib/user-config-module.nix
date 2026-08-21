@@ -307,6 +307,7 @@ in
         keka = program "Keka file archiver" { };
         linearmouse = program "LinearMouse" { };
         monitorcontrol = program "MonitorControl" { };
+        radix = program "Radix disk space analyzer" { };
         raycast = program "Raycast launcher" { };
         shottr = program "Shottr screenshot tool" { };
         thaw = program "Thaw menu bar manager" { };
