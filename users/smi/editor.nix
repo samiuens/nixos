@@ -56,6 +56,8 @@ in
     # Only wanted on the mac so far.
     drawio.enable = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin true;
 
+    intellij-idea.enable = true;
+
     vscodium = {
       enable = true;
 

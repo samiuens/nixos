@@ -200,6 +200,8 @@ in
       editor = section {
         drawio = program "draw.io desktop" { };
 
+        intellij-idea = program "IntelliJ IDEA Ultimate" { };
+
         vscodium = program "VSCodium" {
           profiles = attrsOption "VSCodium profiles.";
         };

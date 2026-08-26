@@ -54,6 +54,14 @@ pkgs:
     cask = "drawio";
   };
 
+  "programs.editor.intellij-idea" = {
+    # `jetbrains.idea` is the Ultimate edition; the community build is a separate
+    # attribute and a separate cask (`intellij-idea-ce`).
+    package = pkgs.jetbrains.idea;
+    cask = "intellij-idea";
+    preferCask = true;
+  };
+
   "programs.editor.zed" = {
     package = pkgs.zed-editor;
     cask = "zed";
