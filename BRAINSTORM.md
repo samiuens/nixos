@@ -29,14 +29,14 @@
 - [ ] Add justfile for frequently-used commands
 
 ## macOS Implementation
-- [ ] tmux Theme for MacOS
-- [ ] Ghostty Font Size
+- [x] tmux Theme for MacOS
+- [x] Ghostty Font Size
 - [x] Auto-clear dock on user init
 - [x] Add aerospace
-- [ ] Add raycast or alternative
-- [ ] Add alt-tab
+- [x] Add raycast or alternative
+- [x] Add alt-tab
 - [ ] Add docker & podman
-- [ ] Add linearmouse
+- [x] Add linearmouse
 - [ ] IDE setup
 - [ ] Install cider
 - [x] Find options for defaults:
