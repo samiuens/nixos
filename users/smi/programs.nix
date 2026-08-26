@@ -60,6 +60,7 @@ in
     # no nixpkgs package to fall back to anywhere else, so they come from a
     # Homebrew cask; the rest are nixpkgs builds.
     utility = lib.mkIf isDarwin {
+      aerospace.enable = true;
       cork.enable = true;
       dockdoor.enable = true;
       keka.enable = true;

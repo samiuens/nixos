@@ -3,6 +3,9 @@
     communication.signal-desktop.enable = true;
     security.bitwarden.enable = true;
 
+    # Ignored off darwin, where AeroSpace does not exist.
+    utility.aerospace.enable = true;
+
     terminal.ghostty = {
       enable = true;
       settings = {
