@@ -13,4 +13,5 @@
   nixUsable = import ./nix-usable.nix { inherit lib; };
   preferNixPackage = import ./prefer-nix-package.nix { inherit lib; };
   userConfigModule = import ./user-config-module.nix { inherit lib; };
+  zenProfile = import ./zen-profile.nix { inherit lib; };
 }

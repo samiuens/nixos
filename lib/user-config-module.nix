@@ -126,6 +126,96 @@ in
           };
 
           betterfox = program "Betterfox preferences for Zen Browser" { };
+
+          containers = mkOption {
+            type = types.attrsOf (
+              types.submodule {
+                options = {
+                  color = mkOption {
+                    type = types.str;
+                    default = "blue";
+                    description = "Container colour shown in the tab strip.";
+                  };
+
+                  icon = mkOption {
+                    type = types.str;
+                    default = "circle";
+                    description = "Container icon shown in the tab strip.";
+                  };
+
+                  id = mkOption {
+                    type = types.nullOr types.ints.positive;
+                    default = null;
+                    description = ''
+                      Container number, for one Zen has already written. The
+                      default of `null` numbers containers in name order, which
+                      is what Zen would have done itself.
+                    '';
+                  };
+                };
+              }
+            );
+            default = { };
+            description = ''
+              Cookie jars this user's spaces are bound to. Leaving this empty
+              keeps the shared default of a single `Personal` container.
+            '';
+          };
+
+          spaces = mkOption {
+            type = types.attrsOf (
+              types.submodule {
+                options = {
+                  icon = mkOption {
+                    type = types.str;
+                    default = "circle";
+                    example = "book";
+                    description = ''
+                      Name of an icon Zen ships, or a full `chrome://` URL. The
+                      bare name is expanded to Zen's selectable icon set.
+                    '';
+                  };
+
+                  container = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    example = "School";
+                    description = ''
+                      Container this space keeps its cookies in, named as
+                      declared in `containers`. A name with no container fails
+                      the build rather than silently sharing the default jar.
+                    '';
+                  };
+
+                  position = mkOption {
+                    type = types.nullOr types.ints.unsigned;
+                    default = null;
+                    description = ''
+                      Sidebar position. The default of `null` orders spaces by
+                      name, a thousand apart, so one can be slotted between two
+                      others without renumbering them.
+                    '';
+                  };
+
+                  id = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = ''
+                      UUID of a space Zen has already created. The default of
+                      `null` derives one from the name, so a space keeps its
+                      pinned tabs when reordered but not when renamed. Pin the
+                      existing value to adopt a space rather than replace it.
+                    '';
+                  };
+                };
+              }
+            );
+            default = { };
+            description = ''
+              Zen workspaces for this user. Leaving this empty keeps the shared
+              default of a single `Personal` space.
+            '';
+          };
         };
       };
 
