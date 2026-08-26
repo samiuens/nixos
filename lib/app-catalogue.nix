@@ -137,6 +137,17 @@ pkgs:
     preferCask = true;
   };
 
+  "programs.utility.rpi-imager" = {
+    package = pkgs.rpi-imager;
+    cask = "raspberry-pi-imager";
+
+    # nixpkgs does build this on darwin, but only from source and with no cache
+    # hit, so a Qt application gets compiled locally for an SD card writer. The
+    # cask is also the build Raspberry Pi signs, which is what macOS wants
+    # before it hands an application raw disk access.
+    preferCask = true;
+  };
+
   "programs.utility.shottr" = {
     package = pkgs.shottr;
     cask = "shottr";

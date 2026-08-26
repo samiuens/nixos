@@ -321,6 +321,7 @@ in
         monitorcontrol = program "MonitorControl" { };
         radix = program "Radix disk space analyzer" { };
         raycast = program "Raycast launcher" { };
+        rpi-imager = program "Raspberry Pi Imager" { };
         shottr = program "Shottr screenshot tool" { };
         thaw = program "Thaw menu bar manager" { };
       };

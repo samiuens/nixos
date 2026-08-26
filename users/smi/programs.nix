@@ -56,20 +56,28 @@ in
 
     sync.nextcloud-client.enable = true;
 
-    # Only wanted on the mac so far. Cork, DockDoor, LinearMouse and Radix have
-    # no nixpkgs package to fall back to anywhere else, so they come from a
-    # Homebrew cask; the rest are nixpkgs builds.
-    utility = lib.mkIf isDarwin {
-      aerospace.enable = true;
-      cork.enable = true;
-      dockdoor.enable = true;
-      keka.enable = true;
-      linearmouse.enable = true;
-      monitorcontrol.enable = true;
-      radix.enable = true;
-      raycast.enable = true;
-      shottr.enable = true;
-      thaw.enable = true;
-    };
+    utility = lib.mkMerge [
+      {
+        # Wanted everywhere, unlike the rest of this section: nixpkgs builds it
+        # on Linux and darwin takes the cask.
+        rpi-imager.enable = true;
+      }
+
+      # Only wanted on the mac so far. Cork, DockDoor, LinearMouse and Radix
+      # have no nixpkgs package to fall back to anywhere else, so they come
+      # from a Homebrew cask; the rest are nixpkgs builds.
+      (lib.mkIf isDarwin {
+        aerospace.enable = true;
+        cork.enable = true;
+        dockdoor.enable = true;
+        keka.enable = true;
+        linearmouse.enable = true;
+        monitorcontrol.enable = true;
+        radix.enable = true;
+        raycast.enable = true;
+        shottr.enable = true;
+        thaw.enable = true;
+      })
+    ];
   };
 }
