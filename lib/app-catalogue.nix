@@ -76,6 +76,24 @@ pkgs:
     cask = "iina";
   };
 
+  # Cask-only: Microsoft ships Office for macOS only and nixpkgs has no package,
+  # so there is nothing to fall back to off darwin. Each application is its own
+  # cask; the `microsoft-office` bundle cask would install the rest as well.
+  "programs.office.excel" = {
+    package = null;
+    cask = "microsoft-excel";
+  };
+
+  "programs.office.powerpoint" = {
+    package = null;
+    cask = "microsoft-powerpoint";
+  };
+
+  "programs.office.word" = {
+    package = null;
+    cask = "microsoft-word";
+  };
+
   "programs.security.bitwarden" = {
     package = pkgs.bitwarden-desktop;
     cask = "bitwarden";

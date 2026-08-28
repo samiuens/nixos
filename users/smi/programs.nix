@@ -21,6 +21,14 @@ in
     # Only wanted on the mac so far; IINA is a macOS-only application.
     media.iina.enable = lib.mkIf isDarwin true;
 
+    # Only wanted on the mac; Office ships for macOS only and has no nixpkgs
+    # package to fall back to anywhere else, so it comes from a Homebrew cask.
+    office = lib.mkIf isDarwin {
+      word.enable = true;
+      excel.enable = true;
+      #powerpoint.enable = true;
+    };
+
     security = {
       bitwarden.enable = true;
       keepassxc.enable = true;

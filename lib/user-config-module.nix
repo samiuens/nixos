@@ -307,6 +307,12 @@ in
         iina = program "IINA media player" { };
       };
 
+      office = section {
+        excel = program "Microsoft Excel" { };
+        powerpoint = program "Microsoft PowerPoint" { };
+        word = program "Microsoft Word" { };
+      };
+
       security = section {
         bitwarden = program "Bitwarden desktop client" { };
         gnupg = program "hardened GnuPG with YubiKey smart-card support" { };
