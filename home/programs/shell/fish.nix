@@ -27,6 +27,15 @@ in
         ++ lib.optional (enabled "done") (plugin "done" pkgs.fishPlugins.done)
         ++ lib.optional (enabled "fzf") (plugin "fzf" pkgs.fishPlugins.fzf-fish)
         ++ lib.optional (enabled "sponge") (plugin "sponge" pkgs.fishPlugins.sponge);
+
+      # Tools installed outside the nix profile land here — `uv tool install`
+      # is the one in use. Appended rather than prepended so the declared
+      # profile still wins on a name clash, and `--path` keeps the entry in
+      # $PATH rather than the universal $fish_user_paths, which would persist
+      # into fish_variables and drift from what is declared here.
+      shellInit = ''
+        fish_add_path --global --append --path "$HOME/.local/bin"
+      '';
     }
     // lib.optionalAttrs ((cfg.interactiveShellInit or "") != "") {
       inherit (cfg) interactiveShellInit;
