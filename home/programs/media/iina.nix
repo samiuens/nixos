@@ -8,13 +8,8 @@
 let
   smiLib = import ../../../lib { inherit lib; };
   cfg = userConfig.programs.media.iina or { };
-
   catalogueKey = "programs.media.iina";
-
-  # Taken from the catalogue rather than named again here, so the package and its
-  # Homebrew cask cannot drift apart.
   entry = (smiLib.appCatalogue pkgs).${catalogueKey};
-
   useNixPackage = smiLib.preferNixPackage pkgs catalogueKey;
 in
 {
