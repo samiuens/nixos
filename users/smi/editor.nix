@@ -55,8 +55,7 @@ in
   smi.system.users.users.smi.programs.editor = {
     datagrip.enable = true;
 
-    # Only wanted on the mac so far.
-    drawio.enable = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin true;
+    drawio.enable = true;
 
     intellij-idea.enable = true;
 
