@@ -54,7 +54,7 @@ in
 
       darwinSettings = {
         # Retina panels render the same point size noticeably smaller.
-        font-size = 15;
+        font-size = 16;
 
         # macOS 26 hands Ghostty the native glass material. It only has
         # something to blur when the background is not fully opaque, so the
