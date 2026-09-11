@@ -146,18 +146,6 @@ pkgs:
     cask = "ghostty";
   };
 
-  "programs.utility.cork" = {
-    # Cask-only: Cork is a Homebrew front end and nixpkgs has no package for it.
-    package = null;
-    cask = "cork";
-  };
-
-  "programs.utility.dockdoor" = {
-    # Cask-only: DockDoor is a signed application and nixpkgs has no package.
-    package = null;
-    cask = "dockdoor";
-  };
-
   "programs.utility.keka" = {
     package = pkgs.keka;
     cask = "keka";

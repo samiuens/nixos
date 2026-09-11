@@ -73,13 +73,11 @@ in
         rpi-imager.enable = true;
       }
 
-      # Only wanted on the mac so far. Cork, DockDoor, LinearMouse and Radix
-      # have no nixpkgs package to fall back to anywhere else, so they come
-      # from a Homebrew cask; the rest are nixpkgs builds.
+      # Only wanted on the mac so far. LinearMouse and Radix have no nixpkgs
+      # package to fall back to anywhere else, so they come from a Homebrew
+      # cask; the rest are nixpkgs builds.
       (lib.mkIf isDarwin {
         aerospace.enable = true;
-        cork.enable = true;
-        dockdoor.enable = true;
         keka.enable = true;
         linearmouse.enable = true;
         monitorcontrol.enable = true;

@@ -420,8 +420,6 @@ in
           settings = attrsOption "AeroSpace configuration, layered over the shared defaults.";
         };
 
-        cork = program "Cork, a Homebrew front end" { };
-        dockdoor = program "DockDoor window peeking" { };
         keka = program "Keka file archiver" { };
         linearmouse = program "LinearMouse" { };
         monitorcontrol = program "MonitorControl" { };
