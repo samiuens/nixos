@@ -13,6 +13,8 @@ in
       claude.enable = true;
     };
 
+    cad.bambu-studio.enable = lib.mkIf isDarwin true;
+
     communication.vesktop = {
       enable = true;
       hosts = [ "smi-nix" ];

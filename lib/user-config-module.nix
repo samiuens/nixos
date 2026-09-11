@@ -219,6 +219,10 @@ in
         };
       };
 
+      cad = section {
+        bambu-studio = program "Bambu Studio" { };
+      };
+
       communication = section {
         signal-desktop = program "Signal Desktop" { };
 

@@ -27,6 +27,13 @@ pkgs:
     cask = "claude";
   };
 
+  "programs.cad.bambu-studio" = {
+    # nixpkgs packages this for Linux only, so darwin has nothing to fall back
+    # to and takes the cask.
+    package = pkgs.bambu-studio;
+    cask = "bambu-studio";
+  };
+
   "programs.development.claude-code" = {
     # Repo-local rather than nixpkgs: upstream ships a prebuilt linux-x64 binary,
     # so the package is marked x86_64-linux only and darwin takes the cask.
