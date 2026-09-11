@@ -49,6 +49,16 @@ pkgs:
     cask = "orbstack";
   };
 
+  "programs.editor.datagrip" = {
+    package = pkgs.jetbrains.datagrip;
+    cask = "datagrip";
+
+    # nixpkgs does build this on darwin, but JetBrains ships DataGrip with its
+    # own updater and the cask is marked `auto_updates`; from the store it would
+    # sit frozen between flake updates, as with the IDEA entry below.
+    preferCask = true;
+  };
+
   "programs.editor.drawio" = {
     package = pkgs.drawio;
     cask = "drawio";

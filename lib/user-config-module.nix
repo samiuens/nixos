@@ -288,6 +288,8 @@ in
       };
 
       editor = section {
+        datagrip = program "DataGrip" { };
+
         drawio = program "draw.io desktop" { };
 
         intellij-idea = program "IntelliJ IDEA Ultimate" { };
