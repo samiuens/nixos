@@ -294,6 +294,8 @@ in
 
         intellij-idea = program "IntelliJ IDEA Ultimate" { };
 
+        obsidian = program "Obsidian" { };
+
         vscodium = program "VSCodium" {
           profiles = attrsOption "VSCodium profiles.";
         };

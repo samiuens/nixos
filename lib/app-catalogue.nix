@@ -72,6 +72,17 @@ pkgs:
     preferCask = true;
   };
 
+  "programs.editor.obsidian" = {
+    package = pkgs.obsidian;
+    cask = "obsidian";
+
+    # nixpkgs does build this on darwin, by unpacking the same signed
+    # application the cask installs. Obsidian updates itself in place, though,
+    # which it cannot do from a read-only store path, so the cask keeps it
+    # current between flake updates.
+    preferCask = true;
+  };
+
   "programs.editor.zed" = {
     package = pkgs.zed-editor;
     cask = "zed";

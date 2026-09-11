@@ -60,6 +60,8 @@ in
 
     intellij-idea.enable = true;
 
+    obsidian.enable = true;
+
     vscodium = {
       enable = true;
 
