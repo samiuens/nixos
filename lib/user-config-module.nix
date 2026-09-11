@@ -425,6 +425,7 @@ in
         keka = program "Keka file archiver" { };
         linearmouse = program "LinearMouse" { };
         monitorcontrol = program "MonitorControl" { };
+        pearcleaner = program "Pearcleaner app uninstaller" { };
         radix = program "Radix disk space analyzer" { };
         raycast = program "Raycast launcher" { };
         rpi-imager = program "Raspberry Pi Imager" { };

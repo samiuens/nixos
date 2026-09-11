@@ -83,6 +83,7 @@ in
         keka.enable = true;
         linearmouse.enable = true;
         monitorcontrol.enable = true;
+        pearcleaner.enable = true;
         radix.enable = true;
         raycast.enable = true;
         shottr.enable = true;

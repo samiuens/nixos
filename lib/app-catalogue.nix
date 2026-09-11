@@ -175,6 +175,13 @@ pkgs:
     cask = "monitorcontrol";
   };
 
+  "programs.utility.pearcleaner" = {
+    # Cask-only: Pearcleaner is a macOS-only application and nixpkgs has no
+    # package, so there is nothing to fall back to off darwin.
+    package = null;
+    cask = "pearcleaner";
+  };
+
   "programs.utility.radix" = {
     # Cask-only: Radix is a signed application and nixpkgs has no package.
     package = null;
