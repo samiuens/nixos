@@ -28,7 +28,7 @@ in
     office = lib.mkIf isDarwin {
       word.enable = true;
       excel.enable = true;
-      #powerpoint.enable = true;
+      powerpoint.enable = false;
     };
 
     security = {
