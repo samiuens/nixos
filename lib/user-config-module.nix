@@ -312,7 +312,15 @@ in
           profiles = attrsOption "Visual Studio Code profiles.";
         };
 
-        zed = program "Zed" { };
+        zed = program "Zed" {
+          extensions = mkOption {
+            type = types.listOf types.str;
+            default = [ ];
+            description = "Zed extensions to install, in addition to the shared Nix extension.";
+          };
+
+          settings = attrsOption "Zed settings, layered over the shared defaults.";
+        };
       };
 
       education = section {
