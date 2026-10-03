@@ -55,7 +55,7 @@ in
   smi.system.users.users.smi.programs.editor = {
     arduino-ide.enable = true;
 
-    datagrip.enable = true;
+    #datagrip.enable = true;
 
     drawio.enable = true;
 
