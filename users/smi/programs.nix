@@ -72,7 +72,7 @@ in
         pearcleaner.enable = true;
         radix.enable = true;
         raycast.enable = true;
-        shottr.enable = true;
+        #shottr.enable = true;
         thaw.enable = true;
       })
     ];
