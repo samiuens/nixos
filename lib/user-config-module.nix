@@ -288,6 +288,8 @@ in
 
         python = program "Python" { };
 
+        t3-code = program "T3 Code" { };
+
         uv = program "uv" { };
       };
 

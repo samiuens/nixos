@@ -17,6 +17,7 @@ in
 
     pnpm.enable = true;
     python.enable = true;
+    t3-code.enable = true;
     uv.enable = true;
 
     git = {

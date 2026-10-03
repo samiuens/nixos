@@ -59,6 +59,16 @@ pkgs:
     cask = "orbstack";
   };
 
+  "programs.development.t3-code" = {
+    package = pkgs.t3code;
+    cask = "t3-code";
+
+    # nixpkgs does build this on darwin, but it trails the cask by several
+    # releases and T3 Code updates itself in place, which it cannot do from a
+    # read-only store path.
+    preferCask = true;
+  };
+
   "programs.editor.arduino-ide" = {
     # nixpkgs packages this for x86_64-linux only, so darwin has nothing to fall
     # back to and takes the cask.
