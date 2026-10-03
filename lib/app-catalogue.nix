@@ -7,6 +7,9 @@
 # `preferCask` for the ones where it does build but the cask is wanted anyway;
 # the flag is ignored on Linux, where nixpkgs is the only source.
 #
+# An entry with `masApp` instead of `cask` comes from the Mac App Store, for
+# applications that are not distributed any other way.
+#
 # Keys are option paths inside a user's `programs`/`services` tree in users/.
 pkgs:
 

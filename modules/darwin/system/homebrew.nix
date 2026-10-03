@@ -20,7 +20,15 @@ let
   # of the first kind return to nixpkgs automatically once support lands upstream.
   fallbackEntries = lib.filterAttrs (path: _: !(smiLib.preferNixPackage pkgs path)) wanted;
 
-  fallbackCasks = lib.mapAttrsToList (_: entry: entry.cask) fallbackEntries;
+  fallbackCasks = lib.mapAttrsToList (_: entry: entry.cask) (
+    lib.filterAttrs (_: entry: entry ? cask) fallbackEntries
+  );
+
+  fallbackMasApps = lib.listToAttrs (
+    lib.mapAttrsToList (_: entry: lib.nameValuePair entry.masApp.name entry.masApp.id) (
+      lib.filterAttrs (_: entry: entry ? masApp) fallbackEntries
+    )
+  );
 in
 {
   options.smi.system.homebrew = {
@@ -117,6 +125,7 @@ in
       enable = true;
       brews = cfg.extraBrews;
       casks = lib.unique (lib.naturalSort (fallbackCasks ++ cfg.extraCasks));
+      masApps = fallbackMasApps;
       taps = map (
         tap:
         if lib.isString tap then
