@@ -199,6 +199,8 @@ in
 
         gh = program "GitHub CLI" { };
 
+        glab = program "GitLab CLI" { };
+
         git = program "Git" {
           userName = mkOption {
             type = types.nullOr types.str;

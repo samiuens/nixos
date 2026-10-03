@@ -10,6 +10,7 @@ in
     codex.enable = true;
     direnv.enable = true;
     gh.enable = true;
+    glab.enable = true;
     nodejs.enable = true;
 
     orbstack.enable = lib.mkIf isDarwin true;
