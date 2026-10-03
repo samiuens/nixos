@@ -39,17 +39,13 @@ in
     autoMigrate = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Whether to adopt an existing Homebrew installation instead of failing.";
+      description = "Whether to adopt an existing Homebrew installation.";
     };
 
     mutableTaps = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
-        Whether Homebrew may manage its own taps. Pinning taps declaratively requires
-        adding the tap repositories as flake inputs, which makes every flake update
-        fetch several hundred megabytes of tap history.
-      '';
+      description = "Whether Homebrew may manage its own taps.";
     };
 
     autoUpdate = lib.mkOption {
@@ -61,7 +57,7 @@ in
     upgrade = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Whether to upgrade outdated formulae and casks during activation.";
+      description = "Whether to upgrade formulae and casks on activation.";
     };
 
     cleanup = lib.mkOption {
@@ -71,11 +67,7 @@ in
         "zap"
       ];
       default = "none";
-      description = ''
-        What to do with Homebrew packages that this configuration does not declare.
-        The default leaves manually installed packages alone; "uninstall" and "zap"
-        make the declared set authoritative and will remove anything installed by hand.
-      '';
+      description = "How to handle Homebrew packages not declared here.";
     };
 
     extraCasks = lib.mkOption {
@@ -93,14 +85,7 @@ in
     extraTaps = lib.mkOption {
       type = lib.types.listOf (lib.types.either lib.types.str lib.types.attrs);
       default = [ ];
-      description = ''
-        Additional taps required by extraCasks or extraBrews.
-
-        A plain name is marked trusted, because declaring a tap here is the
-        decision to trust it: Homebrew 6 refuses to load formulae and casks from
-        untrusted third-party taps and aborts activation. Pass nix-darwin's tap
-        attribute set instead to say otherwise.
-      '';
+      description = "Additional taps; plain names are marked trusted.";
     };
   };
 

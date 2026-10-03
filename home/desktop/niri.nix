@@ -14,7 +14,7 @@ in
   options.smi.desktop.niri.extraConfig = lib.mkOption {
     type = lib.types.lines;
     default = "";
-    description = "Additional Niri configuration contributed by desktop integrations.";
+    description = "Niri configuration from desktop integrations.";
   };
 
   config = lib.mkIf (cfg.enable or false) {

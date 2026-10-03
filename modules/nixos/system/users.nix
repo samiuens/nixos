@@ -110,7 +110,7 @@ in
     mutableUsers = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Whether user accounts can be changed outside NixOS configuration.";
+      description = "Whether accounts can change outside the configuration.";
     };
 
     users = lib.mkOption {
@@ -122,7 +122,7 @@ in
     enabledUsers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = builtins.attrNames cfg.users;
-      description = "Declarative users enabled on this host, identified by login name.";
+      description = "Users enabled on this host.";
     };
   };
 

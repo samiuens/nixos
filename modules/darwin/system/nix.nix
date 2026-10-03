@@ -14,14 +14,7 @@ in
 
     manageNixDaemon = lib.mkEnableOption "nix-darwin management of the Nix installation" // {
       default = true;
-      description = ''
-        Whether nix-darwin manages the Nix installation: the daemon, the
-        installed Nix version and /etc/nix/nix.conf. Turn this off for a
-        Determinate Nix installation, which runs its own daemon and aborts
-        nix-darwin activation while this is on. The `settings` options below
-        stop applying once it is off, because nix-darwin no longer writes
-        nix.conf.
-      '';
+      description = "Whether nix-darwin manages Nix; turn off for a Determinate installation.";
     };
 
     trustedUsers = lib.mkOption {
@@ -59,7 +52,7 @@ in
           Hour = 3;
           Minute = 15;
         };
-        description = "launchd calendar interval for automatic Nix garbage collection.";
+        description = "launchd interval for Nix garbage collection.";
       };
 
       options = lib.mkOption {

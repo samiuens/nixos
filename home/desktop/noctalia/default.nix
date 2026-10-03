@@ -75,7 +75,7 @@ in
     builtinTemplateIds = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      description = "Noctalia built-in template identifiers enabled by application integrations.";
+      description = "Noctalia templates enabled by integrations.";
     };
 
     userTemplates = lib.mkOption {

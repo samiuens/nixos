@@ -14,40 +14,19 @@ in
     clearOnFirstLogin = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
-        Whether to empty the pinned applications out of the dock the first time
-        each user logs in. This runs from a login agent rather than from
-        activation, because `system.defaults` only ever writes preferences for
-        `system.primaryUser` and a freshly created account is handed Apple's
-        default dock the first time it reaches the desktop.
-
-        That same hand-out is what the agent races: on a new account it can
-        land after the clear, quietly restoring the applications. The clear is
-        therefore checked and repeated, and a login that never manages it stays
-        unstamped so the next one tries again.
-      '';
+      description = "Whether to empty the dock on each user's first login.";
     };
 
     attempts = lib.mkOption {
       type = lib.types.ints.positive;
       default = 10;
-      description = ''
-        How many times a single login may clear the dock and check the result
-        before giving up and leaving the job to the next login. Each attempt
-        costs a few seconds, all of them on the first login of a new account
-        and none of them afterwards.
-      '';
+      description = "Attempts per login to clear the dock.";
     };
 
     stampFile = lib.mkOption {
       type = lib.types.str;
       default = "$HOME/.local/state/nix-config/dock-cleared";
-      description = ''
-        Marker recording that this user's dock has already been cleared. The
-        agent stops at the first login that creates it, so applications pinned
-        afterwards survive later logins. Interpreted by the shell, so it may
-        refer to `$HOME`.
-      '';
+      description = "Marker file recording that the dock was cleared; may use `$HOME`.";
     };
   };
 

@@ -35,28 +35,14 @@ let
               type = types.nullOr (types.listOf types.str);
               default = null;
               example = [ "smi-nix" ];
-              description = ''
-                Hosts this program is enabled on, named after their directory in
-                `hosts/`. The default of `null` means every host; naming hosts
-                turns the program off on all the others, whatever `enable` says
-                there.
-
-                This is for a program wanted on some machines but not others.
-                A program that only exists on one platform belongs behind a
-                `pkgs.stdenv.hostPlatform` check instead, so adding a second
-                machine of that kind does not mean editing every list.
-              '';
+              description = "Hosts this program is limited to; `null` means every host.";
             };
 
             excludeHosts = mkOption {
               type = types.listOf types.str;
               default = [ ];
               example = [ "smi-mac" ];
-              description = ''
-                Hosts this program is turned off on, for when naming the hosts
-                that keep it would be the longer list. A host named here loses
-                the program even if `hosts` also names it.
-              '';
+              description = "Hosts this program is turned off on.";
             };
           }
           // options;
@@ -143,20 +129,13 @@ in
                   id = mkOption {
                     type = types.nullOr types.ints.positive;
                     default = null;
-                    description = ''
-                      Container number, for one Zen has already written. The
-                      default of `null` numbers containers in name order, which
-                      is what Zen would have done itself.
-                    '';
+                    description = "Container number; `null` numbers containers by name.";
                   };
                 };
               }
             );
             default = { };
-            description = ''
-              Cookie jars this user's spaces are bound to. Leaving this empty
-              keeps the shared default of a single `Personal` container.
-            '';
+            description = "Containers for this user; empty keeps a single `Personal` container.";
           };
 
           spaces = mkOption {
@@ -167,51 +146,32 @@ in
                     type = types.str;
                     default = "circle";
                     example = "book";
-                    description = ''
-                      Name of an icon Zen ships, or a full `chrome://` URL. The
-                      bare name is expanded to Zen's selectable icon set.
-                    '';
+                    description = "Zen icon name or `chrome://` URL.";
                   };
 
                   container = mkOption {
                     type = types.nullOr types.str;
                     default = null;
                     example = "School";
-                    description = ''
-                      Container this space keeps its cookies in, named as
-                      declared in `containers`. A name with no container fails
-                      the build rather than silently sharing the default jar.
-                    '';
+                    description = "Container this space keeps its cookies in.";
                   };
 
                   position = mkOption {
                     type = types.nullOr types.ints.unsigned;
                     default = null;
-                    description = ''
-                      Sidebar position. The default of `null` orders spaces by
-                      name, a thousand apart, so one can be slotted between two
-                      others without renumbering them.
-                    '';
+                    description = "Sidebar position; `null` orders spaces by name.";
                   };
 
                   id = mkOption {
                     type = types.nullOr types.str;
                     default = null;
-                    description = ''
-                      UUID of a space Zen has already created. The default of
-                      `null` derives one from the name, so a space keeps its
-                      pinned tabs when reordered but not when renamed. Pin the
-                      existing value to adopt a space rather than replace it.
-                    '';
+                    description = "UUID of an existing Zen space; `null` derives one from the name.";
                   };
                 };
               }
             );
             default = { };
-            description = ''
-              Zen workspaces for this user. Leaving this empty keeps the shared
-              default of a single `Personal` space.
-            '';
+            description = "Zen spaces for this user; empty keeps a single `Personal` space.";
           };
         };
       };
@@ -313,7 +273,7 @@ in
           extensions = mkOption {
             type = types.listOf types.str;
             default = [ ];
-            description = "Zed extensions to install, in addition to the shared Nix extension.";
+            description = "Additional Zed extensions.";
           };
 
           settings = attrsOption "Zed settings, layered over the shared defaults.";

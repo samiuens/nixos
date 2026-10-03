@@ -34,7 +34,7 @@ let
             "admin"
           ];
           default = "user";
-          description = "Permission level of this user. macOS group membership is not managed declaratively.";
+          description = "Permission level of this user.";
         };
 
         extraGroups = lib.mkOption {
@@ -89,7 +89,7 @@ in
     enabledUsers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = builtins.attrNames cfg.users;
-      description = "Declarative users enabled on this host, identified by login name.";
+      description = "Users enabled on this host.";
     };
   };
 

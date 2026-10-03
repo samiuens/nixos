@@ -15,7 +15,7 @@ in
     packages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = [ pkgs.adwaita-icon-theme ];
-      description = "Theme packages installed independently of a desktop session.";
+      description = "Desktop-independent theme packages.";
     };
   };
 

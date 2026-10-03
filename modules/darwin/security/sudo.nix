@@ -14,22 +14,13 @@ in
     reattach = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
-        Whether to reattach sudo to the user's login session before it
-        authenticates. Touch ID is tied to that session, so without this it does
-        not work from inside tmux or screen, which is where most shells here
-        live. Costs a `pam_reattach` line in {file}`/etc/pam.d/sudo_local`.
-      '';
+      description = "Whether to reattach sudo to the login session, so Touch ID works inside tmux.";
     };
 
     watchId = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = ''
-        Whether an Apple Watch may authorise sudo as well. Worth having on a
-        machine that spends its time docked with the lid shut, where the Touch
-        ID sensor cannot be reached.
-      '';
+      description = "Whether an Apple Watch may authorise sudo.";
     };
   };
 

@@ -20,39 +20,13 @@ in
     disableSystemShortcuts = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
-        Whether to switch off the shortcuts macOS handles itself, the ones
-        listed under “Keyboard Shortcuts” in System Settings: Mission Control,
-        space switching, Dock hiding, Spotlight, screenshots and friends. They
-        fire before any application sees the key, so a window manager cannot
-        bind over them.
-
-        This covers `com.apple.symbolichotkeys` only. Menu commands such as
-        `cmd-q` or `cmd-h` belong to the application rather than to the system
-        and are left alone; remap those through
-        `system.defaults.NSGlobalDomain.NSUserKeyEquivalents`.
-      '';
+      description = "Whether to switch off the macOS system keyboard shortcuts.";
     };
 
     ids = lib.mkOption {
       type = lib.types.listOf lib.types.ints.unsigned;
       default = lib.range 0 260;
-      description = ''
-        Hotkey slots to sweep. macOS identifies each of its built-in shortcuts
-        by a number, and a slot that has never been written still fires, so the
-        default covers a whole range rather than only the slots already present
-        in the preference file. Numbers macOS does not use are simply ignored.
-
-        260 is the highest number System Settings knows about. It reads its own
-        list from
-
-        ```
-        /System/Library/ExtensionKit/Extensions/KeyboardSettings.appex/Contents/Resources/en.lproj/DefaultShortcutsTable.xml
-        ```
-
-        which names every slot, so that file is the place to look when picking
-        numbers for `keep`.
-      '';
+      description = "Hotkey slots to sweep.";
     };
 
     keep = lib.mkOption {
@@ -62,33 +36,14 @@ in
         64 # Show Spotlight search
         65 # Show Finder search window
       ];
-      description = ''
-        Hotkey slots handed back to macOS. Their entries are removed from the
-        preference file rather than skipped, so the shipped shortcut applies
-        again and moving a number in here revives a shortcut an earlier sweep
-        already switched off.
-
-        The flip side is that these slots are reset at every login, so a
-        shortcut named here cannot be reassigned in System Settings and made to
-        stick. Drop the number from this list to hand it back to the user.
-
-        Note that one shortcut in System Settings often spans several slots.
-        The screenshot group alone is seven of them — ⇧⌘3, ⇧⌘4 and ⇧⌘5 each
-        have their own, plus clipboard and Touch Bar variants — so a group has
-        to be named in full or dropped in full.
-      '';
+      description = "Hotkey slots reset to their macOS defaults at every login.";
       example = lib.literalExpression "[ ]";
     };
 
     batchSize = lib.mkOption {
       type = lib.types.ints.positive;
       default = 6;
-      description = ''
-        How many hotkey slots to hand `PlistBuddy` per invocation. It crashes
-        once it is given more than roughly fourteen commands at once and a slot
-        costs up to two of them, so this trades process count against that
-        limit and has no other effect.
-      '';
+      description = "Hotkey slots per PlistBuddy call; it crashes above ~14 commands.";
     };
   };
 

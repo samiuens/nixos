@@ -14,20 +14,13 @@ in
     stealthMode = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
-        Whether to drop probes for closed ports instead of answering them, which
-        also stops this host replying to pings.
-      '';
+      description = "Whether to ignore probes to closed ports, including pings.";
     };
 
     blockAllIncoming = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = ''
-        Whether to block every incoming connection apart from those needed for
-        basic internet services. This overrides the allowances below, so sharing
-        services and peer-to-peer applications stop accepting connections.
-      '';
+      description = "Whether to block all incoming connections.";
     };
 
     allowSigned = lib.mkOption {
@@ -39,10 +32,7 @@ in
     allowSignedApp = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = ''
-        Whether downloaded software signed by a valid certificate authority may
-        accept incoming connections without prompting.
-      '';
+      description = "Whether signed downloaded software may accept connections.";
     };
   };
 
