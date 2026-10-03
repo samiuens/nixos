@@ -65,6 +65,13 @@ in
   options = {
     desktop = section {
       gnome = program "GNOME desktop preferences" { };
+
+      macos = section {
+        settings = attrsOption "nix-plist-manager `applications` options, layered over the shared defaults.";
+
+        defaults = attrsOption "Preference domains nix-plist-manager does not cover, layered over the shared defaults.";
+      };
+
       niri = program "Niri desktop preferences" {
         noctalia = section {
           plugins = mkOption {
