@@ -64,6 +64,7 @@ in
         inherit hostName inputs;
       };
       sharedModules = [
+        inputs.nix-plist-manager.homeManagerModules.default
         inputs.sops-nix.homeManagerModules.sops
         inputs.zen-browser.homeModules.twilight
       ];

@@ -186,6 +186,26 @@
         "type": "github"
       }
     },
+    "nix-plist-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790802830,
+        "narHash": "sha256-Fy48l/RWmjXLiMoJ4iIv4u5AvDVZO2JjE6ovorprzKs=",
+        "owner": "sushydev",
+        "repo": "nix-plist-manager",
+        "rev": "4ef635b8b2f4c88929ea7d1a8a941acbab5de719",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sushydev",
+        "repo": "nix-plist-manager",
+        "type": "github"
+      }
+    },
     "nix4vscode": {
       "inputs": {
         "nixpkgs": [
@@ -253,6 +273,7 @@
         "nix-flatpak": "nix-flatpak",
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
+        "nix-plist-manager": "nix-plist-manager",
         "nix4vscode": "nix4vscode",
         "nixpkgs": "nixpkgs",
         "noctalia-greeter": "noctalia-greeter",
