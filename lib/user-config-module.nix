@@ -70,6 +70,19 @@ in
         settings = attrsOption "nix-plist-manager `applications` options, layered over the shared defaults.";
 
         defaults = attrsOption "Preference domains nix-plist-manager does not cover, layered over the shared defaults.";
+
+        disableSystemShortcuts = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Whether to switch off the macOS system keyboard shortcuts.";
+        };
+
+        keepShortcuts = mkOption {
+          type = types.nullOr (types.listOf types.ints.unsigned);
+          default = null;
+          example = [ 32 ];
+          description = "Hotkey slots left at their macOS defaults; `null` keeps Mission Control, Finder search and, without Raycast, Spotlight.";
+        };
       };
 
       niri = program "Niri desktop preferences" {

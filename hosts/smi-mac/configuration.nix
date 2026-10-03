@@ -36,16 +36,6 @@
         cleanup = "uninstall";
       };
 
-      keyboard = {
-        enable = true;
-
-        # Spotlight's slot is left out so cmd-space stays free for Raycast.
-        keep = [
-          32 # Mission Control, named “All windows” in the table
-          65 # Show Finder search window
-        ];
-      };
-
       nix = {
         enable = true;
 
