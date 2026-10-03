@@ -8,6 +8,7 @@ in
     ai = lib.mkIf isDarwin {
       chatgpt.enable = true;
       claude.enable = true;
+      codexbar.enable = true;
     };
 
     cad.bambu-studio.enable = lib.mkIf isDarwin true;
