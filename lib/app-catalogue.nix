@@ -166,6 +166,16 @@ pkgs:
     cask = "ghostty";
   };
 
+  "programs.utility.amphetamine" = {
+    # Mac App Store only: Amphetamine has no cask and no nixpkgs package, so
+    # there is nothing to fall back to off darwin.
+    package = null;
+    masApp = {
+      name = "Amphetamine";
+      id = 937984704;
+    };
+  };
+
   "programs.utility.keka" = {
     package = pkgs.keka;
     cask = "keka";
