@@ -13,10 +13,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # Unlike NixOS, darwin takes the whole client from Homebrew. nixpkgs lists
-    # netbird-ui as building here, but it pulls in webkitgtk, which is broken on
-    # darwin, and pairing the cask's app with a nixpkgs daemon would leave the
-    # two on different versions.
+    # netbird-ui from nixpkgs pulls in webkitgtk, which is broken on darwin.
     smi.system.homebrew = {
       extraCasks = [ "netbirdio/tap/netbird-ui" ];
       extraTaps = [ "netbirdio/tap" ];

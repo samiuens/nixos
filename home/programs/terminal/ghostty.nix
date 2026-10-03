@@ -11,11 +11,8 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  # nixpkgs has no darwin build of ghostty. There the app comes from a Homebrew
-  # cask and Home Manager only manages its configuration file.
   useNixPackage = smiLib.nixUsable pkgs pkgs.ghostty;
 
-  # gtk-* are Linux-only ghostty options.
   settings = lib.filterAttrs (name: _: !(isDarwin && lib.hasPrefix "gtk-" name)) (
     (cfg.settings or { }) // lib.optionalAttrs isDarwin (cfg.darwinSettings or { })
   );

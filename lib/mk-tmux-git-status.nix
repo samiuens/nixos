@@ -1,7 +1,5 @@
 _:
 
-# Status-line helper that prints the current branch of a directory, suffixed
-# with an asterisk when the worktree is dirty. Shared by every tmux theme.
 pkgs:
 pkgs.writeShellApplication {
   name = "tmux-git-status";

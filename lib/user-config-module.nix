@@ -1,7 +1,4 @@
-# `hostName` names the host being built, after its directory in `hosts/`. It is
-# what `programs.<...>.hosts` is matched against, and is required rather than
-# defaulted so a missing argument fails loudly instead of quietly scoping every
-# program to nothing.
+# `hostName` has no default so a missing argument fails instead of scoping every program to nothing.
 { lib }:
 
 { hostName }:

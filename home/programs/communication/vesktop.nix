@@ -12,7 +12,6 @@ let
 
   base = pkgs.vesktop.override { withSystemVencord = true; };
 
-  # NIXOS_OZONE_WL only means anything to Electron on Wayland.
   vesktop =
     if isLinux then
       pkgs.symlinkJoin {

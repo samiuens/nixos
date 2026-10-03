@@ -10,8 +10,6 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  # Shared baseline, layered under the user's `settings` so a user restates only
-  # the keys they want changed rather than the whole window manager.
   baseSettings = {
     config-version = 2;
 
@@ -131,49 +129,30 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
-  # AeroSpace starts itself, through the `start-at-login` its own configuration
-  # already understands, rather than through a launchd agent.
-  #
-  # The generated file has to be replaced rather than configured, because Home
-  # Manager writes that key out as `false` unconditionally — a plain `//` over
-  # `settings`, not something `launchd.enable` gates. It is kept out of
-  # `settings` for the same reason: Home Manager asserts against `start-at-login`
-  # unless its own launchd agent is the thing doing the starting.
+  # Home Manager always writes start-at-login = false and asserts against it
+  # without its launchd agent, so the generated file is replaced instead.
   configFile = tomlFormat.generate "aerospace" (settings // { start-at-login = true; });
 in
 {
   config = lib.mkMerge [
-    # Home Manager's AeroSpace module asserts it is running on darwin, so the
-    # platform check belongs here rather than in every user's file.
     (lib.mkIf (isDarwin && (cfg.enable or false)) {
       programs.aerospace = {
         enable = true;
         inherit settings;
 
-        # No launchd agent: AeroSpace registers itself as a login item instead,
-        # so the two cannot both start it.
         launchd.enable = false;
       };
 
       home.file.".aerospace.toml".source = lib.mkForce configFile;
     })
 
-    # nix-darwin's `services.aerospace` wrote its launchd agent straight into
-    # ~/Library/LaunchAgents rather than into the system generation, so dropping
-    # that module left the plist behind on every account that had activated it:
-    # still loaded, still starting a second AeroSpace to fight this one over the
-    # same windows. No generation refers to the file, so nothing will ever
-    # collect it and each account has to clear its own copy.
-    #
-    # Deliberately not gated on `enable`. Turning AeroSpace off should take the
-    # stray agent with it, rather than leaving it as the only copy running.
+    # Removes the agent nix-darwin's services.aerospace left in ~/Library/LaunchAgents.
+    # Not gated on `enable`, so turning AeroSpace off removes it too.
     (lib.mkIf isDarwin {
       home.activation.removeNixDarwinAerospaceAgent = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         orphan_agent="$HOME/Library/LaunchAgents/org.nixos.aerospace.plist"
 
         if [[ -e "$orphan_agent" ]]; then
-          # Fails when the account is not logged in and so has no GUI domain,
-          # which is fine: removing the plist stops it coming back either way.
           run /bin/launchctl bootout "gui/$(id -u)/org.nixos.aerospace" 2>/dev/null || true
           run rm -f "$orphan_agent"
         fi

@@ -12,7 +12,6 @@ in
     gh.enable = true;
     nodejs.enable = true;
 
-    # Only wanted on the mac; OrbStack is a macOS-only application.
     orbstack.enable = lib.mkIf isDarwin true;
 
     pnpm.enable = true;

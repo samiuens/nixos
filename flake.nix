@@ -98,9 +98,7 @@
         };
       };
     in
-    # Only the systems this repository targets: nixpkgs 26.11 dropped x86_64-darwin,
-    # and aarch64-linux is unused. Narrowing the list keeps `nix flake check
-    # --all-systems` usable as the CI gate for the darwin configuration.
+    # Nixpkgs 26.11 dropped x86_64-darwin; keeps `nix flake check --all-systems` usable.
     flake-utils.lib.eachSystem
       [
         "aarch64-darwin"
@@ -171,7 +169,6 @@
           packages = {
             graphify = pkgs.callPackage ./packages/graphify/default.nix { };
           }
-          # Prebuilt Linux-only binaries; darwin installs these through Homebrew.
           // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
             claude-code-bin = pkgs.callPackage ./packages/claude-code-bin.nix { };
             codex-bin = pkgs.callPackage ./packages/codex-bin.nix { };

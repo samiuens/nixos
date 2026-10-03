@@ -72,11 +72,9 @@ in
             "@mw"
           ];
         };
-        # Add alias to the built-in engines (no duplicates)
         duckduckgo.metaData.alias = "@ddg";
         google.metaData.alias = "@g";
 
-        # Disable default engines
         bing.metaData.hidden = "true";
         ecosia.metaData.hidden = "true";
         wikipedia.metaData.hidden = "true";

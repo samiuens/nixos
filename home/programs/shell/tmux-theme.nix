@@ -10,9 +10,6 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  # On NixOS the status line is themed by Noctalia, which regenerates the
-  # colours from the desktop palette. macOS has no such source, so the palette
-  # is spelled out here and mirrors the Noctalia fallback theme.
   enabled = isDarwin && (userConfig.programs.shell.tmux.enable or false);
 
   gitStatus = smiLib.mkTmuxGitStatus pkgs;

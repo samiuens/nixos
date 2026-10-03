@@ -105,8 +105,7 @@ in
       }
     ];
 
-    # macOS accounts are created by the OS, so users.knownUsers is deliberately left unset:
-    # this only describes accounts that already exist.
+    # macOS creates the accounts, so users.knownUsers stays unset.
     users.users = lib.mapAttrs mkDarwinUser enabledUsers;
   };
 }

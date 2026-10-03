@@ -1,63 +1,36 @@
-# Applications that come from Homebrew rather than nixpkgs on darwin. Each entry
-# pairs the nixpkgs package with the Homebrew cask; `preferNixPackage` decides
-# which one applies on a given platform, so an entry needs no change when nixpkgs
-# gains support for a new system.
-#
-# Most entries are here because nixpkgs has no darwin build at all. Set
-# `preferCask` for the ones where it does build but the cask is wanted anyway;
-# the flag is ignored on Linux, where nixpkgs is the only source.
-#
-# An entry with `masApp` instead of `cask` comes from the Mac App Store, for
-# applications that are not distributed any other way.
-#
-# Keys are option paths inside a user's `programs`/`services` tree in users/.
+# nixpkgs package paired with a Homebrew cask (or `masApp`), keyed by option path.
+# `preferCask` takes the cask on darwin even when nixpkgs builds it.
 pkgs:
 
 {
   "programs.ai.chatgpt" = {
-    # Cask-only: the ChatGPT desktop app is proprietary and ships for macOS
-    # only, so nixpkgs has no package and there is nothing to fall back to off
-    # darwin.
     package = null;
     cask = "chatgpt";
   };
 
   "programs.ai.claude" = {
-    # Cask-only: the Claude desktop app is proprietary and ships for macOS
-    # only, so nixpkgs has no package and there is nothing to fall back to off
-    # darwin.
     package = null;
     cask = "claude";
   };
 
   "programs.cad.bambu-studio" = {
-    # nixpkgs packages this for Linux only, so darwin has nothing to fall back
-    # to and takes the cask.
     package = pkgs.bambu-studio;
     cask = "bambu-studio";
   };
 
   "programs.development.claude-code" = {
-    # Repo-local rather than nixpkgs: upstream ships a prebuilt linux-x64 binary,
-    # so the package is marked x86_64-linux only and darwin takes the cask.
     package = pkgs.callPackage ../packages/claude-code-bin.nix { };
 
-    # The `@latest` channel ships each release as it lands; the plain cask trails
-    # it, and the two conflict over the `claude` binary.
+    # The plain cask conflicts with `@latest` over the `claude` binary.
     cask = "claude-code@latest";
   };
 
   "programs.development.codex" = {
-    # Repo-local rather than nixpkgs: upstream ships a prebuilt linux-x64
-    # binary, so the package is marked x86_64-linux only and darwin takes the
-    # cask.
     package = pkgs.callPackage ../packages/codex-bin.nix { };
     cask = "codex";
   };
 
   "programs.development.orbstack" = {
-    # Cask-only: OrbStack is proprietary and macOS-only, so nixpkgs has no
-    # package and there is nothing to fall back to off darwin.
     package = null;
     cask = "orbstack";
   };
@@ -66,15 +39,10 @@ pkgs:
     package = pkgs.t3code;
     cask = "t3-code";
 
-    # nixpkgs does build this on darwin, but it trails the cask by several
-    # releases and T3 Code updates itself in place, which it cannot do from a
-    # read-only store path.
     preferCask = true;
   };
 
   "programs.editor.arduino-ide" = {
-    # nixpkgs packages this for x86_64-linux only, so darwin has nothing to fall
-    # back to and takes the cask.
     package = pkgs.arduino-ide;
     cask = "arduino-ide";
   };
@@ -83,9 +51,6 @@ pkgs:
     package = pkgs.jetbrains.datagrip;
     cask = "datagrip";
 
-    # nixpkgs does build this on darwin, but JetBrains ships DataGrip with its
-    # own updater and the cask is marked `auto_updates`; from the store it would
-    # sit frozen between flake updates, as with the IDEA entry below.
     preferCask = true;
   };
 
@@ -95,8 +60,7 @@ pkgs:
   };
 
   "programs.editor.intellij-idea" = {
-    # `jetbrains.idea` is the Ultimate edition; the community build is a separate
-    # attribute and a separate cask (`intellij-idea-ce`).
+    # Ultimate edition; Community is `intellij-idea-ce`.
     package = pkgs.jetbrains.idea;
     cask = "intellij-idea";
     preferCask = true;
@@ -106,10 +70,6 @@ pkgs:
     package = pkgs.obsidian;
     cask = "obsidian";
 
-    # nixpkgs does build this on darwin, by unpacking the same signed
-    # application the cask installs. Obsidian updates itself in place, though,
-    # which it cannot do from a read-only store path, so the cask keeps it
-    # current between flake updates.
     preferCask = true;
   };
 
@@ -117,8 +77,6 @@ pkgs:
     package = pkgs.zed-editor;
     cask = "zed";
 
-    # nixpkgs does build this on darwin, but only as a source build that trails
-    # the cask by several releases.
     preferCask = true;
   };
 
@@ -126,9 +84,6 @@ pkgs:
     package = pkgs.anki;
     cask = "anki";
 
-    # nixpkgs does build this on darwin, but only from source and with no cache
-    # hit, so a Rust and Qt application gets compiled locally for a flashcard
-    # program.
     preferCask = true;
   };
 
@@ -136,9 +91,6 @@ pkgs:
     package = pkgs.ente-desktop;
     cask = "ente";
 
-    # nixpkgs does build this on darwin, but Ente ships its own updater and the
-    # cask is marked `auto_updates`; from the store it would sit frozen between
-    # flake updates.
     preferCask = true;
   };
 
@@ -147,9 +99,6 @@ pkgs:
     cask = "iina";
   };
 
-  # Cask-only: Microsoft ships Office for macOS only and nixpkgs has no package,
-  # so there is nothing to fall back to off darwin. Each application is its own
-  # cask; the `microsoft-office` bundle cask would install the rest as well.
   "programs.office.excel" = {
     package = null;
     cask = "microsoft-excel";
@@ -169,8 +118,6 @@ pkgs:
     package = pkgs.bitwarden-desktop;
     cask = "bitwarden";
 
-    # nixpkgs does build this on darwin; the cask is preferred anyway so the app
-    # is the signed build Bitwarden ships, installed into /Applications.
     preferCask = true;
   };
 
@@ -195,8 +142,6 @@ pkgs:
   };
 
   "programs.utility.linearmouse" = {
-    # Cask-only: LinearMouse ships as a signed application and nixpkgs has no
-    # package for it at all, so there is nothing to fall back to off darwin.
     package = null;
     cask = "linearmouse";
   };
@@ -207,14 +152,11 @@ pkgs:
   };
 
   "programs.utility.pearcleaner" = {
-    # Cask-only: Pearcleaner is a macOS-only application and nixpkgs has no
-    # package, so there is nothing to fall back to off darwin.
     package = null;
     cask = "pearcleaner";
   };
 
   "programs.utility.radix" = {
-    # Cask-only: Radix is a signed application and nixpkgs has no package.
     package = null;
     cask = "radix";
   };
@@ -223,9 +165,6 @@ pkgs:
     package = pkgs.raycast;
     cask = "raycast";
 
-    # nixpkgs does build this on darwin, but Raycast ships its own updater and
-    # expects to keep itself current; from the store it would sit frozen between
-    # flake updates.
     preferCask = true;
   };
 
@@ -233,10 +172,6 @@ pkgs:
     package = pkgs.rpi-imager;
     cask = "raspberry-pi-imager";
 
-    # nixpkgs does build this on darwin, but only from source and with no cache
-    # hit, so a Qt application gets compiled locally for an SD card writer. The
-    # cask is also the build Raspberry Pi signs, which is what macOS wants
-    # before it hands an application raw disk access.
     preferCask = true;
   };
 
@@ -249,8 +184,7 @@ pkgs:
     package = pkgs.thaw;
     cask = "thaw";
 
-    # nixpkgs does build this on darwin; the cask keeps the app at a stable
-    # path, so the accessibility permission survives an update.
+    # A stable path keeps the accessibility permission across updates.
     preferCask = true;
   };
 }

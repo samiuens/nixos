@@ -14,10 +14,6 @@ let
 
   wanted = smiLib.enabledCatalogueEntries pkgs enabledUsers;
 
-  # An application falls back to Homebrew only when an enabled user asks for it
-  # and the catalogue says nixpkgs is not the source here -- either because the
-  # package has no darwin build, or because the entry sets `preferCask`. Entries
-  # of the first kind return to nixpkgs automatically once support lands upstream.
   fallbackEntries = lib.filterAttrs (path: _: !(smiLib.preferNixPackage pkgs path)) wanted;
 
   fallbackCasks = lib.mapAttrsToList (_: entry: entry.cask) (

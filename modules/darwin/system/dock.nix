@@ -53,16 +53,12 @@ in
 
   config = lib.mkIf (cfg.enable && cfg.clearOnFirstLogin) {
     launchd.agents.clear-dock = {
-      # /Library/LaunchAgents, so every account picks this up at login rather
-      # than just the primary user.
       serviceConfig = {
         RunAtLoad = true;
-        # Sessions without a desktop have no dock to clear.
         LimitLoadToSessionType = "Aqua";
       };
 
-      # PATH is not guaranteed this early in a login session, and none of these
-      # come from nixpkgs.
+      # PATH is not set this early in a login session.
       script = ''
         stamp="${cfg.stampFile}"
 
@@ -73,7 +69,6 @@ in
         plist="$(/usr/bin/mktemp -t dock)"
         trap '/bin/rm -f "$plist"' EXIT
 
-        # An absent key means an empty dock, which is the state being aimed at.
         pinned() {
           /usr/bin/defaults export com.apple.dock "$plist"
           /usr/bin/plutil -extract persistent-apps raw -o - "$plist" 2>/dev/null || echo 0
@@ -84,8 +79,7 @@ in
         while [ "$attempt" -lt ${toString cfg.attempts} ]; do
           attempt=$((attempt + 1))
 
-          # Writing before the dock exists only sets the preference it is about
-          # to overwrite on its way up.
+          # Writing before the dock is up gets overwritten as it starts.
           if ! /usr/bin/pgrep -x Dock >/dev/null 2>&1; then
             /bin/sleep 2
             continue
@@ -94,8 +88,7 @@ in
           /usr/bin/defaults write com.apple.dock persistent-apps -array
           /usr/bin/killall Dock || true
 
-          # Mid-restart the preference reads empty whether or not the clear
-          # held, so wait for the dock to come back before believing it.
+          # Mid-restart the preference reads empty either way.
           waited=0
 
           while [ "$waited" -lt 10 ]; do

@@ -68,9 +68,6 @@ let
     };
   };
 
-  # Catalogue entries whose nixpkgs package cannot be built here. On darwin these
-  # fall back to a Homebrew cask; Linux has no such fallback, so enabling one
-  # would leave the application quietly missing rather than failing the build.
   unavailable = lib.filterAttrs (_: entry: !(smiLib.nixUsable pkgs entry.package)) (
     smiLib.enabledCatalogueEntries pkgs enabledUsers
   );

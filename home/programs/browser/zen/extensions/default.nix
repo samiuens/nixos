@@ -35,11 +35,8 @@ in
       inherit policies;
     }
     // lib.optionalAttrs (!isDarwin) {
-      # Zen resolves its executable to the unwrapped store path, so embed the
-      # policies there in addition to Home Manager's outer finalPackage wrapper.
-      # Darwin cannot: rebuilding the package would mutate the signed bundle.
-      # Home Manager delivers the same policies there through the
-      # app.zen-browser.zen defaults domain instead, so extensions still install.
+      # Zen resolves to the unwrapped store path; darwin gets the policies through
+      # the app.zen-browser.zen defaults domain instead.
       unwrappedPackage =
         inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight-unwrapped.override
           {

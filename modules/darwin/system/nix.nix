@@ -86,9 +86,7 @@ in
         trusted-public-keys = cfg.trustedPublicKeys;
       };
 
-      # nix-darwin asserts `nix.gc.automatic -> nix.enable`, and a Determinate
-      # installation collects garbage itself, so this follows whoever manages
-      # the daemon rather than being separately configurable.
+      # Determinate collects garbage itself, and nix-darwin asserts gc needs nix.enable.
       gc = {
         automatic = cfg.gc.enable && cfg.manageNixDaemon;
         inherit (cfg.gc) interval options;

@@ -93,17 +93,10 @@ in
   };
 
   config = lib.mkIf (cfg.enable && cfg.disableSystemShortcuts) {
-    # `system.activationScripts.launchd` reloads a changed agent as root, in the
-    # root domain. An agent in /Library/LaunchAgents runs in each user's GUI
-    # domain instead, which that reload never reaches, so a switch would leave
-    # the old script running until the next login. Re-bootstrapping the console
-    # session picks the change up straight away; every other account still gets
-    # it when it next logs in.
+    # The launchd reload runs in root's domain, so re-bootstrap the console user's agent.
     system.activationScripts.postActivation.text = ''
       consoleUser="$(/usr/bin/stat -f %u /dev/console)"
 
-      # Nobody is at the desktop during a headless activation, and root owning
-      # the console means the login window rather than a session.
       if [ -n "$consoleUser" ] && [ "$consoleUser" != "0" ]; then
         echo "reloading ${label} for the console session..." >&2
         launchctl bootout "gui/$consoleUser/${label}" 2>/dev/null || true
@@ -112,32 +105,20 @@ in
     '';
 
     launchd.agents.disable-system-shortcuts = {
-      # /Library/LaunchAgents, so every account picks this up at login rather
-      # than just the primary user. `system.defaults` would only ever write the
-      # preference for `system.primaryUser`.
       serviceConfig = {
         RunAtLoad = true;
-        # Sessions without a desktop have no shortcuts to switch off.
         LimitLoadToSessionType = "Aqua";
       };
 
-      # PATH is not guaranteed this early in a login session, and none of these
-      # come from nixpkgs.
+      # PATH is not set this early in a login session.
       script = ''
         plist="$(/usr/bin/mktemp -t symbolichotkeys)"
         trap '/bin/rm -f "$plist"' EXIT
 
-        # Edit a copy rather than the live preference file: `defaults` owns the
-        # real one through cfprefsd, and writing behind its back is lost the
-        # next time it flushes its cache. A domain that does not exist yet
-        # exports as an empty plist.
+        # Edit a copy: cfprefsd owns the live file and discards writes behind its back.
         /usr/bin/defaults export com.apple.symbolichotkeys "$plist"
         /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys dict" -c "Save" "$plist" >/dev/null 2>&1 || true
 
-        # Which slots the preference file already covers. Those carry their key
-        # combination under `value`, so switching one off sets `enabled` rather
-        # than replacing the entry and System Settings still shows which
-        # shortcut each row stands for.
         present=" $(/usr/libexec/PlistBuddy -c "Print :AppleSymbolicHotKeys" "$plist" \
           | /usr/bin/sed -n 's/^ *\([0-9][0-9]*\) = Dict {$/\1/p' \
           | /usr/bin/tr '\n' ' ')"
@@ -154,10 +135,7 @@ in
         for id in ${idList sweep}; do
           case "$keep" in
             *" $id "*)
-              # Removing the slot is what restores it: macOS falls back to the
-              # shortcut it ships with, exactly as on an account that has never
-              # written this preference. A slot with nothing written for it is
-              # already stock and needs no command at all.
+              # Removing the slot restores the stock shortcut.
               case "$present" in
                 *" $id "*)
                   set -- "$@" -c "Delete :AppleSymbolicHotKeys:$id"
@@ -193,7 +171,6 @@ in
 
         /usr/bin/defaults import com.apple.symbolichotkeys "$plist"
 
-        # Otherwise the running session keeps the old set until the next login.
         /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
       '';
     };

@@ -10,7 +10,6 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  # pinentry-qt is Linux-only; darwin uses the native pinentry-mac dialog.
   pinentry = if isDarwin then pkgs.pinentry_mac else pkgs.pinentry-qt;
 in
 {

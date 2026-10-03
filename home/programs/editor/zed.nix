@@ -15,25 +15,19 @@ let
 
   useNixPackage = smiLib.preferNixPackage pkgs "programs.editor.zed";
 
-  # nixd evaluates option declarations from this flake as it was last deployed,
-  # so the same expressions work on every host wherever the checkout lives. A
-  # store path is an unlocked flake reference on its own; the narHash locks it.
+  # A store path is an unlocked flake reference; narHash locks it.
   flake = ''builtins.getFlake "path:${inputs.self}?narHash=${inputs.self.narHash}"'';
   hostOptions = "(${flake}).${
     if isDarwin then "darwinConfigurations" else "nixosConfigurations"
   }.${hostName}.options";
 
-  # Nix support is part of the shared baseline, layered under the user's
-  # `settings`, since this repository is what every user edits.
   baseSettings = {
     languages.Nix.language_servers = [
       "nixd"
       "!nil"
     ];
 
-    # The language server and formatter are referenced by store path rather
-    # than through `extraPackages`, which wraps the package and so cannot reach
-    # the cask build on darwin.
+    # Store paths, not `extraPackages`: that wraps the package, which is null on darwin.
     lsp.nixd = {
       binary.path = lib.getExe pkgs.nixd;
 
