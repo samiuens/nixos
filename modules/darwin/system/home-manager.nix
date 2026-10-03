@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  hostName,
   inputs,
   ...
 }:
@@ -60,7 +61,7 @@ in
     home-manager = {
       inherit (cfg) useGlobalPkgs useUserPackages backupFileExtension;
       extraSpecialArgs = {
-        inherit inputs;
+        inherit hostName inputs;
       };
       sharedModules = [
         inputs.sops-nix.homeManagerModules.sops

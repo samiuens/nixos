@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  hostName,
   inputs,
   ...
 }:
@@ -66,7 +67,7 @@ in
     home-manager = {
       inherit (cfg) useGlobalPkgs useUserPackages backupFileExtension;
       extraSpecialArgs = {
-        inherit inputs;
+        inherit hostName inputs;
         niriDisplayManager = config.smi.desktop.niri.displayManager;
       };
       sharedModules = [
