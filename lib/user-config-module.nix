@@ -438,7 +438,6 @@ in
           settings = attrsOption "AeroSpace configuration, layered over the shared defaults.";
         };
 
-        amphetamine = program "Amphetamine" { };
         keka = program "Keka file archiver" { };
         linearmouse = program "LinearMouse" { };
         monitorcontrol = program "MonitorControl" { };

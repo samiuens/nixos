@@ -69,7 +69,6 @@ in
       # Darwin
       (lib.mkIf isDarwin {
         aerospace.enable = true;
-        amphetamine.enable = true;
         keka.enable = true;
         linearmouse.enable = true;
         #monitorcontrol.enable = true;
