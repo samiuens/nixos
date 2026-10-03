@@ -41,7 +41,10 @@ pkgs:
     # Repo-local rather than nixpkgs: upstream ships a prebuilt linux-x64 binary,
     # so the package is marked x86_64-linux only and darwin takes the cask.
     package = pkgs.callPackage ../packages/claude-code-bin.nix { };
-    cask = "claude-code";
+
+    # The `@latest` channel ships each release as it lands; the plain cask trails
+    # it, and the two conflict over the `claude` binary.
+    cask = "claude-code@latest";
   };
 
   "programs.development.codex" = {
