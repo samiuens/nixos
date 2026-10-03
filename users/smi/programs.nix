@@ -17,6 +17,8 @@ in
       hosts = [ "smi-nix" ];
     };
 
+    education.anki.enable = true;
+
     media.iina.enable = lib.mkIf isDarwin true;
 
     office = lib.mkIf isDarwin {

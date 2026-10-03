@@ -106,6 +106,16 @@ pkgs:
     preferCask = true;
   };
 
+  "programs.education.anki" = {
+    package = pkgs.anki;
+    cask = "anki";
+
+    # nixpkgs does build this on darwin, but only from source and with no cache
+    # hit, so a Rust and Qt application gets compiled locally for a flashcard
+    # program.
+    preferCask = true;
+  };
+
   "programs.media.iina" = {
     package = pkgs.iina;
     cask = "iina";

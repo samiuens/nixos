@@ -313,6 +313,10 @@ in
         zed = program "Zed" { };
       };
 
+      education = section {
+        anki = program "Anki" { };
+      };
+
       media = section {
         iina = program "IINA media player" { };
       };
