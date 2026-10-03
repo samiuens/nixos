@@ -292,6 +292,8 @@ in
       };
 
       editor = section {
+        arduino-ide = program "Arduino IDE" { };
+
         datagrip = program "DataGrip" { };
 
         drawio = program "draw.io desktop" { };

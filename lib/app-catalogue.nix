@@ -56,6 +56,13 @@ pkgs:
     cask = "orbstack";
   };
 
+  "programs.editor.arduino-ide" = {
+    # nixpkgs packages this for x86_64-linux only, so darwin has nothing to fall
+    # back to and takes the cask.
+    package = pkgs.arduino-ide;
+    cask = "arduino-ide";
+  };
+
   "programs.editor.datagrip" = {
     package = pkgs.jetbrains.datagrip;
     cask = "datagrip";
