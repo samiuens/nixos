@@ -23,7 +23,7 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       (lib.mkIf (cfg.displayManager == "noctalia") {
-        programs.noctalia-greeter = {
+        services.displayManager.noctalia-greeter = {
           enable = true;
 
           settings = {
@@ -45,7 +45,7 @@ in
       })
 
       (lib.mkIf (cfg.displayManager == "gdm") {
-        programs.noctalia-greeter.enable = lib.mkForce false;
+        services.displayManager.noctalia-greeter.enable = lib.mkForce false;
         services.displayManager = {
           defaultSession = "niri";
           gdm.enable = true;
