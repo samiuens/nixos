@@ -1,9 +1,17 @@
+{ lib, pkgs, ... }:
+
+let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+in
 {
   smi.system.users.users.visuax.programs = {
     communication.signal-desktop.enable = true;
     security.bitwarden.enable = true;
 
-    utility.aerospace.enable = true;
+    utility = {
+      aerospace.enable = true;
+      raycast.enable = lib.mkIf isDarwin true;
+    };
 
     terminal.ghostty = {
       enable = true;
