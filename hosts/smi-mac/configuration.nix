@@ -20,6 +20,7 @@
     services = {
       localsend.enable = true;
       netbird.enable = true;
+      tailscale.enable = true;
     };
 
     system = {

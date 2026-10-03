@@ -123,6 +123,7 @@
       netbird.enable = true;
       printing.enable = true;
       snapper.enable = true;
+      tailscale.enable = true;
     };
 
     virtualization = {
