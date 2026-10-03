@@ -129,6 +129,16 @@ pkgs:
     preferCask = true;
   };
 
+  "programs.media.ente-photos" = {
+    package = pkgs.ente-desktop;
+    cask = "ente";
+
+    # nixpkgs does build this on darwin, but Ente ships its own updater and the
+    # cask is marked `auto_updates`; from the store it would sit frozen between
+    # flake updates.
+    preferCask = true;
+  };
+
   "programs.media.iina" = {
     package = pkgs.iina;
     cask = "iina";

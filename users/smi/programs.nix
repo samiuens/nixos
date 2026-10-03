@@ -19,7 +19,10 @@ in
 
     education.anki.enable = true;
 
-    media.iina.enable = lib.mkIf isDarwin true;
+    media = {
+      ente-photos.enable = true;
+      iina.enable = lib.mkIf isDarwin true;
+    };
 
     office = lib.mkIf isDarwin {
       word.enable = true;

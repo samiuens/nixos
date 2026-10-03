@@ -320,6 +320,8 @@ in
       };
 
       media = section {
+        ente-photos = program "Ente Photos desktop client" { };
+
         iina = program "IINA media player" { };
       };
 
