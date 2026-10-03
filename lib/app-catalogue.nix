@@ -13,6 +13,11 @@ pkgs:
     cask = "claude";
   };
 
+  "programs.ai.codexbar" = {
+    package = null;
+    cask = "codexbar";
+  };
+
   "programs.cad.bambu-studio" = {
     package = pkgs.bambu-studio;
     cask = "bambu-studio";

@@ -109,6 +109,8 @@ in
         chatgpt = program "ChatGPT desktop app" { };
 
         claude = program "Claude desktop app" { };
+
+        codexbar = program "CodexBar usage monitor" { };
       };
 
       audio = section {
