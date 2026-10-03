@@ -15,10 +15,16 @@ let
     ./xdg.nix
   ];
 
-  isLinuxOnly =
-    path: lib.any (prefix: lib.hasPrefix (toString prefix) (toString path)) linuxOnlyModules;
+  darwinOnlyModules = [
+    ./darwin
+  ];
 
-  modules = lib.filter (path: !(isDarwin && isLinuxOnly path)) (smiLib.importModulesRecursive ./.);
+  isUnder =
+    prefixes: path: lib.any (prefix: lib.hasPrefix (toString prefix) (toString path)) prefixes;
+
+  modules = lib.filter (
+    path: if isDarwin then !(isUnder linuxOnlyModules path) else !(isUnder darwinOnlyModules path)
+  ) (smiLib.importModulesRecursive ./.);
 in
 {
   imports = modules;
