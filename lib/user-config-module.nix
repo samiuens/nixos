@@ -83,6 +83,12 @@ in
           example = [ 32 ];
           description = "Hotkey slots left at their macOS defaults; `null` keeps Mission Control, Finder search and, without Raycast, Spotlight.";
         };
+
+        clearDockOnFirstLogin = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Whether to empty the dock on first login.";
+        };
       };
 
       niri = program "Niri desktop preferences" {
