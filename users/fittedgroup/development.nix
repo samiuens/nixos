@@ -3,7 +3,7 @@
     bun.enable = true;
     claude-code.enable = true;
     direnv.enable = true;
-    gh.enable = true;
+    glab.enable = true;
     nodejs.enable = true;
     pnpm.enable = true;
     python.enable = true;
