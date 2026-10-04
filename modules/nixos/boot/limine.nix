@@ -15,7 +15,7 @@ in
     maxGenerations = lib.mkOption {
       type = lib.types.nullOr lib.types.int;
       default = 20;
-      description = "Maximum number of NixOS generations shown in the Limine boot menu.";
+      description = "Generations shown in the boot menu.";
     };
 
     editor = lib.mkOption {
@@ -29,7 +29,7 @@ in
 
       partitionUuid = lib.mkOption {
         type = lib.types.str;
-        description = "PARTUUID of the EFI system partition containing Windows Boot Manager.";
+        description = "PARTUUID of the Windows EFI partition.";
         example = "3da67cbf-ba14-44c6-a5cf-5a9951594208";
       };
     };
@@ -40,7 +40,7 @@ in
       autoGenerateKeys = lib.mkOption {
         type = lib.types.bool;
         default = false;
-        description = "Whether to generate Secure Boot keys automatically when none exist.";
+        description = "Whether to generate missing Secure Boot keys.";
       };
 
       autoEnrollKeys = {
@@ -52,7 +52,7 @@ in
             "--microsoft"
             "--firmware-builtin"
           ];
-          description = "Additional arguments passed to sbctl when enrolling Secure Boot keys.";
+          description = "Extra sbctl enroll arguments.";
         };
       };
     };

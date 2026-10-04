@@ -25,12 +25,8 @@ in
         inherit (cfg) theme;
       };
 
-      # Plymouth's systemd password agent handles the LUKS fallback prompt when
-      # automatic TPM2 unlocking is unavailable.
       initrd.systemd.enable = true;
 
-      # Keep routine kernel and initrd messages behind the splash. Plymouth can
-      # still be toggled with Esc, and boot failures switch back to text output.
       consoleLogLevel = 3;
       initrd.verbose = false;
       kernelParams = [

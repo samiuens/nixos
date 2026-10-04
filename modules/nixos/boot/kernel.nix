@@ -46,7 +46,7 @@ in
     extraModulePackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = [ ];
-      description = "Additional kernel module packages to build for the selected kernel.";
+      description = "Extra kernel module packages.";
     };
 
     initrd = {

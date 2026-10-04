@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  hostName,
   pkgs,
   ...
 }:
@@ -13,7 +14,7 @@ let
   userModule =
     { name, ... }:
     {
-      imports = [ smiLib.userConfigModule ];
+      imports = [ (smiLib.userConfigModule { inherit hostName; }) ];
 
       options = {
         name = lib.mkOption {
@@ -67,6 +68,10 @@ let
     };
   };
 
+  unavailable = lib.filterAttrs (_: entry: !(smiLib.nixUsable pkgs entry.package)) (
+    smiLib.enabledCatalogueEntries pkgs enabledUsers
+  );
+
   userFaces = lib.filterAttrs (_: builtins.pathExists) (
     lib.mapAttrs (name: _: ../../../users + "/${name}/_face.png") enabledUsers
   );
@@ -105,7 +110,7 @@ in
     mutableUsers = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Whether user accounts can be changed outside NixOS configuration.";
+      description = "Whether accounts can change outside the configuration.";
     };
 
     users = lib.mkOption {
@@ -117,7 +122,7 @@ in
     enabledUsers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = builtins.attrNames cfg.users;
-      description = "Declarative users enabled on this host, identified by login name.";
+      description = "Users enabled on this host.";
     };
   };
 
@@ -131,7 +136,17 @@ in
         assertion = lib.length cfg.enabledUsers == lib.length (lib.unique cfg.enabledUsers);
         message = "smi.system.users.enabledUsers must not contain duplicate usernames.";
       }
-    ];
+    ]
+    ++ lib.mapAttrsToList (path: entry: {
+      assertion = false;
+      message = ''
+        ${path} has no nixpkgs package available on ${pkgs.stdenv.hostPlatform.system}. It is
+        provided by ${
+          if entry ? masApp then "the Mac App Store" else ''the Homebrew cask "${entry.cask}"''
+        }, which only exists on darwin, so enable it there rather than for every host this user
+        is on.
+      '';
+    }) unavailable;
 
     users.mutableUsers = cfg.mutableUsers;
     users.users = lib.mapAttrs mkNixosUser enabledUsers;

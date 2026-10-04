@@ -1,0 +1,23 @@
+name: darwin
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  darwin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      # Evaluating the darwin toplevel from Linux catches configuration errors
+      # without needing a macOS runner. Building it does require one.
+      - name: Evaluate darwin configuration
+        run: nix eval .#checks.aarch64-darwin.darwin-smi-mac.drvPath

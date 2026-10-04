@@ -10,7 +10,6 @@ let
 in
 {
   config = lib.mkIf (cfg.enable or false) {
-    # Preferences declared here override Betterfox's defaults.
     programs.zen-browser.profiles.default.settings = lib.mapAttrs (_: lib.mkForce) (
       {
         # Zen specific

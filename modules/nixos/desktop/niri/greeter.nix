@@ -23,7 +23,7 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       (lib.mkIf (cfg.displayManager == "noctalia") {
-        programs.noctalia-greeter = {
+        services.displayManager.noctalia-greeter = {
           enable = true;
 
           settings = {
@@ -41,20 +41,17 @@ in
           };
         };
 
-        # Noctalia Greeter runs through greetd, so avoid starting a competing
-        # display manager.
         services.displayManager.gdm.enable = lib.mkForce false;
       })
 
       (lib.mkIf (cfg.displayManager == "gdm") {
-        programs.noctalia-greeter.enable = lib.mkForce false;
+        services.displayManager.noctalia-greeter.enable = lib.mkForce false;
         services.displayManager = {
           defaultSession = "niri";
           gdm.enable = true;
         };
 
-        # GDM launches the command from niri.desktop using its service PATH.
-        # niri-session also invokes Bash before entering the user's login shell.
+        # niri-session runs Bash before the login shell.
         systemd.services.display-manager.path = [
           config.programs.niri.package
           pkgs.bash

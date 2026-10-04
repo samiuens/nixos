@@ -1,6 +1,6 @@
 ---
 name: nix-check
-description: Use after editing any .nix file in this repo and before proposing a commit — runs the same four checks CI runs (nixfmt, nix-instantiate syntax, statix, deadnix), explains how to fix each failure, and covers which checks are cheap versus expensive.
+description: Use after editing any .nix file in this repo and before proposing a commit — runs the same checks CI runs (nixfmt, nix-instantiate syntax, statix, deadnix, plus evaluation of the aarch64-darwin host), explains how to fix each failure, and covers which checks are cheap versus expensive.
 ---
 
 # nix-check
@@ -26,7 +26,7 @@ nixfmt --check $(find . -name '*.nix' -not -name hardware-configuration.nix -not
 
 statix check -i hardware-configuration.nix .
 
-deadnix --fail --exclude ./hosts/smi-nix/hardware-configuration.nix .
+deadnix --fail --exclude ./hosts/smi-nix/hardware-configuration.nix -- .
 ```
 
 All three exit non-zero on failure, so they work in a `&&` chain. For syntax, run
@@ -50,6 +50,92 @@ never `hardware-configuration.nix` (filtered out in `flake.nix`).
 **Do not reach for `nix flake check` as the default.** It also builds the
 `nixos-smi-nix` check — the full system toplevel — which is a complete system build, not a
 lint. Run it only when you actually want to verify the system evaluates and builds.
+`nix flake check --no-build --all-systems` is the cheap variant: it evaluates everything
+for both `x86_64-linux` and `aarch64-darwin` without building, and is what the
+`update flake lock` workflow runs.
+
+## The darwin configuration
+
+`hosts/smi-mac` is an `aarch64-darwin` nix-darwin host. It cannot be *built* on a Linux
+machine, but it does evaluate on one, and that evaluation is what CI checks
+(`.github/workflows/darwin.yaml`):
+
+```bash
+nix eval .#checks.aarch64-darwin.darwin-smi-mac.drvPath
+```
+
+**Run it after touching anything under `home/`, `lib/`, `users/`, or `modules/darwin/`.**
+The first three are shared between both hosts, so it is easy to break the Mac from a file
+that looks Linux-only — and none of the four lint checks above will notice.
+
+A new module that is still untracked is invisible to the flake, so the check happily passes
+over a file it never read. If a change appears to have no effect, `git add -N` it before
+concluding anything.
+
+## Getting an application from Homebrew
+
+The usual darwin failure is a package with no `aarch64-darwin` support. The fix is not to
+drop the package — route it through `lib/app-catalogue.nix`, which pairs each nixpkgs
+package with a Homebrew cask. `modules/darwin/system/homebrew.nix` and the home modules
+both read that one catalogue, so the two never drift.
+
+```nix
+# lib/app-catalogue.nix — keyed by the option path in users/
+"programs.sync.nextcloud-client" = {
+  package = pkgs.nextcloud-client;
+  cask = "nextcloud";
+};
+```
+
+Then gate the home module on the catalogue rather than on the package — see
+`home/programs/security/bitwarden.nix` or `home/programs/editor/zed.nix`:
+
+```nix
+useNixPackage = smiLib.preferNixPackage pkgs "programs.security.bitwarden";
+```
+
+`preferNixPackage` takes the **option path, not the package**, and throws on a path the
+catalogue does not define, so a typo fails the darwin check instead of silently installing
+nothing.
+
+Entries added this way need no further change: the cask appears on darwin, and disappears
+again once nixpkgs gains support upstream.
+
+`smiLib.nixUsable` is the underlying predicate. Call it directly only for a package with no
+catalogue entry, as `home/programs/development/claude-code.nix` does — it cannot see
+`preferCask`. The three older catalogue entries (`yubico-authenticator`, `nextcloud-client`,
+`ghostty`) still call it and name their package twice; move them to `preferNixPackage` when
+you next touch them.
+
+### When nixpkgs *does* build it
+
+Set `preferCask` to take the cask anyway — for a signed `/Applications` bundle, or because
+nixpkgs trails the cask by several releases. It is ignored on Linux, where nixpkgs is the
+only source:
+
+```nix
+"programs.editor.zed" = {
+  package = pkgs.zed-editor;
+  cask = "zed";
+  preferCask = true;
+};
+```
+
+Without a `preferCask` entry the fallback will not fire, because `nixUsable` reports the
+package as perfectly usable on darwin.
+
+### When there is no nixpkgs package at all
+
+Skip the catalogue — there is nothing to pair. Use `smi.system.homebrew.extraCasks` in
+`hosts/smi-mac/configuration.nix`, plus `extraTaps` when the cask is not in `homebrew/cask`.
+
+Verify any of the above with:
+
+```bash
+nix eval .#darwinConfigurations.smi-mac.config.homebrew.casks --apply 'cs: map (c: c.name) cs' --json
+```
+
+Casks are not pinned by `flake.lock`, so this tells you *which* casks, never which versions.
 
 ## Fixing each failure
 

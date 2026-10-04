@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration";
+  description = "NixOS and nix-darwin configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -17,6 +17,18 @@
 
     home-manager = {
       url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    nix-plist-manager = {
+      url = "github:sushydev/nix-plist-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -74,129 +86,156 @@
           inherit inputs;
         };
       };
+
+      darwinInputModules = [
+        inputs.home-manager.darwinModules.home-manager
+        inputs.nix-homebrew.darwinModules.nix-homebrew
+        inputs.nix-index-database.darwinModules.default
+        inputs.sops-nix.darwinModules.sops
+      ];
+
+      darwinConfigurations = smiLib.mkDarwinConfigurations {
+        inherit (inputs) nix-darwin;
+        inputModules = darwinInputModules;
+        hostsDir = ./hosts;
+        specialArgs = {
+          inherit inputs;
+        };
+      };
     in
-    flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-          config.allowUnfreePredicate = pkg: nixpkgs.lib.getName pkg == "claude-code-bin";
-        };
+    # Nixpkgs 26.11 dropped x86_64-darwin; keeps `nix flake check --all-systems` usable.
+    flake-utils.lib.eachSystem
+      [
+        "aarch64-darwin"
+        "x86_64-linux"
+      ]
+      (
+        system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfreePredicate = pkg: nixpkgs.lib.getName pkg == "claude-code-bin";
+          };
 
-        checkedSource = nixpkgs.lib.cleanSourceWith {
-          src = ./.;
-          filter = path: type: type == "directory" || baseNameOf path != "hardware-configuration.nix";
-        };
+          checkedSource = nixpkgs.lib.cleanSourceWith {
+            src = ./.;
+            filter = path: type: type == "directory" || baseNameOf path != "hardware-configuration.nix";
+          };
 
-        hardwareConfigurationRegex = "(^|/)hardware-configuration\\.nix$";
+          hardwareConfigurationRegex = "(^|/)hardware-configuration\\.nix$";
 
-        checkNixSyntax = pkgs.writeShellScript "check-nix-syntax" ''
-          set -eu
+          checkNixSyntax = pkgs.writeShellScript "check-nix-syntax" ''
+            set -eu
 
-          export NIX_STATE_DIR="''${TMPDIR:-/tmp}/nix-syntax-state-$$"
-          mkdir -p "$NIX_STATE_DIR"
+            export NIX_STATE_DIR="''${TMPDIR:-/tmp}/nix-syntax-state-$$"
+            mkdir -p "$NIX_STATE_DIR"
 
-          for file in "$@"; do
-            ${pkgs.nix}/bin/nix-instantiate --eval-store dummy:// --parse "$file" >/dev/null
-          done
-        '';
+            for file in "$@"; do
+              ${pkgs.nix}/bin/nix-instantiate --eval-store dummy:// --parse "$file" >/dev/null
+            done
+          '';
 
-        preCommitCheck = inputs.git-hooks.lib.${system}.run {
-          src = checkedSource;
-          hooks = {
-            nixfmt = {
-              enable = true;
-              excludes = [ hardwareConfigurationRegex ];
-            };
+          preCommitCheck = inputs.git-hooks.lib.${system}.run {
+            src = checkedSource;
+            hooks = {
+              nixfmt = {
+                enable = true;
+                excludes = [ hardwareConfigurationRegex ];
+              };
 
-            nix-syntax = {
-              enable = true;
-              name = "Nix syntax";
-              entry = "${checkNixSyntax}";
-              files = "\\.nix$";
-              excludes = [ hardwareConfigurationRegex ];
-              require_serial = true;
+              nix-syntax = {
+                enable = true;
+                name = "Nix syntax";
+                entry = "${checkNixSyntax}";
+                files = "\\.nix$";
+                excludes = [ hardwareConfigurationRegex ];
+                require_serial = true;
+              };
             };
           };
-        };
-      in
-      {
-        devShells.default = pkgs.mkShell {
-          inherit (preCommitCheck) shellHook;
+        in
+        {
+          devShells.default = pkgs.mkShell {
+            inherit (preCommitCheck) shellHook;
 
-          packages =
-            preCommitCheck.enabledPackages
-            ++ (with pkgs; [
-              deadnix
-              nil
-              nixd
-              nixfmt
-              statix
-            ]);
-        };
+            packages =
+              preCommitCheck.enabledPackages
+              ++ (with pkgs; [
+                deadnix
+                nil
+                nixd
+                nixfmt
+                statix
+              ]);
+          };
 
-        formatter = pkgs.nixfmt;
+          formatter = pkgs.nixfmt;
 
-        packages = {
-          claude-code-bin = pkgs.callPackage ./packages/claude-code-bin.nix { };
-          codex-bin = pkgs.callPackage ./packages/codex-bin.nix { };
-          graphify = pkgs.callPackage ./packages/graphify/default.nix { };
-        };
+          packages = {
+            graphify = pkgs.callPackage ./packages/graphify/default.nix { };
+          }
+          // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
+            claude-code-bin = pkgs.callPackage ./packages/claude-code-bin.nix { };
+            codex-bin = pkgs.callPackage ./packages/codex-bin.nix { };
+          };
 
-        checks = {
-          pre-commit = preCommitCheck;
+          checks = {
+            pre-commit = preCommitCheck;
 
-          format =
-            pkgs.runCommand "nix-format-check"
-              {
-                nativeBuildInputs = [ pkgs.nixfmt ];
-              }
-              ''
-                ${pkgs.lib.getExe pkgs.nixfmt} --check ${checkedSource}
-                touch $out
-              '';
+            format =
+              pkgs.runCommand "nix-format-check"
+                {
+                  nativeBuildInputs = [ pkgs.nixfmt ];
+                }
+                ''
+                  ${pkgs.lib.getExe pkgs.nixfmt} --check ${checkedSource}
+                  touch $out
+                '';
 
-          syntax =
-            pkgs.runCommand "nix-syntax-check"
-              {
-                nativeBuildInputs = [ pkgs.nix ];
-              }
-              ''
-                export NIX_STATE_DIR="$TMPDIR/nix-state"
-                mkdir -p "$NIX_STATE_DIR"
+            syntax =
+              pkgs.runCommand "nix-syntax-check"
+                {
+                  nativeBuildInputs = [ pkgs.nix ];
+                }
+                ''
+                  export NIX_STATE_DIR="$TMPDIR/nix-state"
+                  mkdir -p "$NIX_STATE_DIR"
 
-                find ${checkedSource} -type f -name '*.nix' \
-                  -exec nix-instantiate --eval-store dummy:// --parse {} + >/dev/null
-                touch $out
-              '';
+                  find ${checkedSource} -type f -name '*.nix' \
+                    -exec nix-instantiate --eval-store dummy:// --parse {} + >/dev/null
+                  touch $out
+                '';
 
-          statix =
-            pkgs.runCommand "statix-check"
-              {
-                nativeBuildInputs = [ pkgs.statix ];
-              }
-              ''
-                ${pkgs.lib.getExe pkgs.statix} check ${checkedSource}
-                touch $out
-              '';
+            statix =
+              pkgs.runCommand "statix-check"
+                {
+                  nativeBuildInputs = [ pkgs.statix ];
+                }
+                ''
+                  ${pkgs.lib.getExe pkgs.statix} check ${checkedSource}
+                  touch $out
+                '';
 
-          deadnix =
-            pkgs.runCommand "deadnix-check"
-              {
-                nativeBuildInputs = [ pkgs.deadnix ];
-              }
-              ''
-                ${pkgs.lib.getExe pkgs.deadnix} --fail ${checkedSource}
-                touch $out
-              '';
+            deadnix =
+              pkgs.runCommand "deadnix-check"
+                {
+                  nativeBuildInputs = [ pkgs.deadnix ];
+                }
+                ''
+                  ${pkgs.lib.getExe pkgs.deadnix} --fail ${checkedSource}
+                  touch $out
+                '';
+          }
+          // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
+            nixos-smi-nix = nixosConfigurations.smi-nix.config.system.build.toplevel;
+          }
+          // nixpkgs.lib.optionalAttrs (system == "aarch64-darwin") {
+            darwin-smi-mac = darwinConfigurations.smi-mac.system;
+          };
         }
-        // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
-          nixos-smi-nix = nixosConfigurations.smi-nix.config.system.build.toplevel;
-        };
-      }
-    )
+      )
     // {
       lib = smiLib;
-      inherit nixosConfigurations;
+      inherit darwinConfigurations nixosConfigurations;
     };
 }

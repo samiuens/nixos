@@ -9,8 +9,7 @@ let
     _final: prev: {
       datamodel-code-generator = prev.datamodel-code-generator.overridePythonAttrs (old: {
         disabledTests = (old.disabledTests or [ ]) ++ [
-          # Ruff 0.14.14 separates future and third-party imports. These tests
-          # still expect the formatting produced by earlier Ruff versions.
+          # These tests expect pre-0.14.14 Ruff import formatting.
           "ruff"
           "test_no_use_type_checking_imports"
         ];

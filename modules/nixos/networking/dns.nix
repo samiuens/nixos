@@ -14,13 +14,13 @@ in
     provider = lib.mkOption {
       type = lib.types.enum [ "quad9" ];
       default = "quad9";
-      description = "DNS provider to configure. Only Quad9 is implemented currently.";
+      description = "DNS provider; only Quad9 is implemented.";
     };
 
     protocol = lib.mkOption {
       type = lib.types.enum [ "doh" ];
       default = "doh";
-      description = "Encrypted DNS protocol. Only DNS over HTTPS is implemented currently.";
+      description = "Encrypted DNS protocol; only DoH is implemented.";
     };
 
     listenAddress = lib.mkOption {

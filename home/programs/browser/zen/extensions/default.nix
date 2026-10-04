@@ -9,6 +9,8 @@
 let
   cfg = userConfig.programs.browser.zen or { };
 
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+
   mkExtensionSettings = builtins.mapAttrs (
     _extensionId: amoSlug: {
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/${amoSlug}/latest.xpi";
@@ -31,9 +33,10 @@ in
   config = lib.mkIf (cfg.enable or false) {
     programs.zen-browser = {
       inherit policies;
-
-      # Zen resolves its executable to the unwrapped store path, so embed the
-      # policies there in addition to Home Manager's outer finalPackage wrapper.
+    }
+    // lib.optionalAttrs (!isDarwin) {
+      # Zen resolves to the unwrapped store path; darwin gets the policies through
+      # the app.zen-browser.zen defaults domain instead.
       unwrappedPackage =
         inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight-unwrapped.override
           {

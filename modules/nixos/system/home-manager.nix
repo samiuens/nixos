@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  hostName,
   inputs,
   ...
 }:
@@ -33,25 +34,25 @@ in
     homeBaseDirectory = lib.mkOption {
       type = lib.types.str;
       default = "/home";
-      description = "Base directory where normal users' home directories are located.";
+      description = "Base directory for home directories.";
     };
 
     useGlobalPkgs = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Whether Home Manager should reuse the system nixpkgs instance.";
+      description = "Whether Home Manager reuses the system nixpkgs.";
     };
 
     useUserPackages = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Whether Home Manager should install packages through users.users.<name>.packages.";
+      description = "Whether Home Manager installs into users.users.<name>.packages.";
     };
 
     backupFileExtension = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = "backup";
-      description = "Extension used when Home Manager backs up files it would otherwise overwrite.";
+      description = "Extension for files Home Manager backs up.";
     };
   };
 
@@ -66,7 +67,7 @@ in
     home-manager = {
       inherit (cfg) useGlobalPkgs useUserPackages backupFileExtension;
       extraSpecialArgs = {
-        inherit inputs;
+        inherit hostName inputs;
         niriDisplayManager = config.smi.desktop.niri.displayManager;
       };
       sharedModules = [

@@ -53,6 +53,16 @@ let
 in
 {
   smi.system.users.users.smi.programs.editor = {
+    arduino-ide.enable = true;
+
+    #datagrip.enable = true;
+
+    drawio.enable = true;
+
+    intellij-idea.enable = true;
+
+    obsidian.enable = true;
+
     vscodium = {
       enable = true;
 
@@ -100,6 +110,22 @@ in
       };
     };
 
-    zed.enable = true;
+    zed = {
+      enable = true;
+
+      extensions = [ "material-icon-theme" ];
+
+      settings = {
+        buffer_font_family = "JetBrains Mono";
+        buffer_font_size = 16;
+        icon_theme = "Material Icon Theme";
+        terminal.font_family = "JetBrainsMono Nerd Font";
+
+        agent.dock = "left";
+        git_panel.dock = "left";
+        outline_panel.dock = "left";
+        project_panel.dock = "left";
+      };
+    };
   };
 }

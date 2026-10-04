@@ -1,4 +1,7 @@
+# `hostName` has no default so a missing argument fails instead of scoping every program to nothing.
 { lib }:
+
+{ hostName }:
 
 let
   inherit (lib) mkEnableOption mkOption types;
@@ -21,17 +24,73 @@ let
 
   program =
     description: options:
-    section (
-      {
-        enable = mkEnableOption description;
-      }
-      // options
-    );
+    mkOption {
+      type = types.submodule (
+        { config, ... }:
+        {
+          options = {
+            enable = mkEnableOption description;
+
+            hosts = mkOption {
+              type = types.nullOr (types.listOf types.str);
+              default = null;
+              example = [ "smi-nix" ];
+              description = "Hosts this program is limited to; `null` means every host.";
+            };
+
+            excludeHosts = mkOption {
+              type = types.listOf types.str;
+              default = [ ];
+              example = [ "smi-mac" ];
+              description = "Hosts this program is turned off on.";
+            };
+          }
+          // options;
+
+          config =
+            lib.mkIf
+              (
+                (config.hosts != null && !(builtins.elem hostName config.hosts))
+                || builtins.elem hostName config.excludeHosts
+              )
+              {
+                enable = lib.mkForce false;
+              };
+        }
+      );
+      default = { };
+    };
 in
 {
   options = {
     desktop = section {
       gnome = program "GNOME desktop preferences" { };
+
+      macos = section {
+        settings = attrsOption "nix-plist-manager `applications` options, layered over the shared defaults.";
+
+        defaults = attrsOption "Preference domains nix-plist-manager does not cover, layered over the shared defaults.";
+
+        disableSystemShortcuts = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Whether to switch off the macOS system keyboard shortcuts.";
+        };
+
+        keepShortcuts = mkOption {
+          type = types.nullOr (types.listOf types.ints.unsigned);
+          default = null;
+          example = [ 32 ];
+          description = "Hotkey slots left at their macOS defaults; `null` keeps Mission Control, Finder search and, without Raycast, Spotlight.";
+        };
+
+        clearDockOnFirstLogin = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Whether to empty the dock on first login.";
+        };
+      };
+
       niri = program "Niri desktop preferences" {
         noctalia = section {
           plugins = mkOption {
@@ -45,6 +104,14 @@ in
 
     programs = section {
       raw = attrsOption "Home Manager program options passed through without translation.";
+
+      ai = section {
+        chatgpt = program "ChatGPT desktop app" { };
+
+        claude = program "Claude desktop app" { };
+
+        codexbar = program "CodexBar usage monitor" { };
+      };
 
       audio = section {
         pulsemeeter = program "Pulsemeeter" { };
@@ -70,7 +137,75 @@ in
           };
 
           betterfox = program "Betterfox preferences for Zen Browser" { };
+
+          containers = mkOption {
+            type = types.attrsOf (
+              types.submodule {
+                options = {
+                  color = mkOption {
+                    type = types.str;
+                    default = "blue";
+                    description = "Container colour shown in the tab strip.";
+                  };
+
+                  icon = mkOption {
+                    type = types.str;
+                    default = "circle";
+                    description = "Container icon shown in the tab strip.";
+                  };
+
+                  id = mkOption {
+                    type = types.nullOr types.ints.positive;
+                    default = null;
+                    description = "Container number; `null` numbers containers by name.";
+                  };
+                };
+              }
+            );
+            default = { };
+            description = "Containers for this user; empty keeps a single `Personal` container.";
+          };
+
+          spaces = mkOption {
+            type = types.attrsOf (
+              types.submodule {
+                options = {
+                  icon = mkOption {
+                    type = types.str;
+                    default = "circle";
+                    example = "book";
+                    description = "Zen icon name or `chrome://` URL.";
+                  };
+
+                  container = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    example = "School";
+                    description = "Container this space keeps its cookies in.";
+                  };
+
+                  position = mkOption {
+                    type = types.nullOr types.ints.unsigned;
+                    default = null;
+                    description = "Sidebar position; `null` orders spaces by name.";
+                  };
+
+                  id = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = "UUID of an existing Zen space; `null` derives one from the name.";
+                  };
+                };
+              }
+            );
+            default = { };
+            description = "Zen spaces for this user; empty keeps a single `Personal` space.";
+          };
         };
+      };
+
+      cad = section {
+        bambu-studio = program "Bambu Studio" { };
       };
 
       communication = section {
@@ -91,6 +226,8 @@ in
         };
 
         gh = program "GitHub CLI" { };
+
+        glab = program "GitLab CLI" { };
 
         git = program "Git" {
           userName = mkOption {
@@ -132,14 +269,28 @@ in
 
         nodejs = program "Node.js and npm" { };
 
+        orbstack = program "OrbStack container runtime" { };
+
         pnpm = program "pnpm" { };
 
         python = program "Python" { };
+
+        t3-code = program "T3 Code" { };
 
         uv = program "uv" { };
       };
 
       editor = section {
+        arduino-ide = program "Arduino IDE" { };
+
+        datagrip = program "DataGrip" { };
+
+        drawio = program "draw.io desktop" { };
+
+        intellij-idea = program "IntelliJ IDEA Ultimate" { };
+
+        obsidian = program "Obsidian" { };
+
         vscodium = program "VSCodium" {
           profiles = attrsOption "VSCodium profiles.";
         };
@@ -148,7 +299,31 @@ in
           profiles = attrsOption "Visual Studio Code profiles.";
         };
 
-        zed = program "Zed" { };
+        zed = program "Zed" {
+          extensions = mkOption {
+            type = types.listOf types.str;
+            default = [ ];
+            description = "Additional Zed extensions.";
+          };
+
+          settings = attrsOption "Zed settings, layered over the shared defaults.";
+        };
+      };
+
+      education = section {
+        anki = program "Anki" { };
+      };
+
+      media = section {
+        ente-photos = program "Ente Photos desktop client" { };
+
+        iina = program "IINA media player" { };
+      };
+
+      office = section {
+        excel = program "Microsoft Excel" { };
+        powerpoint = program "Microsoft PowerPoint" { };
+        word = program "Microsoft Word" { };
       };
 
       security = section {
@@ -240,7 +415,25 @@ in
 
         ghostty = program "Ghostty" {
           settings = attrsOption "Ghostty configuration.";
+
+          darwinSettings = attrsOption "Ghostty configuration applied on darwin only, layered over settings.";
         };
+      };
+
+      utility = section {
+        aerospace = program "the AeroSpace tiling window manager" {
+          settings = attrsOption "AeroSpace configuration, layered over the shared defaults.";
+        };
+
+        keka = program "Keka file archiver" { };
+        linearmouse = program "LinearMouse" { };
+        monitorcontrol = program "MonitorControl" { };
+        pearcleaner = program "Pearcleaner app uninstaller" { };
+        radix = program "Radix disk space analyzer" { };
+        raycast = program "Raycast launcher" { };
+        rpi-imager = program "Raspberry Pi Imager" { };
+        shottr = program "Shottr screenshot tool" { };
+        thaw = program "Thaw menu bar manager" { };
       };
     };
 

@@ -49,7 +49,12 @@ if [[ -z ${FLAKE_ATTR:-} ]]; then
   host_options=()
   for configuration in "$REPO_ROOT"/hosts/*/configuration.nix; do
     [[ -f "$configuration" ]] || continue
-    host_options+=("$(basename -- "$(dirname -- "$configuration")")")
+    host_dir="$(dirname -- "$configuration")"
+    # hosts/<name>/meta.nix declares the platform; skip anything not NixOS.
+    if [[ -f "$host_dir/meta.nix" ]] && ! grep -q 'platform = "nixos"' "$host_dir/meta.nix"; then
+      continue
+    fi
+    host_options+=("$(basename -- "$host_dir")")
   done
 
   ((${#host_options[@]} > 0)) || die "no hosts found in $REPO_ROOT/hosts"

@@ -7,6 +7,10 @@
 
 let
   cfg = userConfig.programs.security.gnupg or { };
+
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+
+  pinentry = if isDarwin then pkgs.pinentry_mac else pkgs.pinentry-qt;
 in
 {
   config = lib.mkIf (cfg.enable or false) {
@@ -32,7 +36,7 @@ in
       grabKeyboardAndMouse = true;
       noAllowExternalCache = true;
       extraConfig = "no-allow-loopback-pinentry";
-      pinentry.package = pkgs.pinentry-qt;
+      pinentry.package = pinentry;
     };
   };
 }

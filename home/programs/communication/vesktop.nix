@@ -7,16 +7,23 @@
 
 let
   cfg = userConfig.programs.communication.vesktop or { };
-  vesktop = pkgs.symlinkJoin {
-    name = "vesktop-wayland";
-    paths = [
-      (pkgs.vesktop.override { withSystemVencord = true; })
-    ];
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      wrapProgram $out/bin/vesktop --set NIXOS_OZONE_WL 1
-    '';
-  };
+
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
+
+  base = pkgs.vesktop.override { withSystemVencord = true; };
+
+  vesktop =
+    if isLinux then
+      pkgs.symlinkJoin {
+        name = "vesktop-wayland";
+        paths = [ base ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/vesktop --set NIXOS_OZONE_WL 1
+        '';
+      }
+    else
+      base;
 in
 {
   config = lib.mkIf (cfg.enable or false) {

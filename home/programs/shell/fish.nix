@@ -14,6 +14,8 @@ let
   };
 
   enabled = name: cfg.plugins.${name}.enable or false;
+
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
 in
 {
   config = lib.mkIf (cfg.enable or false) {
@@ -25,6 +27,11 @@ in
         ++ lib.optional (enabled "done") (plugin "done" pkgs.fishPlugins.done)
         ++ lib.optional (enabled "fzf") (plugin "fzf" pkgs.fishPlugins.fzf-fish)
         ++ lib.optional (enabled "sponge") (plugin "sponge" pkgs.fishPlugins.sponge);
+
+      # `--path` keeps this out of the universal $fish_user_paths.
+      shellInit = ''
+        fish_add_path --global --append --path "$HOME/.local/bin"
+      '';
     }
     // lib.optionalAttrs ((cfg.interactiveShellInit or "") != "") {
       inherit (cfg) interactiveShellInit;
@@ -36,6 +43,6 @@ in
         pkgs.fd
         pkgs.fzf
       ]
-      ++ lib.optional (enabled "done") pkgs.libnotify;
+      ++ lib.optional (enabled "done" && isLinux) pkgs.libnotify;
   };
 }

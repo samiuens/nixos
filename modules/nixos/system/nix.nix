@@ -43,7 +43,7 @@ in
       dates = lib.mkOption {
         type = lib.types.str;
         default = "weekly";
-        description = "Systemd calendar expression for automatic Nix garbage collection.";
+        description = "Systemd calendar for Nix garbage collection.";
       };
 
       options = lib.mkOption {

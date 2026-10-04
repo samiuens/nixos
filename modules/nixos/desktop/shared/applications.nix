@@ -27,7 +27,7 @@ in
         pkgs.nautilus
         pkgs.papers
       ];
-      description = "Graphical applications installed independently of a desktop session.";
+      description = "Desktop-independent graphical applications.";
     };
   };
 

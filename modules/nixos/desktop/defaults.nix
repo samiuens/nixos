@@ -22,7 +22,7 @@ in
     default = alternativeTerminalEnabled;
     readOnly = true;
     internal = true;
-    description = "Whether an enabled user has selected a terminal outside the desktop environment.";
+    description = "Whether a user picked a terminal outside the desktop.";
   };
 
   config = lib.mkMerge [
