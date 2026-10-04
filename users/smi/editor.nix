@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 
 let
   openVsx = pkgs.nix4vscode.forOpenVsx;
