@@ -5,6 +5,9 @@ let
 in
 {
   config = lib.mkIf (cfg.enable or false) {
-    programs.gh.enable = true;
+    programs.gh = {
+      enable = true;
+      settings.git_protocol = "ssh";
+    };
   };
 }
