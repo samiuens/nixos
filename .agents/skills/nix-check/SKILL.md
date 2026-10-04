@@ -26,7 +26,7 @@ nixfmt --check $(find . -name '*.nix' -not -name hardware-configuration.nix -not
 
 statix check -i hardware-configuration.nix .
 
-deadnix --fail --exclude ./hosts/smi-nix/hardware-configuration.nix .
+deadnix --fail --exclude ./hosts/smi-nix/hardware-configuration.nix -- .
 ```
 
 All three exit non-zero on failure, so they work in a `&&` chain. For syntax, run
