@@ -55,12 +55,12 @@ in
 pythonPackages.buildPythonApplication rec {
   __structuredAttrs = true;
   pname = "graphify";
-  version = "0.9.79";
+  version = "0.9.80";
   pyproject = true;
 
   src = fetchurl {
     url = "https://github.com/Graphify-Labs/graphify/archive/refs/tags/v${version}.tar.gz";
-    hash = "sha256-pMl1r5sZ8p0n6mHPNE0rVOzcRbB6mRLZudSw6hVBaRA=";
+    hash = "sha256-MCjXpWZdq61IRXePPQIZT+FsVE9mQvFNFDzx+Z4hdSU=";
   };
 
   build-system = [ pythonPackages.setuptools ];
