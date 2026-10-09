@@ -17,6 +17,7 @@ in
       partitions = {
         ESP = {
           name = "ESP";
+          label = "esp";
           start = "1M";
           size = "1G";
           type = "EF00";
@@ -31,6 +32,7 @@ in
 
         system = {
           size = "100%";
+          label = "nixos";
 
           content = {
             type = "luks";
