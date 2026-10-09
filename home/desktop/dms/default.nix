@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   niriShell,
   userConfig,
@@ -7,6 +8,7 @@
 
 let
   enabled = (userConfig.desktop.niri.enable or false) && niriShell == "dms";
+  configDir = "${config.xdg.configHome}/DankMaterialShell";
 in
 {
   config = lib.mkIf enabled {
@@ -43,6 +45,12 @@ in
       include optional=true "dms/layout.kdl"
       include optional=true "dms/alttab.kdl"
       include optional=true "dms/outputs.kdl"
+    '';
+
+    # DMS rewrites its settings from the GUI, so they are copied instead of
+    # linked. Wallpaper and other session state live in ~/.local/state.
+    home.activation.seedDmsSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run install -Dm644 ${./settings.json} "${configDir}/settings.json"
     '';
   };
 }
