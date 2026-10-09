@@ -59,7 +59,7 @@ let
       actions = sessionActions;
     };
   greeterSyncSettings = userSettings.shell.greeter_sync // {
-    auto_sync = niriDisplayManager == "noctalia";
+    auto_sync = niriDisplayManager == "shell";
   };
   pluginSettings = {
     enabled = userConfig.desktop.niri.noctalia.plugins or [ ];

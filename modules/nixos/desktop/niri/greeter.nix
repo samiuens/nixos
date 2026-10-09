@@ -9,20 +9,21 @@ let
   cfg = config.smi.desktop.niri;
   cursor = config.smi.desktop.shared.cursor;
   keyboard = config.smi.environment.keyboard;
+  shellGreeter = cfg.displayManager == "shell";
 in
 {
   options.smi.desktop.niri.displayManager = lib.mkOption {
     type = lib.types.enum [
-      "noctalia"
+      "shell"
       "gdm"
     ];
-    default = "noctalia";
-    description = "Display manager used to start Niri sessions.";
+    default = "shell";
+    description = "Display manager used to start Niri sessions; `shell` uses the greeter of the selected shell.";
   };
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
-      (lib.mkIf (cfg.displayManager == "noctalia") {
+      (lib.mkIf (shellGreeter && cfg.shell == "noctalia") {
         services.displayManager.noctalia-greeter = {
           enable = true;
 
@@ -40,7 +41,41 @@ in
             };
           };
         };
+      })
 
+      (lib.mkIf (shellGreeter && cfg.shell == "dms") {
+        services.displayManager = {
+          defaultSession = "niri";
+
+          dms-greeter = {
+            enable = true;
+            compositor = {
+              name = "niri";
+              customConfig = ''
+                input {
+                    keyboard {
+                        xkb {
+                            layout "${keyboard.layout}"
+                            variant "${keyboard.variant}"
+                        }
+                    }
+                }
+
+                cursor {
+                    xcursor-theme "${cursor.name}"
+                    xcursor-size ${toString cursor.size}
+                }
+
+                hotkey-overlay {
+                    skip-at-startup
+                }
+              '';
+            };
+          };
+        };
+      })
+
+      (lib.mkIf shellGreeter {
         services.displayManager.gdm.enable = lib.mkForce false;
       })
 
