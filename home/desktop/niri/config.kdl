@@ -1,4 +1,4 @@
-// Niri configuration with Noctalia Shell v5 integration.
+// Niri configuration shared by every desktop shell.
 
 input {
     keyboard {
@@ -31,8 +31,6 @@ layout {
     border { off; }
 }
 
-spawn-at-startup "noctalia"
-
 hotkey-overlay {
     skip-at-startup
 }
@@ -44,20 +42,8 @@ window-rule {
 }
 
 window-rule {
-    match app-id="dev.noctalia.Noctalia"
-    open-floating true
-    default-column-width { fixed 1080; }
-    default-window-height { fixed 920; }
-}
-
-window-rule {
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
     open-floating true
-}
-
-layer-rule {
-    match namespace="^noctalia-backdrop"
-    place-within-backdrop true
 }
 
 debug {
@@ -68,18 +54,6 @@ binds {
     Mod+Shift+ssharp { show-hotkey-overlay; }
 
     Mod+T hotkey-overlay-title="Open a Terminal: Ghostty" { spawn "ghostty"; }
-    Mod+Space hotkey-overlay-title="Open the Application Launcher" { spawn-sh "noctalia msg panel-toggle launcher"; }
-    Mod+S hotkey-overlay-title="Open the Control Center" { spawn-sh "noctalia msg panel-toggle control-center"; }
-    Mod+Comma hotkey-overlay-title="Open Noctalia Settings" { spawn-sh "noctalia msg settings-toggle"; }
-    Alt+Tab hotkey-overlay-title="Switch Windows" { spawn-sh "noctalia msg window-switcher"; }
-    Super+Alt+L hotkey-overlay-title="Lock the Session" { spawn-sh "noctalia msg session lock"; }
-
-    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "noctalia msg volume-up"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "noctalia msg volume-down"; }
-    XF86AudioMute allow-when-locked=true { spawn-sh "noctalia msg volume-mute"; }
-    XF86AudioMicMute allow-when-locked=true { spawn-sh "noctalia msg mic-mute"; }
-    XF86MonBrightnessUp allow-when-locked=true { spawn-sh "noctalia msg brightness-up"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn-sh "noctalia msg brightness-down"; }
 
     Mod+O repeat=false { toggle-overview; }
     Mod+Q repeat=false { close-window; }

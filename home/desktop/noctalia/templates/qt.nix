@@ -1,12 +1,11 @@
 {
   config,
   lib,
-  userConfig,
   ...
 }:
 
 let
-  enabled = userConfig.desktop.niri.enable or false;
+  enabled = config.smi.desktop.noctalia.enable;
 in
 {
   config = lib.mkIf enabled {

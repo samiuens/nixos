@@ -69,6 +69,7 @@ in
       extraSpecialArgs = {
         inherit hostName inputs;
         niriDisplayManager = config.smi.desktop.niri.displayManager;
+        niriShell = config.smi.desktop.niri.shell;
       };
       sharedModules = [
         inputs.nix-flatpak.homeManagerModules.nix-flatpak

@@ -8,7 +8,7 @@
 
 let
   enabled =
-    (userConfig.desktop.niri.enable or false) && (userConfig.programs.shell.starship.enable or false);
+    config.smi.desktop.noctalia.enable && (userConfig.programs.shell.starship.enable or false);
   inputPath = "${config.xdg.configHome}/noctalia/templates/starship.toml";
   outputPath = "${config.xdg.cacheHome}/noctalia/starship.toml";
   tomlFormat = pkgs.formats.toml { };

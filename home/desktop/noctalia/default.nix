@@ -2,6 +2,7 @@
   config,
   lib,
   niriDisplayManager,
+  niriShell,
   pkgs,
   userConfig,
   ...
@@ -9,7 +10,6 @@
 
 let
   cfg = config.smi.desktop.noctalia;
-  enabled = userConfig.desktop.niri.enable or false;
   tomlFormat = pkgs.formats.toml { };
 
   userSettings = builtins.fromTOML (builtins.readFile ./config.toml);
@@ -72,6 +72,14 @@ let
 in
 {
   options.smi.desktop.noctalia = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = (userConfig.desktop.niri.enable or false) && niriShell == "noctalia";
+      readOnly = true;
+      internal = true;
+      description = "Whether Noctalia Shell runs in this user's Niri session.";
+    };
+
     builtinTemplateIds = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
@@ -85,7 +93,42 @@ in
     };
   };
 
-  config = lib.mkIf enabled {
+  config = lib.mkIf cfg.enable {
+    smi.desktop.niri.extraConfig = ''
+      include "noctalia-shell.kdl"
+    '';
+
+    xdg.configFile."niri/noctalia-shell.kdl".text = ''
+      spawn-at-startup "noctalia"
+
+      window-rule {
+          match app-id="dev.noctalia.Noctalia"
+          open-floating true
+          default-column-width { fixed 1080; }
+          default-window-height { fixed 920; }
+      }
+
+      layer-rule {
+          match namespace="^noctalia-backdrop"
+          place-within-backdrop true
+      }
+
+      binds {
+          Mod+Space hotkey-overlay-title="Open the Application Launcher" { spawn-sh "noctalia msg panel-toggle launcher"; }
+          Mod+S hotkey-overlay-title="Open the Control Center" { spawn-sh "noctalia msg panel-toggle control-center"; }
+          Mod+Comma hotkey-overlay-title="Open Noctalia Settings" { spawn-sh "noctalia msg settings-toggle"; }
+          Alt+Tab hotkey-overlay-title="Switch Windows" { spawn-sh "noctalia msg window-switcher"; }
+          Super+Alt+L hotkey-overlay-title="Lock the Session" { spawn-sh "noctalia msg session lock"; }
+
+          XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "noctalia msg volume-up"; }
+          XF86AudioLowerVolume allow-when-locked=true { spawn-sh "noctalia msg volume-down"; }
+          XF86AudioMute allow-when-locked=true { spawn-sh "noctalia msg volume-mute"; }
+          XF86AudioMicMute allow-when-locked=true { spawn-sh "noctalia msg mic-mute"; }
+          XF86MonBrightnessUp allow-when-locked=true { spawn-sh "noctalia msg brightness-up"; }
+          XF86MonBrightnessDown allow-when-locked=true { spawn-sh "noctalia msg brightness-down"; }
+      }
+    '';
+
     xdg.configFile."noctalia/config.toml".source = tomlFormat.generate "noctalia-config.toml" (
       userSettings
       // {

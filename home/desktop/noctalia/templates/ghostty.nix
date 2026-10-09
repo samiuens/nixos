@@ -8,7 +8,7 @@
 
 let
   enabled =
-    (userConfig.desktop.niri.enable or false) && (userConfig.programs.terminal.ghostty.enable or false);
+    config.smi.desktop.noctalia.enable && (userConfig.programs.terminal.ghostty.enable or false);
   fallback = pkgs.writeText "noctalia-ghostty-theme" ''
     background = 111111
     foreground = d8d8d8

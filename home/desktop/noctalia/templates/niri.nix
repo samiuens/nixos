@@ -2,12 +2,11 @@
   config,
   lib,
   pkgs,
-  userConfig,
   ...
 }:
 
 let
-  enabled = userConfig.desktop.niri.enable or false;
+  enabled = config.smi.desktop.noctalia.enable;
   fallback = pkgs.writeText "noctalia-niri.kdl" ''
     // Initial fallback; Noctalia's built-in Niri template replaces this file.
     layout {

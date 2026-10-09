@@ -9,8 +9,7 @@
 let
   smiLib = import ../../../../lib { inherit lib; };
 
-  enabled =
-    (userConfig.desktop.niri.enable or false) && (userConfig.programs.shell.tmux.enable or false);
+  enabled = config.smi.desktop.noctalia.enable && (userConfig.programs.shell.tmux.enable or false);
 
   gitStatus = smiLib.mkTmuxGitStatus pkgs;
 
