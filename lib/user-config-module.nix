@@ -330,6 +330,7 @@ in
 
       security = section {
         bitwarden = program "Bitwarden desktop client" { };
+        cloudflare-warp = program "Cloudflare One Client (WARP)" { };
         gnupg = program "hardened GnuPG with YubiKey smart-card support" { };
         keepassxc = program "KeePassXC desktop client" { };
         sops = program "SOPS secrets editor" { };

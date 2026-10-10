@@ -126,6 +126,14 @@ pkgs:
     preferCask = true;
   };
 
+  "programs.security.cloudflare-warp" = {
+    package = pkgs.cloudflare-warp;
+    cask = "cloudflare-warp";
+
+    # The client needs its system extension, which only the installer sets up.
+    preferCask = true;
+  };
+
   "programs.security.yubico-authenticator" = {
     package = pkgs.yubioath-flutter;
     cask = "yubico-authenticator";
