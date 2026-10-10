@@ -2,6 +2,7 @@
   smi.system.users.users.keepitdeveloped.programs = {
     communication.signal-desktop.enable = true;
     security.bitwarden.enable = true;
+    security.cloudflare-warp.enable = true;
 
     terminal.ghostty = {
       enable = true;

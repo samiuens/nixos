@@ -7,6 +7,7 @@ in
   smi.system.users.users.visuax.programs = {
     communication.signal-desktop.enable = true;
     security.bitwarden.enable = true;
+    security.cloudflare-warp.enable = true;
 
     utility = {
       aerospace.enable = true;
