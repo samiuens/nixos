@@ -7,11 +7,19 @@
 }:
 
 let
-  enabled = (userConfig.desktop.niri.enable or false) && niriShell == "dms";
+  cfg = config.smi.desktop.dms;
   configDir = "${config.xdg.configHome}/DankMaterialShell";
 in
 {
-  config = lib.mkIf enabled {
+  options.smi.desktop.dms.enable = lib.mkOption {
+    type = lib.types.bool;
+    default = (userConfig.desktop.niri.enable or false) && niriShell == "dms";
+    readOnly = true;
+    internal = true;
+    description = "Whether DankMaterialShell runs in this user's Niri session.";
+  };
+
+  config = lib.mkIf cfg.enable {
     smi.desktop.niri.extraConfig = ''
       include "dms-shell.kdl"
     '';
