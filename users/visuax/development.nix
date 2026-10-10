@@ -1,5 +1,6 @@
 {
   smi.system.users.users.visuax.programs.development = {
+    ansible.enable = true;
     bun.enable = true;
     claude-code.enable = true;
     direnv.enable = true;
