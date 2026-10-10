@@ -5,6 +5,7 @@
     direnv.enable = true;
     glab.enable = true;
     nodejs.enable = true;
+    opentofu.enable = true;
     pnpm.enable = true;
     python.enable = true;
     t3-code.enable = true;
