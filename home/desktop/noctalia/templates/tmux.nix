@@ -11,20 +11,9 @@ let
 
   enabled = config.smi.desktop.noctalia.enable && (userConfig.programs.shell.tmux.enable or false);
 
-  gitStatus = smiLib.mkTmuxGitStatus pkgs;
+  tmuxTheme = smiLib.mkTmuxTheme pkgs;
 
-  fallback = pkgs.writeText "noctalia-tmux.conf" ''
-    set -g status-style 'bg=#333333,fg=#777777'
-    set -g status-left '#[fg=#7aa2f7,bold] #S #[fg=#777777,bg=#333333,nobold]'
-    set -g window-status-format '#[fg=#777777]○ #W'
-    set -g window-status-current-format '#[fg=#7aa2f7,bold]● #W'
-    set -g status-right '#{?client_prefix,#[fg=#e0af68]prefix ,}#[fg=#bb9af7]#(${lib.getExe gitStatus} #{q:pane_current_path}) #[fg=#777777]%H:%M '
-
-    set -g pane-border-style 'fg=#333333'
-    set -g pane-active-border-style 'fg=#7aa2f7'
-    set -g message-style 'bg=#111111,fg=#d8d8d8'
-    set -g mode-style 'bg=#7aa2f7,fg=#111111'
-  '';
+  fallback = pkgs.writeText "noctalia-tmux.conf" tmuxTheme.static;
 
   reload = pkgs.writeShellApplication {
     name = "reload-noctalia-tmux-theme";
@@ -48,18 +37,7 @@ in
       source-file -q ~/.config/tmux/noctalia.conf
     '';
 
-    xdg.configFile."noctalia/templates/tmux.conf".text = ''
-      set -g status-style 'bg={{colors.surface_variant.default.hex}},fg={{colors.outline.default.hex}}'
-      set -g status-left '#[fg={{colors.primary.default.hex}},bold] #S #[fg={{colors.outline.default.hex}},bg={{colors.surface_variant.default.hex}},nobold]'
-      set -g window-status-format '#[fg={{colors.outline.default.hex}}]○ #W'
-      set -g window-status-current-format '#[fg={{colors.primary.default.hex}},bold]● #W'
-      set -g status-right '#{?client_prefix,#[fg={{colors.tertiary.default.hex}}]prefix ,}#[fg={{colors.secondary.default.hex}}]#(${lib.getExe gitStatus} #{q:pane_current_path}) #[fg={{colors.outline.default.hex}}]%H:%M '
-
-      set -g pane-border-style 'fg={{colors.outline.default.hex}}'
-      set -g pane-active-border-style 'fg={{colors.primary.default.hex}}'
-      set -g message-style 'bg={{colors.surface.default.hex}},fg={{colors.on_surface.default.hex}}'
-      set -g mode-style 'bg={{colors.primary.default.hex}},fg={{colors.on_primary.default.hex}}'
-    '';
+    xdg.configFile."noctalia/templates/tmux.conf".text = tmuxTheme.template;
 
     home.activation.seedNoctaliaTmuxTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       theme_file="${config.xdg.configHome}/tmux/noctalia.conf"

@@ -10,6 +10,7 @@
   mkDarwinConfigurations = import ./mk-darwin-configurations.nix { inherit lib; };
   mkNixosConfigurations = import ./mk-nixos-configurations.nix { inherit lib; };
   mkTmuxGitStatus = import ./mk-tmux-git-status.nix { inherit lib; };
+  mkTmuxTheme = import ./mk-tmux-theme.nix { inherit lib; };
   nixUsable = import ./nix-usable.nix { inherit lib; };
   preferNixPackage = import ./prefer-nix-package.nix { inherit lib; };
   userConfigModule = import ./user-config-module.nix { inherit lib; };
