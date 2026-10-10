@@ -215,6 +215,8 @@ in
       };
 
       development = section {
+        ansible = program "Ansible" { };
+
         bun = program "Bun" { };
 
         claude-code = program "Claude Code" { };
