@@ -269,6 +269,8 @@ in
 
         nodejs = program "Node.js and npm" { };
 
+        opentofu = program "OpenTofu" { };
+
         orbstack = program "OrbStack container runtime" { };
 
         pnpm = program "pnpm" { };
