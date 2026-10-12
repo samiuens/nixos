@@ -112,4 +112,39 @@ in
       };
     };
   };
+
+  disko.devices.disk.data = {
+    type = "disk";
+    device = "/dev/disk/by-id/ata-ST2000DM008-2FR102_ZFL5L2VJ";
+
+    content = {
+      type = "gpt";
+
+      partitions.data = {
+        size = "100%";
+        label = "data";
+
+        content = {
+          type = "btrfs";
+          extraArgs = [
+            "-f"
+            "-L"
+            "data"
+          ];
+
+          subvolumes."@data" = {
+            mountpoint = "/mnt/data";
+            mountOptions = btrfsMountOptions ++ [
+              "nofail"
+              "x-systemd.device-timeout=10s"
+              "x-gvfs-show"
+              "x-gvfs-name=Data"
+            ];
+          };
+        };
+      };
+    };
+  };
+
+  systemd.tmpfiles.rules = [ "d /mnt/data 0755 smi users -" ];
 }
