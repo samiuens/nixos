@@ -9,11 +9,11 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "codex-bin";
-  version = "0.162.1";
+  version = "0.163.0";
 
   src = fetchurl {
     url = "https://releases.openai.com/codex/releases/${finalAttrs.version}/codex-x86_64-unknown-linux-musl.tar.gz";
-    hash = "sha256-hvJo2BuJjz4UTF7P8q0v2ixYAuBC1hlbclOP4PoSUFc=";
+    hash = "sha256-vrM56OzZugV6a7Lcga2MpHSBLt+/D8UFbKgYeXZI3eQ=";
   };
 
   dontUnpack = true;
