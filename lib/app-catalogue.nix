@@ -1,4 +1,4 @@
-# nixpkgs package paired with a Homebrew cask (or `masApp`), keyed by option path.
+# nixpkgs package paired with a Homebrew cask (or `brew` formula, or `masApp`), keyed by option path.
 # `preferCask` takes the cask on darwin even when nixpkgs builds it.
 pkgs:
 

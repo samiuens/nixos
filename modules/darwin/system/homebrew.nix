@@ -20,6 +20,21 @@ let
     lib.filterAttrs (_: entry: entry ? cask) fallbackEntries
   );
 
+  fallbackBrews = lib.mapAttrsToList (_: entry: entry.brew) (
+    lib.filterAttrs (_: entry: entry ? brew) fallbackEntries
+  );
+
+  # A fully qualified `user/repo/name` needs its tap declared, or cleanup would untap it.
+  fallbackTaps = lib.unique (
+    lib.concatMap (
+      name:
+      let
+        parts = lib.splitString "/" name;
+      in
+      lib.optional (lib.length parts == 3) "${lib.elemAt parts 0}/${lib.elemAt parts 1}"
+    ) (fallbackBrews ++ fallbackCasks)
+  );
+
   fallbackMasApps = lib.listToAttrs (
     lib.mapAttrsToList (_: entry: lib.nameValuePair entry.masApp.name entry.masApp.id) (
       lib.filterAttrs (_: entry: entry ? masApp) fallbackEntries
@@ -104,7 +119,7 @@ in
 
     homebrew = {
       enable = true;
-      brews = cfg.extraBrews;
+      brews = lib.unique (lib.naturalSort (fallbackBrews ++ cfg.extraBrews));
       casks = lib.unique (lib.naturalSort (fallbackCasks ++ cfg.extraCasks));
       masApps = fallbackMasApps;
       taps = map (
@@ -116,7 +131,7 @@ in
           }
         else
           tap
-      ) cfg.extraTaps;
+      ) (fallbackTaps ++ cfg.extraTaps);
 
       onActivation = {
         inherit (cfg) autoUpdate cleanup upgrade;

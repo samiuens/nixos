@@ -142,7 +142,12 @@ in
       message = ''
         ${path} has no nixpkgs package available on ${pkgs.stdenv.hostPlatform.system}. It is
         provided by ${
-          if entry ? masApp then "the Mac App Store" else ''the Homebrew cask "${entry.cask}"''
+          if entry ? masApp then
+            "the Mac App Store"
+          else if entry ? brew then
+            ''the Homebrew formula "${entry.brew}"''
+          else
+            ''the Homebrew cask "${entry.cask}"''
         }, which only exists on darwin, so enable it there rather than for every host this user
         is on.
       '';
