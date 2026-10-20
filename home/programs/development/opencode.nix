@@ -125,6 +125,8 @@ let
         ];
       };
     };
+
+    websearch.provider = "random";
   };
 in
 {
