@@ -88,8 +88,35 @@ let
     inherit effect resource;
   };
 
+  # Opt-in: picked in the agent selector; Build stays the default.
+  coordinator = {
+    mode = "primary";
+    description = "Splits a request into tasks, runs each in its own worktree session and merges the results.";
+    system =
+      builtins.replaceStrings
+        [ "{{workerRules}}" ]
+        [ (lib.removeSuffix "\n" (builtins.readFile ./opencode/worker-rules.md)) ]
+        (builtins.readFile ./opencode/coordinator.md);
+
+    # Layered over the shared rules; the merge prompt is the user's approval.
+    permissions = [
+      {
+        action = "edit";
+        resource = "*";
+        effect = "deny";
+      }
+    ]
+    ++ map (shellRule "ask") [
+      "git merge *"
+      "git commit *"
+      "git reset *"
+      "git branch -D *"
+    ];
+  };
+
   baseSettings = {
     model = "claude-code/claude-opus-5-5[1m]";
+    agents = { inherit coordinator; };
     plugins = [ claudePlugin ];
 
     # Last match wins: block every provider, then allow the plugin's.

@@ -1,0 +1,5 @@
+- A coordinator started this session for one task. It runs in its own worktree on its own branch; work and commit only there.
+- The user approved commits on this branch in advance. Commit without waiting for confirmation, following the repository's commit message format and granularity.
+- Never merge, push, or check out another branch. The coordinator merges.
+- In a flake repository, run `git add -N` on new files before running checks, or Nix won't see them.
+- When the task is done, rebase onto the default branch, run the project's checks, and reply with the branch name, its commits, each check and its result, and anything left open.
