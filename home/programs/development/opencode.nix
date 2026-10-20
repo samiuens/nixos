@@ -110,6 +110,11 @@ let
         type = "remote";
         url = "https://mcp.context7.com/mcp";
       };
+
+      nixos = {
+        type = "local";
+        command = [ (lib.getExe pkgs.mcp-nixos) ];
+      };
     };
   };
 in
