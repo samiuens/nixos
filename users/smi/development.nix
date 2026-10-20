@@ -11,6 +11,7 @@ in
     direnv.enable = true;
     gh.enable = true;
     nodejs.enable = true;
+    openchamber.enable = true;
     opencode.enable = true;
 
     orbstack.enable = lib.mkIf isDarwin true;
