@@ -127,6 +127,9 @@ let
     };
 
     websearch.provider = "random";
+
+    # Nix or Homebrew pins the version.
+    update = "disable";
   };
 in
 {
