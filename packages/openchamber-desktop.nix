@@ -1,11 +1,13 @@
 # OpenChamber desktop from its flake, with the bun dependency hash it ships corrected.
 # Drop for `openchamber.packages.<system>.openchamber-desktop` once upstream's
 # nix/hashes.json matches again.
-{ openchamber, system }:
+{ pkgs, openchamber }:
 
 let
-  # Upstream's own pin: the bun dependency hash depends on its bun version.
-  pkgs = openchamber.inputs.nixpkgs.legacyPackages.${system};
+  inherit (pkgs.stdenv.hostPlatform) system;
+
+  # Upstream's own pin builds the server: the bun dependency hash depends on its bun version.
+  pinnedPkgs = openchamber.inputs.nixpkgs.legacyPackages.${system};
 
   bunDepsHash = "sha256-1FB+MoreZx6wc3Ku1ZBE5i5c3eSAEipmkx/5G7QjjRU=";
 
@@ -28,11 +30,12 @@ let
   # Only OpenChamber's Cloudflare tunnel uses it; `makeBinPath` skips null.
   cloudflared = null;
 
-  openchamberServer = pkgs.callPackage package {
+  openchamberServer = pinnedPkgs.callPackage package {
     inherit cloudflared opencodeCli version;
     self = openchamber;
   };
 in
+# The app itself uses the host's nixpkgs, so its glibc matches the system's graphics driver.
 pkgs.callPackage "${openchamber}/nix/gui.nix" {
   inherit cloudflared opencodeCli version;
   self = openchamber;

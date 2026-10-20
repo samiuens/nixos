@@ -69,7 +69,7 @@ in
 
           openchamber-desktop = import ../../../packages/openchamber-desktop.nix {
             inherit (inputs) openchamber;
-            inherit system;
+            pkgs = final;
           };
         }
       )
