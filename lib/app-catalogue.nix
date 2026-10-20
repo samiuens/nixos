@@ -35,6 +35,12 @@ pkgs:
     cask = "codex";
   };
 
+  # Overlaid from the OpenChamber flake on x86_64-linux only.
+  "programs.development.openchamber" = {
+    package = pkgs.openchamber-desktop or null;
+    cask = "openchamber";
+  };
+
   "programs.development.opencode" = {
     # Overlaid on x86_64-linux only; nixpkgs' `opencode` is still the 1.x line.
     package = pkgs.opencode-cli or null;

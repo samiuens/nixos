@@ -59,9 +59,20 @@ in
       inputs.nix4vscode.overlays.default
 
       # OpenChamber needs OpenCode 2.x, so take the CLI it pins over nixpkgs' 1.x.
-      (final: _prev: {
-        inherit (inputs.openchamber.packages.${final.stdenv.hostPlatform.system}) opencode-cli;
-      })
+      (
+        final: _prev:
+        let
+          inherit (final.stdenv.hostPlatform) system;
+        in
+        {
+          inherit (inputs.openchamber.packages.${system}) opencode-cli;
+
+          openchamber-desktop = import ../../../packages/openchamber-desktop.nix {
+            inherit (inputs) openchamber;
+            inherit system;
+          };
+        }
+      )
     ];
 
     nix = {

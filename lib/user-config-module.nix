@@ -271,6 +271,8 @@ in
 
         nodejs = program "Node.js and npm" { };
 
+        openchamber = program "OpenChamber" { };
+
         opencode = program "OpenCode" { };
 
         opentofu = program "OpenTofu" { };
