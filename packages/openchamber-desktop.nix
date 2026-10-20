@@ -25,13 +25,16 @@ let
 
   opencodeCli = openchamber.packages.${system}.opencode-cli;
 
+  # Only OpenChamber's Cloudflare tunnel uses it; `makeBinPath` skips null.
+  cloudflared = null;
+
   openchamberServer = pkgs.callPackage package {
-    inherit opencodeCli version;
+    inherit cloudflared opencodeCli version;
     self = openchamber;
   };
 in
 pkgs.callPackage "${openchamber}/nix/gui.nix" {
-  inherit opencodeCli version;
+  inherit cloudflared opencodeCli version;
   self = openchamber;
   inherit (openchamberServer.passthru) src;
   openchamberCore = openchamberServer.passthru.core;
