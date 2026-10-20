@@ -83,6 +83,11 @@ let
     ]
   );
 
+  shellRule = effect: resource: {
+    action = "shell";
+    inherit effect resource;
+  };
+
   baseSettings = {
     model = "claude-code/claude-opus-5-5[1m]";
     plugins = [ claudePlugin ];
@@ -154,6 +159,13 @@ let
           resource = "*.env.example";
           effect = "allow";
         }
+      ]
+      ++ map (shellRule "ask") [
+        "sudo *"
+        "git push *"
+        "rm -rf *"
+        "nixos-rebuild *"
+        "darwin-rebuild *"
       ];
   };
 in
