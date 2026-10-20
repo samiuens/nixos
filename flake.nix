@@ -39,6 +39,9 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak/v0.7.0";
 
+    # Not following nixpkgs: its OpenCode node_modules hash is tied to its own bun.
+    openchamber.url = "github:openchamber/openchamber/v2.5.0";
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";

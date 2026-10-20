@@ -55,7 +55,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    nixpkgs.overlays = [ inputs.nix4vscode.overlays.default ];
+    nixpkgs.overlays = [
+      inputs.nix4vscode.overlays.default
+
+      # OpenChamber needs OpenCode 2.x, so take the CLI it pins over nixpkgs' 1.x.
+      (final: _prev: {
+        inherit (inputs.openchamber.packages.${final.stdenv.hostPlatform.system}) opencode-cli;
+      })
+    ];
 
     nix = {
       settings = {

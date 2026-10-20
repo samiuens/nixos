@@ -35,6 +35,12 @@ pkgs:
     cask = "codex";
   };
 
+  "programs.development.opencode" = {
+    # Overlaid on x86_64-linux only; nixpkgs' `opencode` is still the 1.x line.
+    package = pkgs.opencode-cli or null;
+    brew = "anomalyco/tap/opencode-v2";
+  };
+
   "programs.development.orbstack" = {
     package = null;
     cask = "orbstack";
