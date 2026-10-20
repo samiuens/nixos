@@ -181,6 +181,12 @@ let
       ];
       extensions = [ ".nix" ];
     };
+
+    watcher.ignore = [
+      "result"
+      ".direnv"
+      "node_modules"
+    ];
   };
 in
 {
