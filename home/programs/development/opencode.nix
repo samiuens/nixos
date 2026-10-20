@@ -115,6 +115,15 @@ let
         type = "local";
         command = [ (lib.getExe pkgs.mcp-nixos) ];
       };
+
+      # Headless keeps browser windows out of the way while an agent works.
+      playwright = {
+        type = "local";
+        command = [
+          (lib.getExe pkgs.playwright-mcp)
+          "--headless"
+        ];
+      };
     };
   };
 in
