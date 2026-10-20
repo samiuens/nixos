@@ -31,6 +31,7 @@ let
   ];
 
   baseSettings = {
+    model = "claude-code/claude-opus-5-5[1m]";
     plugins = [ claudePlugin ];
 
     # Last match wins: block every provider, then allow the plugin's.
