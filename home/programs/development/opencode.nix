@@ -167,6 +167,20 @@ let
         "nixos-rebuild *"
         "darwin-rebuild *"
       ];
+
+    # Store paths keep both working outside a devShell.
+    lsp.nixd = {
+      command = [ (lib.getExe pkgs.nixd) ];
+      extensions = [ ".nix" ];
+    };
+
+    formatter.nixfmt = {
+      command = [
+        (lib.getExe pkgs.nixfmt)
+        "$FILE"
+      ];
+      extensions = [ ".nix" ];
+    };
   };
 in
 {
