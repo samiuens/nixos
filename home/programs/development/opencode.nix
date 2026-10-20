@@ -14,6 +14,11 @@ let
 in
 {
   config = lib.mkIf (cfg.enable or false) {
-    home.packages = lib.optional useNixPackage entry.package;
+    programs.opencode = {
+      enable = true;
+
+      # Homebrew installs it on darwin; the config is still written.
+      package = if useNixPackage then entry.package else null;
+    };
   };
 }
