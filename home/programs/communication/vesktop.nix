@@ -10,7 +10,8 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isLinux;
 
-  base = pkgs.vesktop.override { withSystemVencord = true; };
+  # Vesktop's own Vencord updates faster than nixpkgs when Discord breaks it.
+  base = pkgs.vesktop.override { withSystemVencord = false; };
 
   vesktop =
     if isLinux then
