@@ -5,6 +5,7 @@
     direnv.enable = true;
     glab.enable = true;
     nodejs.enable = true;
+    openchamber.enable = true;
     opencode.enable = true;
     pnpm.enable = true;
     python.enable = true;
