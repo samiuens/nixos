@@ -130,6 +130,7 @@ let
 
     # Nix or Homebrew pins the version.
     update = "disable";
+    share = "disabled";
   };
 in
 {
