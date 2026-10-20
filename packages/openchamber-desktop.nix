@@ -42,6 +42,6 @@ pkgs.callPackage "${openchamber}/nix/gui.nix" {
   inherit (openchamberServer.passthru) src;
   openchamberCore = openchamberServer.passthru.core;
 
-  # Matches the electron major upstream's flake passes.
-  electron = pkgs.electron_43;
+  # packages/electron/package.json asks for Electron 44; upstream's flake still passes 43.
+  electron = pkgs.electron_44;
 }
