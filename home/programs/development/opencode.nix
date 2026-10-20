@@ -104,6 +104,13 @@ let
     providers.claude-code.models = lib.genAttrs legacyModels (_: {
       disabled = true;
     });
+
+    mcp.servers = {
+      context7 = {
+        type = "remote";
+        url = "https://mcp.context7.com/mcp";
+      };
+    };
   };
 in
 {
