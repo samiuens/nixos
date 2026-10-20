@@ -200,5 +200,8 @@ in
       inherit context;
       settings = baseSettings;
     };
+
+    # Leftover Claude Code skills would load on top of the declared ones.
+    home.sessionVariables.OPENCODE_DISABLE_CLAUDE_CODE = "1";
   };
 }
