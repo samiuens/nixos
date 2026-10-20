@@ -15,6 +15,21 @@ let
   # Pinned so a plugin release lands with a commit, not on the next launch.
   claudePlugin = "@openchamber/opencode-claude@1.4.2";
 
+  # Pre-5 ids the Claude Code CLI may still report; listing one it lacks is harmless.
+  legacyModels = [
+    "claude-haiku-4-5"
+    "claude-haiku-4-5-20251001"
+    "claude-opus-4-1"
+    "claude-opus-4-5"
+    "claude-opus-4-6"
+    "claude-opus-4-6[1m]"
+    "claude-opus-4-7"
+    "claude-opus-4-8"
+    "claude-sonnet-4-5"
+    "claude-sonnet-4-6"
+    "claude-sonnet-4-6[1m]"
+  ];
+
   baseSettings = {
     plugins = [ claudePlugin ];
 
@@ -31,6 +46,10 @@ let
         effect = "allow";
       }
     ];
+
+    providers.claude-code.models = lib.genAttrs legacyModels (_: {
+      disabled = true;
+    });
   };
 in
 {
