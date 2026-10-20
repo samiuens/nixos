@@ -131,6 +131,30 @@ let
     # Nix or Homebrew pins the version.
     update = "disable";
     share = "disabled";
+
+    # Last match wins over OpenCode's defaults.
+    permissions =
+      map
+        (resource: {
+          action = "read";
+          inherit resource;
+          effect = "deny";
+        })
+        [
+          "*.env"
+          "*.env.*"
+          "*.pem"
+          "*.key"
+          "*.ssh/*"
+          "*sops/age/*"
+        ]
+      ++ [
+        {
+          action = "read";
+          resource = "*.env.example";
+          effect = "allow";
+        }
+      ];
   };
 in
 {
