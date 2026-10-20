@@ -129,7 +129,8 @@ let
           "--headless"
         ];
       };
-    };
+    }
+    // (cfg.mcpServers or { });
 
     websearch.provider = "random";
 
@@ -198,7 +199,7 @@ in
       package = if useNixPackage then entry.package else null;
 
       inherit context;
-      settings = baseSettings;
+      settings = lib.recursiveUpdate baseSettings (cfg.settings or { });
     };
 
     # Leftover Claude Code skills would load on top of the declared ones.

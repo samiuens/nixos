@@ -273,7 +273,11 @@ in
 
         openchamber = program "OpenChamber" { };
 
-        opencode = program "OpenCode" { };
+        opencode = program "OpenCode" {
+          settings = attrsOption "OpenCode settings, layered over the shared defaults.";
+
+          mcpServers = attrsOption "MCP servers added to the shared ones.";
+        };
 
         opentofu = program "OpenTofu" { };
 
