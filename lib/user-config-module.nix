@@ -271,7 +271,11 @@ in
 
         nodejs = program "Node.js and npm" { };
 
-        openchamber = program "OpenChamber" { };
+        openchamber = program "OpenChamber" {
+          settings = attrsOption "OpenChamber settings seeded over the shared defaults, by key.";
+
+          surfaceSettings = attrsOption "Per-surface OpenChamber settings, such as `desktop.darkThemeId`.";
+        };
 
         opencode = program "OpenCode" {
           settings = attrsOption "OpenCode settings, layered over the shared defaults.";
