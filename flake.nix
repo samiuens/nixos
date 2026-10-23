@@ -176,6 +176,9 @@
 
           packages = {
             graphify = pkgs.callPackage ./packages/graphify/default.nix { };
+
+            # Run by this repo's opencode.json, so flake.lock pins it on every host.
+            inherit (pkgs) mcp-nixos;
           }
           // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
             claude-code-bin = pkgs.callPackage ./packages/claude-code-bin.nix { };
