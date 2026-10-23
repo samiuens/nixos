@@ -100,8 +100,8 @@ let
       disabled = true;
     });
 
-    # None by default: server instructions ride along in every session and
-    # prompt extra calls. Projects that need one declare it themselves.
+    # None built in: server instructions ride along in every session and
+    # prompt extra calls. Declare them in users/shared.nix or per user.
     mcp.servers = (shared.mcpServers or { }) // (cfg.mcpServers or { });
 
     websearch.provider = "random";
