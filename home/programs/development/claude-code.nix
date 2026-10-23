@@ -21,8 +21,19 @@ let
   entry = (smiLib.appCatalogue pkgs).${catalogueKey};
   useNixPackage = smiLib.preferNixPackage pkgs catalogueKey;
 
+  statusLine = pkgs.writeShellApplication {
+    name = "claude-code-statusline";
+    runtimeInputs = [ pkgs.jq ];
+    text = builtins.readFile ./claude-code/statusline.sh;
+  };
+
   baseSettings = {
     tui = "fullscreen";
+
+    statusLine = {
+      type = "command";
+      command = lib.getExe statusLine;
+    };
   };
 in
 {
