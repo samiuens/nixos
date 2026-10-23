@@ -302,6 +302,10 @@ in
           settings = attrsOption "OpenChamber settings seeded over the shared defaults, by key.";
 
           surfaceSettings = attrsOption "Per-surface OpenChamber settings, such as `desktop.darkThemeId`.";
+
+          overrideSettings = attrsOption "OpenChamber settings written on every activation, replacing the user's own value.";
+
+          overrideSurfaceSettings = attrsOption "Per-surface OpenChamber settings written on every activation, replacing the user's own value.";
         };
 
         opencode = program "OpenCode" {

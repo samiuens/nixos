@@ -125,13 +125,25 @@ let
     (layeredSurfaces "surfaceSettings")
   ];
 
+  overrideSettings = layered "overrideSettings";
+  overrideSurfaceSettings = layeredSurfaces "overrideSurfaceSettings";
+
+  byScope = values: {
+    profile = lib.filterAttrs (key: _: scopeOf key == "profile") values;
+    instance = lib.filterAttrs (key: _: scopeOf key == "instance") values;
+  };
+
   defaults = pkgs.writeText "openchamber-defaults.json" (
-    builtins.toJSON {
-      profileKeys = lib.attrNames (lib.filterAttrs (_: field: field.scope == "profile") registry);
-      profile = lib.filterAttrs (key: _: scopeOf key == "profile") settings;
-      instance = lib.filterAttrs (key: _: scopeOf key == "instance") settings;
-      surfaces = surfaceSettings;
-    }
+    builtins.toJSON (
+      {
+        profileKeys = lib.attrNames (lib.filterAttrs (_: field: field.scope == "profile") registry);
+        surfaces = surfaceSettings;
+        override = byScope overrideSettings // {
+          surfaces = overrideSurfaceSettings;
+        };
+      }
+      // byScope settings
+    )
   );
 
   seedSettings = pkgs.writeShellApplication {
@@ -140,10 +152,16 @@ let
     text = builtins.readFile ./openchamber/seed-settings.sh;
   };
 
-  deviceKeys = lib.filter (key: scopeOf key == "device") (lib.attrNames settings);
-  unknownSurfaces = lib.subtractLists surfaces (lib.attrNames surfaceSettings);
+  allSurfaceSettings = [
+    surfaceSettings
+    overrideSurfaceSettings
+  ];
+  deviceKeys = lib.filter (key: scopeOf key == "device") (
+    lib.attrNames (settings // overrideSettings)
+  );
+  unknownSurfaces = lib.subtractLists surfaces (lib.concatMap lib.attrNames allSurfaceSettings);
   sharedSurfaceKeys = lib.filter (key: !(registry.${key}.perSurface or false)) (
-    lib.concatMap lib.attrNames (lib.attrValues surfaceSettings)
+    lib.concatMap (s: lib.concatMap lib.attrNames (lib.attrValues s)) allSurfaceSettings
   );
 in
 {
@@ -161,12 +179,12 @@ in
       }
       {
         assertion = sharedSurfaceKeys == [ ];
-        message = "OpenChamber stores ${lib.concatStringsSep ", " sharedSurfaceKeys} for every surface; set them in `settings`.";
+        message = "OpenChamber stores ${lib.concatStringsSep ", " sharedSurfaceKeys} for every surface; set them in `settings` or `overrideSettings`.";
       }
     ];
 
-    # OpenChamber rewrites both files from its UI, so the declared values only
-    # fill in keys a user has not set yet; later changes here do not reach them.
+    # OpenChamber rewrites both files from its UI, so `settings` only fills in
+    # keys a user has not set yet; `overrideSettings` is written every time.
     home.activation.seedOpenChamberSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       run ${lib.getExe seedSettings} "${config.home.homeDirectory}/.config/openchamber" ${defaults}
     '';
