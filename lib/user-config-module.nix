@@ -246,7 +246,9 @@ in
 
         bun = program "Bun" { };
 
-        claude-code = program "Claude Code" { };
+        claude-code = program "Claude Code" {
+          mcpServers = attrsOption "MCP servers for Claude Code, layered over the shared ones.";
+        };
 
         codex = program "Codex" { };
 
