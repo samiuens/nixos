@@ -3,6 +3,7 @@
   lib,
   pkgs,
   inputs,
+  osConfig,
   userConfig,
   ...
 }:
@@ -10,6 +11,20 @@
 let
   smiLib = import ../../../lib { inherit lib; };
   cfg = userConfig.programs.development.openchamber or { };
+
+  # A user's own value replaces the shared one as a whole; read both to layer them by key.
+  shared = lib.attrByPath [
+    "programs"
+    "development"
+    "openchamber"
+  ] { } (osConfig.smi.system.users.shared or { });
+  layered = name: (shared.${name} or { }) // (cfg.${name} or { });
+  layeredSurfaces =
+    name:
+    lib.zipAttrsWith (_: lib.foldl (a: b: a // b) { }) [
+      (shared.${name} or { })
+      (cfg.${name} or { })
+    ];
   catalogueKey = "programs.development.openchamber";
   entry = (smiLib.appCatalogue pkgs).${catalogueKey};
   useNixPackage = smiLib.preferNixPackage pkgs catalogueKey;
@@ -104,12 +119,11 @@ let
   };
 
   # A value replaces the shared one whole; OpenChamber stores each key as one value.
-  settings = baseSettings // (cfg.settings or { });
-  surfaceSettings =
+  settings = baseSettings // layered "settings";
+  surfaceSettings = lib.zipAttrsWith (_: lib.foldl (a: b: a // b) { }) [
     baseSurfaceSettings
-    // lib.mapAttrs (surface: values: (baseSurfaceSettings.${surface} or { }) // values) (
-      cfg.surfaceSettings or { }
-    );
+    (layeredSurfaces "surfaceSettings")
+  ];
 
   defaults = pkgs.writeText "openchamber-defaults.json" (
     builtins.toJSON {
