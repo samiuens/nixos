@@ -1,7 +1,13 @@
 # `hostName` has no default so a missing argument fails instead of scoping every program to nothing.
+# `shared` holds definitions every user gets at default priority, so a user's own value wins.
 { lib }:
 
-{ hostName }:
+{
+  hostName,
+  shared ? { },
+}:
+
+{ options, ... }:
 
 let
   inherit (lib) mkEnableOption mkOption types;
@@ -60,8 +66,29 @@ let
       );
       default = { };
     };
+
+  # Descends through submodules to each option a definition sets; a name with
+  # no option passes through so the module system still reports it.
+  sharedDefaults =
+    opts: defs:
+    lib.mapAttrs (
+      name: value:
+      let
+        opt = opts.${name} or null;
+      in
+      if lib.isOption opt && opt.type.name == "submodule" then
+        sharedDefaults (opt.type.getSubOptions opt.loc) value
+      else if lib.isOption opt then
+        lib.mkDefault value
+      else if opt != null && lib.isAttrs value then
+        sharedDefaults opt value
+      else
+        value
+    ) defs;
 in
 {
+  config = sharedDefaults options shared;
+
   options = {
     desktop = section {
       gnome = program "GNOME desktop preferences" { };

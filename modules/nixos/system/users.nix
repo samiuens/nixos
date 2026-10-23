@@ -14,7 +14,12 @@ let
   userModule =
     { name, ... }:
     {
-      imports = [ (smiLib.userConfigModule { inherit hostName; }) ];
+      imports = [
+        (smiLib.userConfigModule {
+          inherit hostName;
+          inherit (cfg) shared;
+        })
+      ];
 
       options = {
         name = lib.mkOption {
@@ -117,6 +122,15 @@ in
       type = lib.types.attrsOf (lib.types.submodule userModule);
       default = { };
       description = "Declarative users keyed by login name.";
+    };
+
+    shared = lib.mkOption {
+      type = lib.types.attrsOf lib.types.anything;
+      default = { };
+      example = {
+        programs.development.opencode.settings.model = "claude-code/claude-sonnet-5-5";
+      };
+      description = "Options set for every user, in the same shape as a user's; a user's own value wins.";
     };
 
     enabledUsers = lib.mkOption {
