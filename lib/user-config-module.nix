@@ -247,6 +247,8 @@ in
         bun = program "Bun" { };
 
         claude-code = program "Claude Code" {
+          settings = attrsOption "Claude Code settings, layered over the shared defaults.";
+
           mcpServers = attrsOption "MCP servers for Claude Code, layered over the shared ones.";
         };
 
