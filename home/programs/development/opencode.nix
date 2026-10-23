@@ -144,28 +144,9 @@ let
       disabled = true;
     });
 
-    mcp.servers = {
-      context7 = {
-        type = "remote";
-        url = "https://mcp.context7.com/mcp";
-      };
-
-      nixos = {
-        type = "local";
-        command = [ (lib.getExe pkgs.mcp-nixos) ];
-      };
-
-      # Headless keeps browser windows out of the way while an agent works.
-      playwright = {
-        type = "local";
-        command = [
-          (lib.getExe pkgs.playwright-mcp)
-          "--headless"
-        ];
-      };
-    }
-    // (shared.mcpServers or { })
-    // (cfg.mcpServers or { });
+    # None by default: server instructions ride along in every session and
+    # prompt extra calls. Projects that need one declare it themselves.
+    mcp.servers = (shared.mcpServers or { }) // (cfg.mcpServers or { });
 
     websearch.provider = "random";
 
