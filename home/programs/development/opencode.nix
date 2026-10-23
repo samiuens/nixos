@@ -115,7 +115,7 @@ let
   };
 
   baseSettings = {
-    model = "claude-code/claude-opus-5-5[1m]";
+    model = "claude-code/claude-opus-5-5";
     agents = { inherit coordinator; };
     plugins = [ claudePlugin ];
 

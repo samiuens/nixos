@@ -38,12 +38,12 @@ let
     monoFont = "jetbrains-mono";
     uiFont = "inter";
 
-    defaultModel = "claude-code/claude-opus-5-5[1m]";
+    defaultModel = "claude-code/claude-opus-5-5";
     defaultVariant = "medium";
     favoriteModels = [
       {
         providerID = "claude-code";
-        modelID = "claude-opus-5-5[1m]";
+        modelID = "claude-opus-5-5";
       }
     ];
     walkthroughModelOverride = "claude-code/claude-haiku-5-5";
