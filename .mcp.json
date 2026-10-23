@@ -3,10 +3,6 @@
     "nixos": {
       "command": "nix",
       "args": ["run", ".#mcp-nixos"]
-    },
-    "context7": {
-      "type": "http",
-      "url": "https://mcp.context7.com/mcp"
     }
   }
 }
