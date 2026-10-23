@@ -21,10 +21,6 @@ let
   entry = (smiLib.appCatalogue pkgs).${catalogueKey};
   useNixPackage = smiLib.preferNixPackage pkgs catalogueKey;
 
-  inherit (pkgs.stdenv.hostPlatform) isDarwin system;
-
-  enabled = path: lib.attrByPath (path ++ [ "enable" ]) false userConfig.programs;
-
   # Pinned so a plugin release lands with a commit, not on the next launch.
   claudePlugin = "@openchamber/opencode-claude@1.4.2";
 
@@ -43,52 +39,12 @@ let
     "claude-sonnet-4-6[1m]"
   ];
 
-  terminals =
-    lib.optional (enabled [
-      "terminal"
-      "ghostty"
-    ]) "Ghostty"
-    ++ lib.optional (enabled [
-      "terminal"
-      "alacritty"
-    ]) "Alacritty";
-
-  forgeClis =
-    lib.optional (enabled [
-      "development"
-      "gh"
-    ]) "`gh` for GitHub issues, pull requests and CI"
-    ++ lib.optional (enabled [
-      "development"
-      "glab"
-    ]) "`glab` for GitLab issues, merge requests and CI";
-
-  hostNotes = ../../../hosts/${hostName}/opencode.md;
-
-  context = lib.concatStringsSep "\n" (
-    [
-      "# Host"
-      ""
-      "- Host: `${hostName}`, ${
-        if isDarwin then "macOS managed by nix-darwin" else "NixOS"
-      } on `${system}`."
-    ]
-    ++ lib.optional (enabled [
-      "shell"
-      "fish"
-    ]) "- Shell: fish. Write shell commands in fish syntax, not bash."
-    ++ lib.optional (terminals != [ ]) "- Terminal: ${lib.concatStringsSep ", " terminals}."
-    ++ lib.optional (forgeClis != [ ]) "- Use ${lib.concatStringsSep ", and " forgeClis}."
-    ++ [
-      "- Packages come from Nix. Never install tools globally; run a missing one with `nix shell nixpkgs#<package> -c <command>`${
-        lib.optionalString (osConfig.smi.packages.comma.enable or false) " or comma: `, <command>`"
-      }."
-    ]
-    ++ lib.optionals (builtins.pathExists hostNotes) [
-      ""
-      (lib.removeSuffix "\n" (builtins.readFile hostNotes))
-    ]
-  );
+  context = smiLib.mkAgentContext {
+    inherit hostName;
+    inherit (pkgs.stdenv) hostPlatform;
+    inherit (userConfig) programs;
+    comma = osConfig.smi.packages.comma.enable or false;
+  };
 
   shellRule = effect: resource: {
     action = "shell";

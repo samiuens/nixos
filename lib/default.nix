@@ -6,6 +6,7 @@
   enabledCatalogueEntries = import ./enabled-catalogue-entries.nix { inherit lib; };
   getAdminUsers = import ./get-admin-users.nix { inherit lib; };
   importModulesRecursive = import ./import-modules-recursive.nix { inherit lib; };
+  mkAgentContext = import ./mk-agent-context.nix { inherit lib; };
   mkUserGroups = import ./mk-user-groups.nix { inherit lib; };
   mkDarwinConfigurations = import ./mk-darwin-configurations.nix { inherit lib; };
   mkNixosConfigurations = import ./mk-nixos-configurations.nix { inherit lib; };
