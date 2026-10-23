@@ -10,6 +10,13 @@
 let
   smiLib = import ../../../lib { inherit lib; };
   cfg = userConfig.programs.development.opencode or { };
+
+  # A user's own `settings` replaces the shared one as a whole; read both to layer them by key.
+  shared = lib.attrByPath [
+    "programs"
+    "development"
+    "opencode"
+  ] { } (osConfig.smi.system.users.shared or { });
   catalogueKey = "programs.development.opencode";
   entry = (smiLib.appCatalogue pkgs).${catalogueKey};
   useNixPackage = smiLib.preferNixPackage pkgs catalogueKey;
@@ -157,6 +164,7 @@ let
         ];
       };
     }
+    // (shared.mcpServers or { })
     // (cfg.mcpServers or { });
 
     websearch.provider = "random";
@@ -226,7 +234,10 @@ in
       package = if useNixPackage then entry.package else null;
 
       inherit context;
-      settings = lib.recursiveUpdate baseSettings (cfg.settings or { });
+      settings = lib.foldl lib.recursiveUpdate baseSettings [
+        (shared.settings or { })
+        (cfg.settings or { })
+      ];
     };
 
     # Leftover Claude Code skills would load on top of the declared ones.
